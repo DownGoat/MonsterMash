@@ -1,3 +1,12 @@
 Config refs
 
 Project Plan: SE_G12_PP_00
+
+-Introduction		SE_G12_PP_01
+-OverView		SE_G12_PP_02
+-Use-Case Diagram	SE_G12_PP_03
+-User Interface Designs	SE_G12_PP_04
+-Gantt Chart		SE_G12_PP_05
+-Risk Analysis		SE_G12_PP_06
+
+Test Specification:  SE_G12_PP_00
