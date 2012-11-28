@@ -1,0 +1,9 @@
+Applications in the System
+
+There are two distinct applications - the client program, which runs in a web browser on the player's computer, and the server program, which will run on a server in the University.
+
+Our client program will be what the player will see in the web browser. With this application, the player will be able to send friend requests, fight requests and other actions to the server to be passed along to another player or other places, depending on the action. The player can also modify certain details and delete their account.
+
+The server will generate the pages that are handed to the client program (the web browser). It will also pass data from the database to the users when required - such as the data from the marketplace, the leader board and the breeding market. 
+
+Servers will also interact with each other, by hosting cross-server fights between players, trades and friend requests.
