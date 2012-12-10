@@ -1,11 +1,11 @@
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
-import java.util.Date;
-
+import Player;
+import Monster;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 
-public class BreedingOffer
+public class MarketOffer
 // ## Implementation preserve start class extends. 
 // ## Implementation preserve end class extends. 
 
@@ -14,11 +14,11 @@ public class BreedingOffer
 
 {
     /** Attributes */
+    private Player seller;
+    private Monster monster;
+    private Date offerSentTime;
     private int id;
-    private Player player;
-    private Male monster;
-    private int moneyCost;
-    private Date offerStartTime;
+    private int money;
     // ## Implementation preserve start class attributes. 
     // ## Implementation preserve end class attributes. 
     // ## Implementation preserve start class associations. 

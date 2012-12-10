@@ -1,6 +1,7 @@
 // ## Implementation preserve start class opening. 
+import java.util.Date;
+
 // ## Implementation preserve end class opening. 
-import MarketOffer;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 

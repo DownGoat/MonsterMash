@@ -1,15 +1,11 @@
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
-
-/*import Player;
+import Player;
 import Monster;
 import FriendRequest;
 import FightRequest;
 import MarketOffer;
-import BreedingOffer;*/
+import BreedingOffer;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 
@@ -27,11 +23,10 @@ public class Player
     private String email;
     private ArrayList<Player> friends;
     private int money;
-    private ArrayList<Notification> notifications; 
     // ## Implementation preserve start class attributes. 
     // ## Implementation preserve end class attributes. 
     /** Associations */
-    private ArrayList<Monster> monsters;
+    private Monster unnamed;
     // ## Implementation preserve start class associations. 
     // ## Implementation preserve end class associations. 
     /**
@@ -39,46 +34,10 @@ public class Player
      *
      * @return 
      */
-    
-    public Player(int id, String email, String password, int money)
+    public createInitialMonster (  )
     {
-    	this.id = id; 
-    	this.email = email;
-    	this.password = password;
-    	this.money = money;
-    	
-    	createInitialMonster();
-    }
-    
-    public void createInitialMonster()
-    {
-    	Random random = new Random();
-    	Monster monster;
-    	boolean isMale = random.nextBoolean();
-		if(isMale)
-		{
-			monster = new Male();
-		}
-		else
-		{
-			monster = new Female(); 
-		}
-		
-		monster.name = "New monster ";
-		monster.dob = new Date();
-		
-		monster.strength = random.nextFloat();
-		monster.speed = random.nextFloat();
-		monster.accuracy = random.nextFloat();
-		monster.endurance = random.nextFloat();
-		monster.armor = random.nextFloat();
-		monster.dodge = random.nextFloat();
-		monster.age_rate = random.nextFloat();
-		monster.fertility = random.nextFloat();
-		
-		monster.health = 100; //?
-		
-		monsters.add(monster);
+        // ## Implementation preserve start class method.createInitialMonster@@@ 
+        // ## Implementation preserve end class method.createInitialMonster@@@ 
     }
     /**
      * Operation
@@ -86,9 +45,10 @@ public class Player
      * @param friend
      * @return 
      */
-    public void addFriend ( Player friend )
+    public addFriend ( Player friend )
     {
-        friends.add(friend);
+        // ## Implementation preserve start class method.addFriend@@@@Player 
+        // ## Implementation preserve end class method.addFriend@@@@Player 
     }
     /**
      * Operation
@@ -96,11 +56,10 @@ public class Player
      * @param friend
      * @return 
      */
-    public void removeFriend ( Player friend )
+    public removeFriend ( Player friend )
     {
         // ## Implementation preserve start class method.removeFriend@@@@Player 
         // ## Implementation preserve end class method.removeFriend@@@@Player 
-    	friends.remove(friend);
     }
     /**
      * Operation
@@ -108,11 +67,10 @@ public class Player
      * @param monster
      * @return 
      */
-    public void addMonster ( Monster monster )
+    public addMonster ( Monster monster )
     {
         // ## Implementation preserve start class method.addMonster@@@@Monster 
         // ## Implementation preserve end class method.addMonster@@@@Monster 
-    	monsters.add(monster);
     }
     /**
      * Operation
@@ -120,11 +78,10 @@ public class Player
      * @param monster
      * @return 
      */
-    public void removeMonster ( Monster monster )
+    public removeMonster ( Monster monster )
     {
         // ## Implementation preserve start class method.removeMonster@@@@Monster 
         // ## Implementation preserve end class method.removeMonster@@@@Monster 
-    	monsters.remove(monster);
     }
     /**
      * Operation
@@ -132,26 +89,20 @@ public class Player
      * @param notefication
      * @return 
      */
-    public void addNotification ( Notification notification )
+    public addNotification ( Notefication notefication )
     {
         // ## Implementation preserve start class method.addNotification@@@@Notefication 
         // ## Implementation preserve end class method.addNotification@@@@Notefication 
-    	notifications.add(notification);
     }
     /**
      * Operation
      *
      * @return 
      */
-    public void updateMonsters (  )
+    public updateMonsters (  )
     {
         // ## Implementation preserve start class method.updateMonsters@@@ 
         // ## Implementation preserve end class method.updateMonsters@@@ 
-    	for(int i = 0; i < monsters.size(); i++)
-    	{
-    		if(monsters.get(i).health <= 0)
-    			monsters.remove(i);
-    	}
     }
     // ## Implementation preserve start class other.operations. 
     // ## Implementation preserve end class other.operations. 

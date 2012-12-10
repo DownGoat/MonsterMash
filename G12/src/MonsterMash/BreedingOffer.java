@@ -1,7 +1,7 @@
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
-import java.util.Date;
-
+import Player;
+import Male;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 
