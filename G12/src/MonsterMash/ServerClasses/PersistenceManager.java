@@ -1,69 +1,80 @@
-// ## Implementation preserve start class opening. 
-// ## Implementation preserve end class opening. 
-import Register;
-import Login;
-import Market;
-import Leadboard;
-import BreedingMarket;
-import MainPage;
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
+package database;
 
-public class PersistenceManager
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
+import java.sql.*;
 
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
-{
-    /** Attributes */
-    private final String dbName;
-    private final String dbHost;
-    private final String dbPort;
-    private final String dbUsername;
-    private final String dbPassword;
+/**
+ *
+ * @author sjk4
+ */
+public class PersistenceManager {
+    private final String dbname = "MonsterMash";
+    private final String dbuser = "root";
+    private final String dbpassword = "root";
+    private final String dbhost = "localhost";
+    private final String dbport = "1527";
+    
     private Connection connection;
     private String error;
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
-    /**
-     * Operation
-     *
-     * @param query
-     * @return boolean
-     */
-    public boolean query ( String query )
-    {
-        // ## Implementation preserve start class method.query@boolean@@@String 
-        // ## Implementation preserve end class method.query@boolean@@@String 
+    
+    public PersistenceManager(){
+        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+        String connectionURL = "jdbc:derby://"+dbhost+":"+dbport+"/"+dbname+";create=true;user="+dbuser+";password="+dbpassword;
+        try {
+            Class.forName(driver);
+        } catch (java.lang.ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            connection = DriverManager.getConnection(connectionURL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    /**
-     * Operation
-     *
-     * @param query
-     * @return String[]
-     */
-    public String[] select ( String query )
-    {
-        // ## Implementation preserve start class method.select@String[]@@@String 
-        // ## Implementation preserve end class method.select@String[]@@@String 
+    
+    public boolean insert(String query){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute(query);
+            stmt.close();
+            return true;
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+            return false;
+        }
     }
-    /**
-     * Operation
-     *
-     * @return String
-     */
-    public String getError (  )
-    {
-        // ## Implementation preserve start class method.getError@String@@ 
-        // ## Implementation preserve end class method.getError@String@@ 
+    
+    public int count(String query){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery(query);
+            int count = 0;
+            while(results.next()){
+                count++;
+            }
+            results.close();
+            stmt.close();
+            return count;
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+            return -1;
+        }
     }
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
+    
+    public ResultSet select(String query){
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery(query);
+            results.close();
+            stmt.close();
+            return results;
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+            return null;
+        }
+    }
+    
+    public String getErrorMessage(){
+        return this.error;
+    }
 }
-
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
