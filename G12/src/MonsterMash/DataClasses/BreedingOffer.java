@@ -1,31 +1,64 @@
+package MonsterMash.DataClasses;
+
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
+import MonsterMash.DataClasses.Player;
+import MonsterMash.DataClasses.Male;
 import java.util.Date;
+  
 
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
-
-public class BreedingOffer
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
-
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
+public class BreedingOffer   
+ 
 {
-    /** Attributes */
+
+    /**
+     * Attributes
+     */
     private int id;
     private Player player;
     private Male monster;
     private int moneyCost;
     private Date offerStartTime;
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
-}
 
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Male getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Male monster) {
+        this.monster = monster;
+    }
+
+    public int getMoneyCost() {
+        return moneyCost;
+    }
+
+    public void setMoneyCost(int moneyCost) {
+        this.moneyCost = moneyCost;
+    }
+
+    public Date getOfferStartTime() {
+        return offerStartTime;
+    }
+
+    public void setOfferStartTime(Date offerStartTime) {
+        this.offerStartTime = offerStartTime;
+    }
+ 
+}
+ 

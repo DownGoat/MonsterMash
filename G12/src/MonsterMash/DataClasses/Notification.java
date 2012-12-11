@@ -1,31 +1,59 @@
+package MonsterMash.DataClasses;
+
+import MonsterMash.DataClasses.Player;
 import java.util.Date;
 
-// ## Implementation preserve start class opening. 
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
+public class Notification {
 
-public class Notification
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
-
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
-{
-    /** Attributes */
+    /**
+     * Attributes
+     */
     private int id;
     private String text;
     private Player player;
     private Date timeSent;
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    /** Associations */
+    /**
+     * Associations
+     */
     private Player unnamed;
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
-}
 
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Date getTimeSent() {
+        return timeSent;
+    }
+
+    public void setTimeSent(Date timeSent) {
+        this.timeSent = timeSent;
+    }
+
+    public Player getUnnamed() {
+        return unnamed;
+    }
+
+    public void setUnnamed(Player unnamed) {
+        this.unnamed = unnamed;
+    }
+}

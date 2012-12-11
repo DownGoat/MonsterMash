@@ -1,161 +1,150 @@
+package MonsterMash.DataClasses;
+
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
+import MonsterMash.DataClasses.Player;
+import MonsterMash.DataClasses.Monster;
+import MonsterMash.DataClasses.FriendRequest;
+import MonsterMash.DataClasses.FightRequest;
+import MonsterMash.DataClasses.MarketOffer;
+import MonsterMash.DataClasses.BreedingOffer;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
 
-/*import Player;
-import Monster;
-import FriendRequest;
-import FightRequest;
-import MarketOffer;
-import BreedingOffer;*/
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
+public class Player {
 
-public class Player
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
-
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
-{
-    /** Attributes */
+    /**
+     * Attributes
+     */
     private int id;
     private String password;
     private String email;
     private ArrayList<Player> friends;
     private int money;
-    private ArrayList<Notification> notifications; 
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    /** Associations */
+    /**
+     * Associations
+     */
     private ArrayList<Monster> monsters;
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
+    private ArrayList<Notification> notifications;
+
     /**
      * Operation
      *
-     * @return 
+     * @return
      */
-    
-    public Player(int id, String email, String password, int money)
-    {
-    	this.id = id; 
-    	this.email = email;
-    	this.password = password;
-    	this.money = money;
-    	
-    	createInitialMonster();
+    public void createInitialMonster() {
     }
-    
-    public void createInitialMonster()
-    {
-    	Random random = new Random();
-    	Monster monster;
-    	boolean isMale = random.nextBoolean();
-		if(isMale)
-		{
-			monster = new Male();
-		}
-		else
-		{
-			monster = new Female(); 
-		}
-		
-		monster.name = "New monster ";
-		monster.dob = new Date();
-		
-		monster.strength = random.nextFloat();
-		monster.speed = random.nextFloat();
-		monster.accuracy = random.nextFloat();
-		monster.endurance = random.nextFloat();
-		monster.armor = random.nextFloat();
-		monster.dodge = random.nextFloat();
-		monster.age_rate = random.nextFloat();
-		monster.fertility = random.nextFloat();
-		
-		monster.health = 100; //?
-		
-		monsters.add(monster);
-    }
+
     /**
      * Operation
      *
      * @param friend
-     * @return 
+     * @return
      */
-    public void addFriend ( Player friend )
-    {
+    public void addFriend(Player friend) {
         friends.add(friend);
     }
+
     /**
      * Operation
      *
      * @param friend
-     * @return 
+     * @return
      */
-    public void removeFriend ( Player friend )
-    {
-        // ## Implementation preserve start class method.removeFriend@@@@Player 
-        // ## Implementation preserve end class method.removeFriend@@@@Player 
-    	friends.remove(friend);
+    public void removeFriend(Player friend) {
+        friends.remove(friend);
     }
+
     /**
      * Operation
      *
      * @param monster
-     * @return 
+     * @return
      */
-    public void addMonster ( Monster monster )
-    {
-        // ## Implementation preserve start class method.addMonster@@@@Monster 
-        // ## Implementation preserve end class method.addMonster@@@@Monster 
-    	monsters.add(monster);
+    public void addMonster(Monster monster) {
+        monsters.add(monster);
     }
+
     /**
      * Operation
      *
      * @param monster
-     * @return 
+     * @return
      */
-    public void removeMonster ( Monster monster )
-    {
-        // ## Implementation preserve start class method.removeMonster@@@@Monster 
-        // ## Implementation preserve end class method.removeMonster@@@@Monster 
-    	monsters.remove(monster);
+    public void removeMonster(Monster monster) {
+        monsters.remove(monster);
     }
+
     /**
      * Operation
      *
      * @param notefication
-     * @return 
+     * @return
      */
-    public void addNotification ( Notification notification )
-    {
-        // ## Implementation preserve start class method.addNotification@@@@Notefication 
-        // ## Implementation preserve end class method.addNotification@@@@Notefication 
-    	notifications.add(notification);
+    public void addNotification(Notification notefication) {
+        notifications.add(notefication);
     }
+
     /**
      * Operation
      *
-     * @return 
+     * @return
      */
-    public void updateMonsters (  )
-    {
-        // ## Implementation preserve start class method.updateMonsters@@@ 
-        // ## Implementation preserve end class method.updateMonsters@@@ 
-    	for(int i = 0; i < monsters.size(); i++)
-    	{
-    		if(monsters.get(i).health <= 0)
-    			monsters.remove(i);
-    	}
+    public void updateMonsters() {
     }
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
-}
 
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ArrayList<Player> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(ArrayList<Player> friends) {
+        this.friends = friends;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public ArrayList<Monster>  getMonsters() {
+        return monsters;
+    }
+
+    public void setMonsters(ArrayList<Monster>  monsters) {
+        this.monsters = monsters;
+    }
+
+    public ArrayList<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+}

@@ -1,31 +1,57 @@
+package MonsterMash.DataClasses;
+
+import MonsterMash.DataClasses.Player;
+import MonsterMash.DataClasses.Monster;
 import java.util.Date;
 
-// ## Implementation preserve start class opening. 
-// ## Implementation preserve end class opening
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
+public class MarketOffer {
 
-public class MarketOffer
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
-
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
-{
-    /** Attributes */
+    /**
+     * Attributes
+     */
     private Player seller;
     private Monster monster;
     private Date offerSentTime;
     private int id;
     private int money;
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
-}
 
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
+    public Player getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Player seller) {
+        this.seller = seller;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
+
+    public Date getOfferSentTime() {
+        return offerSentTime;
+    }
+
+    public void setOfferSentTime(Date offerSentTime) {
+        this.offerSentTime = offerSentTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+}

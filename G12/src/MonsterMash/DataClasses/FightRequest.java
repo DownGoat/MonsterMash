@@ -1,19 +1,14 @@
+package MonsterMash.DataClasses;
+
+import MonsterMash.DataClasses.Player;
+import MonsterMash.DataClasses.Male;
 import java.util.Date;
 
-// ## Implementation preserve start class opening. 
-// ## Implementation preserve end class opening. 
-// ## Implementation preserve start class import. 
-// ## Implementation preserve end class import. 
+public class FightRequest {
 
-public class FightRequest
-// ## Implementation preserve start class extends. 
-// ## Implementation preserve end class extends. 
-
-// ## Implementation preserve start class inheritence. 
-// ## Implementation preserve end class inheritence. 
-
-{
-    /** Attributes */
+    /**
+     * Attributes
+     */
     private int id;
     private Player sender;
     private Player reciver;
@@ -22,13 +17,68 @@ public class FightRequest
     private Male opponentMonster;
     private Date offerSentTime;
     private String figthKey;
-    // ## Implementation preserve start class attributes. 
-    // ## Implementation preserve end class attributes. 
-    // ## Implementation preserve start class associations. 
-    // ## Implementation preserve end class associations. 
-    // ## Implementation preserve start class other.operations. 
-    // ## Implementation preserve end class other.operations. 
-}
 
-// ## Implementation preserve start class closing. 
-// ## Implementation preserve end class closing. 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Player getSender() {
+        return sender;
+    }
+
+    public void setSender(Player sender) {
+        this.sender = sender;
+    }
+
+    public Player getReciver() {
+        return reciver;
+    }
+
+    public void setReciver(Player reciver) {
+        this.reciver = reciver;
+    }
+
+    public int getMoneyOffer() {
+        return moneyOffer;
+    }
+
+    public void setMoneyOffer(int moneyOffer) {
+        this.moneyOffer = moneyOffer;
+    }
+
+    public Male getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Male monster) {
+        this.monster = monster;
+    }
+
+    public Male getOpponentMonster() {
+        return opponentMonster;
+    }
+
+    public void setOpponentMonster(Male opponentMonster) {
+        this.opponentMonster = opponentMonster;
+    }
+
+    public Date getOfferSentTime() {
+        return offerSentTime;
+    }
+
+    public void setOfferSentTime(Date offerSentTime) {
+        this.offerSentTime = offerSentTime;
+    }
+
+    public String getFigthKey() {
+        return figthKey;
+    }
+
+    public void setFigthKey(String figthKey) {
+        this.figthKey = figthKey;
+    }
+}
