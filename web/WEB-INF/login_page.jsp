@@ -46,7 +46,7 @@
 			<div class="login-header">
 				Create an account
 			</div>
-                        Some text here.
+                        A fun new world awaits!
                         <p style="text-align: center;"><a href="create-account"><img src="images/create_account.png" width="125" height="32" alt="submit" /></a></p>
 		</div>
 	</div>
