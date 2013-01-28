@@ -55,6 +55,18 @@ public class MainPage extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if(session != null && session.getAttribute("user") != null){
+            Player selected = (Player)session.getAttribute("user");
+            // Check if acceptFriendRequest occured:
+            if(request.getParameter("acceptFriendRequest") != null){
+                
+            }
+            // Check if cancelFriendRequest occured:
+            if(request.getParameter("cancelFriendRequest") != null){
+                
+            }
+        }
         this.getDataFromDB(request, response);
     }
 
@@ -71,12 +83,19 @@ public class MainPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if(session != null && session.getAttribute("user") != null){
+            // Get email from POST
             String email = request.getParameter("email");
             PersistenceManager pm = new PersistenceManager();
             // Check if user with that email address exists
             int playerID = pm.getPlayerID(email);
-            if(playerID > 0){
-                Player selected = (Player)session.getAttribute("user");
+            Player selected = (Player)session.getAttribute("user");
+            if(playerID <= 0){
+                request.setAttribute("alertMessage", "Cannot find user with this email address.");
+            }else if(pm.isFriendRequestSent(selected.getId(), playerID)){
+                request.setAttribute("alertMessage", "Cannot send friend request to this player.");
+            }else if(playerID == selected.getId()){
+                request.setAttribute("alertMessage", "Cannot send friend request to yourself.");
+            }else{
                 String message = "Friend request to <b>"+email+"</b> sent successfully.";
                 // Add notification
                 selected.addNotification(new Notification(message, message, selected));
@@ -88,11 +107,8 @@ public class MainPage extends HttpServlet {
                 pm.addNewFriends(selected);
                 session.setAttribute("user", selected);
                 request.setAttribute("alertMessage", message);
-            }else{
-                request.setAttribute("alertMessage", "Cannot find user with this email address.");
             }
-            
         }
-        this.getDataFromDB(request, response);
+        this.doGet(request, response);
     }
 }

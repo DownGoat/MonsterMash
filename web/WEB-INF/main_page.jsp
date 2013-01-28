@@ -23,6 +23,9 @@
 			$( "#updates" ).accordion({
 				event: "click"
 			});
+                        <c:if test="${not empty alertMessage}">
+                        alert("${alertMessage}");
+                        </c:if>      
 		});
 	</script>
 </head>
@@ -30,19 +33,19 @@
 	<div id="friendslist">
 		<ul class="list">
                     <c:forEach items="${friendshipList}" var="friend">
-                        <c:if test="${friend.friendshipConfirmed  != 'Y'}">
+                        <c:if test="${! friend.friendshipConfirmed}">
                             <li class="friend-request">
-				<a href="#"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a>
+				<a><img src="images/avatar.jpg" alt="" /> ${friend.email}</a>
 				<ul class="subrequest">
-					<li><a href="main?acceptFriendRequest=${friend.id}">Accept Request</a></li>
-					<li><a href="main?cancelFriendRequest=${friend.id}">Cancel Request</a></li>
+					<li><a href="main?acceptFriendRequest=${friend.friendshipID}">Accept Request</a></li>
+					<li><a href="main?cancelFriendRequest=${friend.friendshipID}">Cancel Request</a></li>
 				</ul>
                             </li>
                         </c:if>
                     </c:forEach>
                     <c:forEach items="${friendshipList}" var="friend">
-                        <c:if test="${friend.friendshipConfirmed  == 'Y'}">
-                            <li><a href="player?show=${friend.id}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
+                        <c:if test="${friend.friendshipConfirmed}">
+                            <li><a href="player?show=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
                         </c:if>
                     </c:forEach>
 		</ul>

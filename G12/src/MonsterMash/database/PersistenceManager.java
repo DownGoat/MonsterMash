@@ -281,27 +281,27 @@ public class PersistenceManager {
         return null;
     }
     
-//    public boolean isFriendRequestSent(int from, int to){
-//        int count = 0;
-//        try{
-//            Statement stmt = connection.createStatement();
-//            stmt = connection.createStatement();
-//            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Friendship\" WHERE (\"email\" = '"+email+"'");
-//            while(results.next()){
-//                count++;
-//            }
-//            results.close();
-//            stmt.close();
-//        }catch (SQLException sqlExcept){
-//            this.error = sqlExcept.getMessage();
-//            count = -1;
-//        }
-//        if(count > 0){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
+    public boolean isFriendRequestSent(int playerOne, int playerTwo){
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Friendship\" WHERE (\"sender_id\" = "+playerOne+" AND \"receiver_id\" = "+playerTwo+") OR (\"sender_id\" = "+playerTwo+" AND \"receiver_id\" = "+playerOne+")");
+            while(results.next()){
+                count++;
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+            count = -1;
+        }
+        if(count > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     public boolean insert(String query){
         try{
