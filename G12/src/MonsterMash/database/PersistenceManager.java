@@ -146,7 +146,11 @@ public class PersistenceManager {
                 try{
                     Statement stmt = connection.createStatement();
                     // Insert notification into DB
-                    stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+")", Statement.RETURN_GENERATED_KEYS);
+                    String confirmed = "N";
+                    if(f.isFriendshipConfirmed()){
+                        confirmed = "Y";
+                    }
+                    stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
                     // Set ID of notification
                     ResultSet rs = stmt.getGeneratedKeys();
                     if(rs != null && rs.next()){
@@ -181,6 +185,22 @@ public class PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"email\" = '"+email+"' AND \"password\" = '"+password+"'");
+            r.next();
+            selected = new Player(r.getInt("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getInt("id")), this.getNotificationList(r.getInt("id")), this.getMonsterList(r.getInt("id")));
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return selected;
+    }
+    
+    public Player getPlayer(int id){
+        Player selected = null;
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+id+"'");
             r.next();
             selected = new Player(r.getInt("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getInt("id")), this.getNotificationList(r.getInt("id")), this.getMonsterList(r.getInt("id")));
             r.close();
