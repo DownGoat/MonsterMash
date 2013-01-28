@@ -137,7 +137,7 @@ public class PlayerTest {
     public void testGetFriendY() {
         System.out.println("getFriends");
         Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        Friend friend = new Friend(23, "lwv@aber.ac.uk", "N");
+        Friend friend = new Friend(12,23,11, "lwv@aber.ac.uk", "N");
         player.addFriend(friend);
         assertEquals("friend ID should be 23", 23, friend.getId(player.getFriend(0)));
     }
@@ -149,13 +149,15 @@ public class PlayerTest {
     public void testGetFriendN() {
         System.out.println("getFriends");
         Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        Friend friend = new Friend(23, "lwv@aber.ac.uk", "N");
+        Friend friend = new Friend(12,23,11, "lwv@aber.ac.uk", "N");
         player.addFriend(friend);
-        assertEquals("Confirmed should be no", false,
-                friend.isFriendshipConfirmed(player.getFriend(0)));
+        assertEquals("Confirmed should be no",
+                false, friend.isFriendshipConfirmed(player.getFriend(0)));
+        
         friend.setFriendConfirmed("Y");
-        assertEquals("Confirmed should be yes", true,
-                friend.isFriendshipConfirmed(player.getFriend(0)));
+        
+        assertEquals("Confirmed should be yes", 
+                true,friend.isFriendshipConfirmed(player.getFriend(0)));
     }
 
     /**
@@ -164,12 +166,7 @@ public class PlayerTest {
     @Test
     public void testGetNotifications() {
         System.out.println("getNotifications");
-        Player instance = null;
-        ArrayList expResult = null;
-        ArrayList result = instance.getNotifications();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**

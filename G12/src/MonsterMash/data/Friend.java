@@ -85,4 +85,8 @@ public class Friend {
         public boolean isFriendshipConfirmed(Friend f) {
         return f.friendshipConfirmed;
     }
+        
+        public int getId(Friend f){
+            return f.friendID;
+        }
 }
