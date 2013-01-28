@@ -35,10 +35,14 @@ public class MainPage extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
+            // Redirect when user is not logged in
             response.sendRedirect("");
         }else{
             Player selected = (Player)session.getAttribute("user");
+            // Get notifications
             request.setAttribute("notificationList", selected.getNotifications());
+            // Get friends and friend request
+            request.setAttribute("friendshipList", selected.getFriends());
             request.getRequestDispatcher("/WEB-INF/main_page.jsp").forward(request, response);
         }
 
@@ -60,8 +64,22 @@ public class MainPage extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request,response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        try {
+            if(session == null || session.getAttribute("user") == null){
+                // Redirect when user is not logged in
+                out.println("Please, sign in first.");
+            }else{
+                String email = request.getParameter("sendFriendRequest");
+                out.println("Friend request to <b>"+email+"</b> sent successfully.");
+            }
+        } finally {            
+            out.close();
+        }
+        
+        //doGet(request,response);
     }
 }

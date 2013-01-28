@@ -25,28 +25,61 @@
 			});
 		});
 	</script>
+        <script type="text/javascript">
+        function sendFriendRequest(){
+            var xmlhttp;
+            if (window.XMLHttpRequest){
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp=new XMLHttpRequest();
+            }else{
+                // code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function(){
+                    if(xmlhttp.readyState==4 && xmlhttp.status==200){
+                        var updates = document.getElementById('updates');
+                        var currentTime = new Date();
+                        var day = ("0" + currentTime.getDate()).slice(-2);
+                        var month = ("0" + (currentTime.getMonth() + 1)).slice(-2);
+                        var year = currentTime.getFullYear();
+                        var date = year+"-"+month+"-"+day;
+                        updates.innerHTML = "<h3><div style=\"float:left;\">"+xmlhttp.responseText+"</div><div class=\"date\">"+date+"</div><div style=\"clear:both;\"></div></h3><div><p>"+xmlhttp.responseText+"</p></div>"+updates.innerHTML;
+                        $( "#updates" ).accordion( "destroy" );
+                        $( "#updates" ).accordion();
+                    }
+                }
+            var friendEmail = document.getElementById('friendRequestName').value;
+            xmlhttp.open("POST","main",true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send("sendFriendRequest="+friendEmail);
+        }
+        </script>
 </head>
 <body>
 	<div id="friendslist">
 		<ul class="list">
-                    <c:forEach items="${friendRequestList}" var="friend">
-			<li class="friend-request">
-				<a href="#"><img src="images/avatar.jpg" alt="" /> ${friend}</a>
+                    <c:forEach items="${friendshipList}" var="friend">
+                        <c:if test="${friend.friendshipConfirmed  != 'Y'}">
+                            <li class="friend-request">
+				<a href="#"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a>
 				<ul class="subrequest">
-					<li><a href="?accept=${friend}">Accept Request</a></li>
-					<li><a href="?cancel=${friend}">Cancel Request</a></li>
+					<li><a href="main?acceptFriendRequest=${friend.id}">Accept Request</a></li>
+					<li><a href="main?cancelFriendRequest=${friend.id}">Cancel Request</a></li>
 				</ul>
-			</li>
+                            </li>
+                        </c:if>
                     </c:forEach>
-                        <c:forEach items="${friendList}" var="current">
-                            <li><a><img src="images/avatar.jpg" alt="" /> ${current}</a></li>
-                        </c:forEach>
+                    <c:forEach items="${friendshipList}" var="friend">
+                        <c:if test="${friend.friendshipConfirmed  == 'Y'}">
+                            <li><a href="player?show=${friend.id}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
+                        </c:if>
+                    </c:forEach>
 		</ul>
 	</div>
 	<div id="friend-request">
-		<form action="" method="post">
-			<p><input type="text" value="Enter email ..." name="email" maxlength="255" /></p>
-                        <p><input type="submit" value="Send request" /></p>
+		<form action="main" method="post">
+			<p><input id="friendRequestName" type="text" value="Enter email ..." name="email" maxlength="255" /></p>
+                        <p><button type="button"onclick="sendFriendRequest()">Send request</button></p>
 		</form>
 	</div>
 	<div id="monsterlist">
@@ -65,8 +98,8 @@
 		<div id="updates">
                     <c:forEach items="${notificationList}" var="current">
                         <h3>
-				<div style="float:left;">${current.text}.</div>
-				<div class="date">${current.timeSent}.</div>
+				<div style="float:left;">${current.text}</div>
+				<div class="date">${current.timeSent}</div>
 				<div style="clear:both;"></div>
 			</h3>
 			<div>

@@ -18,4 +18,30 @@ public class Friend {
             friendshipConfirmed = false;
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isFriendshipConfirmed() {
+        return friendshipConfirmed;
+    }
+
+    public void setFriendshipConfirmed(boolean friendshipConfirmed) {
+        this.friendshipConfirmed = friendshipConfirmed;
+    }
+    
+    
 }
