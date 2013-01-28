@@ -4,20 +4,23 @@ import java.util.Date;
 public class Notification{
     /** Attributes */
     private int id;
-    private String text;
+    private String shortText;
+    private String longText;
     private Player player;
     private Date timeSent;
     
-    public Notification(String text, Player player){
+    public Notification(String shortText, String longText, Player player){
         this.id = 0;
-        this.text = text;
+        this.shortText = shortText;
+        this.longText = longText;
         this.player = player;
         this.timeSent = new Date();
     }
     
-    public Notification(int id, String text, Date timeSent){
+    public Notification(int id, String shortText, String longText, Date timeSent){
         this.id = id;
-        this.text = text;
+        this.shortText = shortText;
+        this.longText = longText;
         this.player = null;
         this.timeSent = timeSent;
     }
@@ -30,12 +33,20 @@ public class Notification{
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getShortText() {
+        return shortText;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setShortText(String shortText) {
+        this.shortText = shortText;
+    }
+
+    public String getLongText() {
+        return longText;
+    }
+
+    public void setLongText(String longText) {
+        this.longText = longText;
     }
 
     public Player getPlayer() {

@@ -98,12 +98,12 @@
 		<div id="updates">
                     <c:forEach items="${notificationList}" var="current">
                         <h3>
-				<div style="float:left;">${current.text}</div>
+				<div style="float:left;">${current.shortText}</div>
 				<div class="date">${current.timeSent}</div>
 				<div style="clear:both;"></div>
 			</h3>
 			<div>
-				<p></p>
+				<p>${current.longText}</p>
 			</div>
                     </c:forEach>
 		</div>
