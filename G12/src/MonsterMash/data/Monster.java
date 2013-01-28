@@ -58,10 +58,6 @@ public class Monster {
         return dob;
     }
 
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
     public float getGenetic_strength() {
         return genetic_strength;
     }
