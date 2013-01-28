@@ -15,9 +15,9 @@ public class Friend {
         this.friendID = friendID;
         this.serverID = serverID;
         this.email = email;
-        if(confirmed.equals("Y")){
+        if (confirmed.equals("Y")) {
             friendshipConfirmed = true;
-        }else{
+        } else {
             friendshipConfirmed = false;
         }
     }
@@ -62,5 +62,15 @@ public class Friend {
         this.friendshipConfirmed = friendshipConfirmed;
     }
     
+    public void setFriendConfirmed(String confirmed) {
+        if (confirmed.equals("Y")) {
+            friendshipConfirmed = true;
+        } else {
+            friendshipConfirmed = false;
+        }
+    }
     
+        public boolean isFriendshipConfirmed(Friend f) {
+        return f.friendshipConfirmed;
+    }
 }
