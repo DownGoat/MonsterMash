@@ -100,7 +100,7 @@ public class PersistenceManager {
                     Statement stmt = connection.createStatement();
                     Timestamp ts = new Timestamp(n.getTimeSent().getTime());
                     // Insert notification into DB
-                    stmt.execute("INSERT INTO \"Notification\" (\"message\", \"player_id\", \"time\") VALUES ('"+n.getText()+"', "+n.getPlayer().getId()+", '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
+                    stmt.execute("INSERT INTO \"Notification\" (\"message\", \"long_message\", \"player_id\", \"time\") VALUES ('"+n.getShortText()+"', '"+n.getLongText()+"', "+n.getPlayer().getId()+", '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
                     // Set ID of notification
                     ResultSet rs = stmt.getGeneratedKeys();
                     if(rs != null && rs.next()){
@@ -187,7 +187,7 @@ public class PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM \"Notification\" WHERE \"player_id\" = "+playerID+"");
             while(result.next()){
-                notificationList.add(new Notification(result.getInt("id"), result.getString("message"), result.getDate("time")));
+                notificationList.add(new Notification(result.getInt("id"), result.getString("message"), result.getString("long_message"), result.getDate("time")));
             }
             result.close();
             stmt.close();

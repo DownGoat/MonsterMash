@@ -32,8 +32,8 @@ public class Player {
         this.monsters = new ArrayList<Monster>();
     	monsters.add(new Monster(initialMonsterName));
         // Add first notifications:
-        notifications.add(new Notification("Account created successfully.", this));
-        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", this));
+        notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
+        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
     }
     
     /**
