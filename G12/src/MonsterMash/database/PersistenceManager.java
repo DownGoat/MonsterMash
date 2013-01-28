@@ -140,8 +140,9 @@ public class PersistenceManager {
     }
     
     public void addNewFriends(Player p){
+        ArrayList<Friend> toRemove = new ArrayList<Friend>();
         for(Friend f: p.getFriends()){
-            // If friendship ID equals 0, friendship hasn't been saved in DB
+            // If friendship ID equals 0 it means user sent friend request and friendship hasn't been saved in DB
             if(f.getFriendshipID() == 0){
                 try{
                     Statement stmt = connection.createStatement();
@@ -151,16 +152,15 @@ public class PersistenceManager {
                         confirmed = "Y";
                     }
                     stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
-                    // Set ID of notification
-                    ResultSet rs = stmt.getGeneratedKeys();
-                    if(rs != null && rs.next()){
-                        f.setFriendshipID(rs.getInt(1));
-                    }
+                    toRemove.add(f);
                 }catch(SQLException sqlExcept){
                     System.err.println(sqlExcept.getMessage());
                     this.error = sqlExcept.getMessage();
                 }
             }
+        }
+        for(Friend f: toRemove){
+            p.getFriends().remove(f);
         }
     }
     
@@ -198,10 +198,9 @@ public class PersistenceManager {
     
     public Player getPlayer(int id){
         Player selected = null;
-        //
         try{
             Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+id+"'");
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = "+id);
             r.next();
             selected = new Player(r.getInt("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getInt("id")), this.getNotificationList(r.getInt("id")), this.getMonsterList(r.getInt("id")));
             r.close();
@@ -257,15 +256,52 @@ public class PersistenceManager {
         return notificationList;
     }
     
+    // TODO: needs server-server communication
     public String getPlayersEmail(int playerID, int serverID){
-        return "Player's Name";
+        if(serverID == 0){
+            String email = null;
+            try{
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery("SELECT \"email\" FROM \"Player\" WHERE \"id\" = "+playerID+"");
+                r.next();
+                email = r.getString("email");
+                r.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }
+            return email;
+        }else{
+            return "Player Outside";
+        }
     }
     
     public ArrayList<Monster> getMonsterList(int playerID){
         return null;
     }
     
-    
+//    public boolean isFriendRequestSent(int from, int to){
+//        int count = 0;
+//        try{
+//            Statement stmt = connection.createStatement();
+//            stmt = connection.createStatement();
+//            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Friendship\" WHERE (\"email\" = '"+email+"'");
+//            while(results.next()){
+//                count++;
+//            }
+//            results.close();
+//            stmt.close();
+//        }catch (SQLException sqlExcept){
+//            this.error = sqlExcept.getMessage();
+//            count = -1;
+//        }
+//        if(count > 0){
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
     
     public boolean insert(String query){
         try{
