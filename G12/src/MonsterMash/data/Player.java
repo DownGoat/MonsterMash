@@ -92,8 +92,9 @@ public class Player {
         return friends;
     }
 
-    public void setFriends(ArrayList<Friend> friends) {
-        this.friends = friends;
+    
+    public Friend getFriend(int i){
+        return friends.get(i);
     }
 
     public ArrayList<Notification> getNotifications() {
