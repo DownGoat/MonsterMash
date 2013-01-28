@@ -43,8 +43,8 @@ public class LoginPage extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if(session.getAttribute("user") != null){
+        HttpSession session = request.getSession(true);
+        if(session != null && session.getAttribute("user") != null){
             response.sendRedirect("main");
         }else{
             request.getRequestDispatcher("/WEB-INF/login_page.jsp").forward(request, response);

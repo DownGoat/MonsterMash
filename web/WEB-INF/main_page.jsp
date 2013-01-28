@@ -25,35 +25,6 @@
 			});
 		});
 	</script>
-        <script type="text/javascript">
-        function sendFriendRequest(){
-            var xmlhttp;
-            if (window.XMLHttpRequest){
-                // code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp=new XMLHttpRequest();
-            }else{
-                // code for IE6, IE5
-                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function(){
-                    if(xmlhttp.readyState==4 && xmlhttp.status==200){
-                        var updates = document.getElementById('updates');
-                        var currentTime = new Date();
-                        var day = ("0" + currentTime.getDate()).slice(-2);
-                        var month = ("0" + (currentTime.getMonth() + 1)).slice(-2);
-                        var year = currentTime.getFullYear();
-                        var date = year+"-"+month+"-"+day;
-                        updates.innerHTML = "<h3><div style=\"float:left;\">"+xmlhttp.responseText+"</div><div class=\"date\">"+date+"</div><div style=\"clear:both;\"></div></h3><div><p>"+xmlhttp.responseText+"</p></div>"+updates.innerHTML;
-                        $( "#updates" ).accordion( "destroy" );
-                        $( "#updates" ).accordion();
-                    }
-                }
-            var friendEmail = document.getElementById('friendRequestName').value;
-            xmlhttp.open("POST","main",true);
-            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-            xmlhttp.send("sendFriendRequest="+friendEmail);
-        }
-        </script>
 </head>
 <body>
 	<div id="friendslist">
@@ -79,7 +50,7 @@
 	<div id="friend-request">
 		<form action="main" method="post">
 			<p><input id="friendRequestName" type="text" value="Enter email ..." name="email" maxlength="255" /></p>
-                        <p><button type="button"onclick="sendFriendRequest()">Send request</button></p>
+                        <p><input type="submit" value="Send request" /></p>
 		</form>
 	</div>
 	<div id="monsterlist">

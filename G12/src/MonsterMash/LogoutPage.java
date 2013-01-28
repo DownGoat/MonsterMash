@@ -31,7 +31,7 @@ public class LogoutPage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        session.removeAttribute("user");
+        session.invalidate();
         response.sendRedirect("login");
     }
 
@@ -48,17 +48,7 @@ public class LogoutPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        session.removeAttribute("user");
+        session.invalidate();
         response.sendRedirect("login");
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 }
