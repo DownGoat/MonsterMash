@@ -1,20 +1,16 @@
+package unused;
+
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
-import Male;
-import Monster;
-import BreedingOffer;
-import FightRequest;
+import HttpServlet;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 
-public class Male extends Monster
+public class BreedingMarket extends HttpServlet
 // ## Implementation preserve start class inheritence. 
 // ## Implementation preserve end class inheritence. 
 
 {
-    /** Attributes */
-    private final int MAX_RANGE;
-    private boolean injured;
     // ## Implementation preserve start class attributes. 
     // ## Implementation preserve end class attributes. 
     // ## Implementation preserve start class associations. 
@@ -22,13 +18,14 @@ public class Male extends Monster
     /**
      * Operation
      *
-     * @param opponent
-     * @return boolean
+     * @param request
+     * @param response
+     * @return 
      */
-    public boolean fight ( Male opponent )
+    public processBreedRequest ( HttpServletRequest request, HttpServletResponse response )
     {
-        // ## Implementation preserve start class method.fight@boolean@@@Male 
-        // ## Implementation preserve end class method.fight@boolean@@@Male 
+        // ## Implementation preserve start class method.processBreedRequest@@@@HttpServletRequest@HttpServletResponse 
+        // ## Implementation preserve end class method.processBreedRequest@@@@HttpServletRequest@HttpServletResponse 
     }
     // ## Implementation preserve start class other.operations. 
     // ## Implementation preserve end class other.operations. 

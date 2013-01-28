@@ -1,7 +1,7 @@
-package MonsterMash.DataClasses;
+package unused;
 
 import MonsterMash.DataClasses.Player;
-import MonsterMash.DataClasses.Male;
+import unused.Male;
 import java.util.Date;
 
 public class FightRequest {

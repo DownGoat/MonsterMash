@@ -1,4 +1,4 @@
-package MonsterMash.DataClasses;
+package unused;
 
 import MonsterMash.DataClasses.Player;
 import java.util.Date;

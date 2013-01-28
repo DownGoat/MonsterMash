@@ -1,5 +1,6 @@
 package database;
 
+import data.Monster;
 import data.*;
 import java.sql.*;
 import java.util.ArrayList;

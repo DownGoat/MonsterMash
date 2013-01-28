@@ -1,9 +1,9 @@
-package MonsterMash.DataClasses;
+package unused;
 
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
 import MonsterMash.DataClasses.Player;
-import MonsterMash.DataClasses.Male;
+import unused.Male;
 import java.util.Date;
   
 

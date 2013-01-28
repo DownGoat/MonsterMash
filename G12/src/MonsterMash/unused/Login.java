@@ -1,10 +1,12 @@
+package unused;
+
 // ## Implementation preserve start class opening. 
 // ## Implementation preserve end class opening. 
 import HttpServlet;
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
 
-public class Leadboard extends HttpServlet
+public class Login extends HttpServlet
 // ## Implementation preserve start class inheritence. 
 // ## Implementation preserve end class inheritence. 
 
@@ -20,10 +22,22 @@ public class Leadboard extends HttpServlet
      * @param response
      * @return 
      */
-    public processRequest ( HttpServletRequest request, HttpServletResponse response )
+    public processLoginRequest ( HttpServletRequest request, HttpServletResponse response )
     {
-        // ## Implementation preserve start class method.processRequest@@@@HttpServletRequest@HttpServletResponse 
-        // ## Implementation preserve end class method.processRequest@@@@HttpServletRequest@HttpServletResponse 
+        // ## Implementation preserve start class method.processLoginRequest@@@@HttpServletRequest@HttpServletResponse 
+        // ## Implementation preserve end class method.processLoginRequest@@@@HttpServletRequest@HttpServletResponse 
+    }
+    /**
+     * Operation
+     *
+     * @param request
+     * @param response
+     * @return 
+     */
+    public processLogoutRequest ( HttpServletRequest request, HttpServletResponse response )
+    {
+        // ## Implementation preserve start class method.processLogoutRequest@@@@HttpServletRequest@HttpServletResponse 
+        // ## Implementation preserve end class method.processLogoutRequest@@@@HttpServletRequest@HttpServletResponse 
     }
     // ## Implementation preserve start class other.operations. 
     // ## Implementation preserve end class other.operations. 

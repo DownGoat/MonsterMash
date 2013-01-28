@@ -1,36 +1,25 @@
+package unused;
 
-import java.util.Date;
+import data.Monster;
+import unused.Male;
+import MonsterMash.DataClasses.Monster;
 import java.util.Random;
 
+public class Male extends Monster {
 
-public class Monster
-
-
-{
-    /** Attributes */
+    /**
+     * Attributes
+     */
     private final int MAX_RANGE = 30;
     private boolean injured;
-    private int id;
-    private String name;
-    private Date dob;
-    private float genetic_strength;
-    private float speed;
-    private float accuracy;
-    private float endurance;
-    private float armor;
-    private float dodge;
-    private float age_rate;
-    private float fertility;
-    private float health;
-    private float strength;
-    
+
     /**
      * Operation
      *
      * @param opponent
      * @return boolean
      */
-    public boolean fight(Monster opponent) {
+    public boolean fight(Male opponent) {
         do {
             float damageToOpponent = 0;
             float damageToPlayer = 0;
@@ -84,111 +73,4 @@ public class Monster
     public void setInjured(boolean injured) {
         this.injured = injured;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    public float getGenetic_strength() {
-        return genetic_strength;
-    }
-
-    public void setGenetic_strength(float genetic_strength) {
-        this.genetic_strength = genetic_strength;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getAccuracy() {
-        return accuracy;
-    }
-
-    public void setAccuracy(float accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    public float getEndurance() {
-        return endurance;
-    }
-
-    public void setEndurance(float endurance) {
-        this.endurance = endurance;
-    }
-
-    public float getArmor() {
-        return armor;
-    }
-
-    public void setArmor(float armor) {
-        this.armor = armor;
-    }
-
-    public float getDodge() {
-        return dodge;
-    }
-
-    public void setDodge(float dodge) {
-        this.dodge = dodge;
-    }
-
-    public float getAge_rate() {
-        return age_rate;
-    }
-
-    public void setAge_rate(float age_rate) {
-        this.age_rate = age_rate;
-    }
-
-    public float getFertility() {
-        return fertility;
-    }
-
-    public void setFertility(float fertility) {
-        this.fertility = fertility;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        this.health = health;
-    }
-
-    public float getStrength() {
-        return strength;
-    }
-
-    public void setStrength(float strength) {
-        this.strength = strength;
-    }
-
-    
 }
-
