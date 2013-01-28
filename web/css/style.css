@@ -1,0 +1,284 @@
+body {
+	padding: 0;
+	margin: 0;
+	background: #131514 url(../images/bg-forest2.jpg) no-repeat center top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+a {
+	text-decoration: none;
+	color: #c7c7c7;
+}
+a:hover {
+	color: #8a8a8a;
+}
+/* Login Page */
+#login-box {
+	margin: 250px auto 0;
+	width: 556px;
+	height: 217px;
+	background: url(../images/login_box.png) no-repeat center top;
+	color: #919397;
+	line-height: 20px;
+}
+#login-left {
+	width: 288px;
+	float: left;
+	padding: 13px 20px;
+}
+#login-right {
+	width: 188px;
+	float: left;
+	padding: 13px 20px;
+}
+.login-header {
+	font-size: 15px;
+	font-weight: bold;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e6e7e7;
+	color: #7e8085;
+	margin-bottom: 12px;
+}
+form.login {
+	margin-top: 20px;
+}
+.login p {
+	line-height: 30px;
+	color: #626262;
+}
+.login input {
+	background: url(../images/input_text.gif) no-repeat top left;
+	width: 210px;
+	height: 30px;
+	padding: 0 5px;
+	border: 0;
+	color: #7e8085;
+	float: right;
+}
+a.forgotten-password{
+	line-height: 30px;
+}
+button.forgot-password{
+	float: right;
+	margin: 0px -8px 0 0;
+	border: 0;
+	background: transparent;
+}
+button.create-account{
+	margin: 10px 0 0 -8px;
+	border: 0;
+	background: transparent;
+}
+/* Menu */
+.menu {
+    list-style-type: none;
+    list-style-position: outside;
+    position: relative;
+	width: 625px;
+    margin: 150px auto 0;
+    padding: 0;
+}
+.menu li{
+	display: block;
+	overflow: hidden;
+	padding: 0;
+	cursor: pointer;
+	float: left;
+	width: 125px;
+	height: 40px;
+	margin-right: 0px;
+	background-image: url(../images/menu.jpg);
+	background-repeat: no-repeat;
+}
+.menu a{
+	display: block;
+	height: 40px;
+	text-indent: -9999px;
+	outline: none;
+}
+#home {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	background-position: 0px 0px;
+	border-top: 1px solid #4d4d4d;
+	border-left: 1px solid #4d4d4d;
+	border-bottom: 1px solid #4d4d4d;
+}
+#market {
+	background-position: -200px 0px;
+	border-top: 1px solid #4d4d4d;
+	border-bottom: 1px solid #4d4d4d;
+}
+#mating {
+	background-position: -400px 0px;
+	border-top: 1px solid #4d4d4d;
+	border-bottom: 1px solid #4d4d4d;
+}
+#highscores {
+	background-position: -600px 0px;
+	border-top: 1px solid #4d4d4d;
+	border-bottom: 1px solid #4d4d4d;
+}
+#logout {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-position: -800px 0px;
+	border-top: 1px solid #4d4d4d;
+	border-right: 1px solid #4d4d4d;
+	border-bottom: 1px solid #4d4d4d;
+}
+#home.active, #home:hover {
+	background-position: 0 bottom;
+}
+#market.active, #market:hover{
+	background-position: -200px bottom;
+}
+#mating.active, #mating:hover {
+	background-position: -400px bottom;
+}
+#highscores.active, #highscores:hover {
+	background-position: -600px bottom;
+}
+#logout.active, #logout:hover {
+	background-position: -800px bottom;
+}
+hr {
+	background: transparent;
+	border: 1px solid #a6a6a6;
+	margin-bottom: 15px;
+	width: 95%;
+}
+/* Main Panel */
+.content {
+	margin: 30px auto 0px;
+	width: 605px;
+	padding: 10px;
+	background: #fff url(../images/content_bg.jpg) repeat-x top;
+	border: 2px solid #fff;
+	border-radius: 5px;
+}
+.date {
+	float: right;
+	font-weight: bold;
+	color: #5988ff;
+}
+/* Market */
+#buylist {
+	margin-bottom: 20px;
+}
+.content h1{
+	font-size: 18px;
+	margin: 0 5px;
+	margin-bottom: 10px;
+	color: #999999;
+}
+/* Create an account */
+.box{
+    background-color: #f2f3f4;
+    border-radius: 5px;
+    border: 3px solid #bfbbbb;
+    width: 400px;
+    margin: 240px auto 0 auto;
+    padding: 10px;
+}
+/* Sidebars */
+#friendslist{
+	position: fixed; 
+	left:0px; 
+	top: 150px; 
+	width: 200px;
+	height: 300px;
+	border-top-right-radius: 5px;
+	background-color: #DDDDDD; 
+	border-top: solid 1px #eee;
+	border-right: solid 1px #eee;
+	border-bottom: solid 1px #fff;
+}
+.list, .list ul {
+    list-style-type: none;
+    list-style-position: outside;
+	margin: 0;
+	padding: 0;
+}
+.list li {
+	display: block;
+}
+.list a {
+	font-weight: bold;
+	color: #000;
+	display: block;
+	padding: 12px 10px;
+	border-bottom: 1px solid #4c4c4c;
+}
+.friend-request {
+	background-color: #ff9d9d;
+}
+.list a:hover {
+	color: #969696;
+	background-color: #fff;
+}
+.list img {
+	float: left;
+	margin-right: 10px;
+	margin-top: -8px;
+	border: 1px solid #5988ff;
+}
+.list li ul {
+	display:none;
+	background-color: #fff;
+	position:absolute;
+	margin-top: -40px;
+	margin-left: 200px;
+	width: 120px;
+}
+.list ul li ul {
+
+}
+.list li:hover ul, .list li.over ul {
+	display:block;
+        z-index: 10;
+	
+}
+.list li:hover ul ul, .list li.over ul ul {
+	display:none;
+}
+#friend-request {
+	position: fixed;
+	text-align: center;
+	font-weight: bold;
+	left: 0px;
+	top: 452px;
+	width: 200px;
+	height: 80px;
+	border-bottom-right-radius: 5px;
+	background-color: #DDDDDD; 
+	border-top: solid 1px #000;
+	border-right: solid 1px #eee;
+	border-bottom: solid 1px #eee;
+}
+#monsterlist{
+	position: fixed; 
+	right:0px;
+	top: 150px;
+	width: 200px;
+	height: 380px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	background-color: #DDDDDD; 
+	border-top: solid 1px #eee;
+	border-left: solid 1px #eee;
+	border-bottom: solid 1px #fff;
+}
+/* Table */
+td {
+	border-bottom: 1px solid #fff;
+	padding: 10px;
+	background-color: #e8edff;
+	color: #8279ff;
+}
+tr.head td {
+	border-top: 3px solid #aabcfe;
+	background-color: #b9c9fe;
+	color: #1200ff;
+	font-weight: bold;
+}
