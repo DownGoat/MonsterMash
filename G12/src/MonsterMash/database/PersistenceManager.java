@@ -198,6 +198,7 @@ public class PersistenceManager {
     
     public Player getPlayer(int id){
         Player selected = null;
+        //
         try{
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+id+"'");
