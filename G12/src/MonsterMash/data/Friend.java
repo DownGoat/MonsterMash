@@ -10,6 +10,18 @@ public class Friend {
     private String email;
     private boolean friendshipConfirmed;
     
+    public Friend(int friendshipID, int friendID, int serverID, String email, String confirmed){
+        this.friendshipID = friendshipID;
+        this.friendID = friendID;
+        this.serverID = serverID;
+        this.email = email;
+        if (confirmed.equals("Y")) {
+            friendshipConfirmed = true;
+        } else {
+            friendshipConfirmed = false;
+        }
+    }
+    
     public Friend(int friendID, int serverID, String email, String confirmed){
         this.friendshipID = 0;
         this.friendID = friendID;
