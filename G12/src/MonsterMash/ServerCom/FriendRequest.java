@@ -5,6 +5,8 @@
 package ServerCom;
 
 import data.Friend;
+import data.Player;
+import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -39,7 +41,16 @@ public class FriendRequest extends HttpServlet {
         if (friendID == null || localUserID == null || remoteServerNumber == null || remoteUserID == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         } else {
+            PersistenceManager pm = new PersistenceManager();
+            Player player = pm.getPlayer(Integer.parseInt(localUserID));
             friend = new Friend(friendID, remoteUserID, localUserID, remoteServerNumber, "N");
+            
+            if(player != null) {
+                pm.addFriend(friend);
+                pm.storeNotifications(player);
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found.");
+            }
         }
     }
 

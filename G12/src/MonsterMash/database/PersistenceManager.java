@@ -4,6 +4,8 @@ import data.Monster;
 import data.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -472,5 +474,24 @@ public class PersistenceManager {
 
     public Monster getMonster(int monsterID) {
         return null;
+    }
+    
+    public void addFriend(Friend friend) {
+        
+                    // Insert notification into DB
+        String confirmed = "N";
+        if(friend.isFriendshipConfirmed()){
+            confirmed = "Y";
+        }
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+
+                friend.getRemoteAddress()+", "+friend.getLocalUserID()+", 0, "+friend.getRemoteAddress()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            this.error = ex.getMessage();
+            Logger.getLogger(PersistenceManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
