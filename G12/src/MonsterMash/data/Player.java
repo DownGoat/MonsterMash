@@ -30,10 +30,10 @@ public class Player {
         this.friends = new ArrayList<Friend>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
-    	monsters.add(new Monster(initialMonsterName));
+    	monsters.add(new Monster(initialMonsterName, this.id));
         // Add first notifications:
-        notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
-        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
+        notifications.add(new Notification("Account created successfully.", "You have created your own Monster Mash account. Invite your friends ...", this));
+        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "Your first monster is ...", this));
     }
     
     /**

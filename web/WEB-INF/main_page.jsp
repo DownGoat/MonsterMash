@@ -45,7 +45,7 @@
                     </c:forEach>
                     <c:forEach items="${friendshipList}" var="friend">
                         <c:if test="${friend.friendshipConfirmed}">
-                            <li><a href="player?show=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
+                            <li><a title="Send Fight Request" href="fight?request=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
                         </c:if>
                     </c:forEach>
 		</ul>
@@ -57,9 +57,11 @@
 		</form>
 	</div>
 	<div id="monsterlist">
-		<ul class="list">
-			<li><a><img src="images/avatar.jpg" alt="" />Random Monster</a></li>
-		</ul>
+            <ul class="list">
+                <c:forEach items="${monsterList}" var="monster">
+                    <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                </c:forEach>
+            </ul>
 	</div>
 	<ul class="menu">
 		<li id="home"><a href="main">Home</a></li>
