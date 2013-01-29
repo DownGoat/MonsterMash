@@ -274,6 +274,25 @@ public class PersistenceManager {
     }
     
     
+    public ArrayList<String> getHighscores(){
+         ArrayList<String> toReturn = new ArrayList<String>();
+         try{
+            Statement stmt = connection.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM \"Player\" ORDER BY \"money\" DESC");
+            int i = 1;
+            while(result.next()){
+                toReturn.add("<tr><td>"+i+".</td><td><b>"+result.getString("email")+"</b></td><td>"+result.getInt("money")+"$</td></tr>");
+                i++;
+            }
+            result.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        return toReturn;
+    }
+    
+    
     
     
     

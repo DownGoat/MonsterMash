@@ -24,6 +24,10 @@
         <servlet-name>Monsters</servlet-name>
         <servlet-class>ServerCom.Monsters</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HighscoresPage</servlet-name>
+        <servlet-class>HighscoresPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginPage</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -48,9 +52,11 @@
         <servlet-name>Monsters</servlet-name>
         <url-pattern>/monsters</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HighscoresPage</servlet-name>
+        <url-pattern>/highscores</url-pattern>
+    </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 </web-app>
