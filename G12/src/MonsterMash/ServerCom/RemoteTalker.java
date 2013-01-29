@@ -8,11 +8,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import data.Friend;
 import data.Monster;
 import data.Player;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.ws.rs.core.MultivaluedMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,10 +111,17 @@ public class RemoteTalker {
     
     public void remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         resource = client.resource(getRemoteAddress(serverNumber));
-        
-        String body = resource.path("friends/request").queryParam("monsterID", monsterID).get(String.class);
-        
-        
         Friend friend = new Friend(String.valueOf((new Date()).getTime()), remoteUserID, localUser.getId(), serverNumber, "N");
+        
+         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+         params.add("friendID", friend.getFriendshipID());
+         params.add("localUserID", localUser.getId());
+         params.add("remoteUserID", remoteUserID);
+         params.add("remoteServerNumber", String.valueOf(serverNumber));
+        
+        String body = resource.path("friends/request").queryParams(params).get(String.class);
+        
+        // TODO add Friend object to db when db method is made.
+    
     }
 }
