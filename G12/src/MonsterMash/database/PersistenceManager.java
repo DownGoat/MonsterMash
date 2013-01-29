@@ -249,6 +249,60 @@ public class PersistenceManager {
     }
     
     /**
+     * Returns player id at index 0 and player server id at index 1
+     * TODO: Needs SERVER<->SERVER
+     * @param email player's email address
+     * @return player id (index 0) player server id (index 1)
+     */
+    public String[] getPlayerIdAndServer(String email){
+        String[] player = new String[2];
+        player[0] = "0";
+        player[1] = "1";
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"username\" = '"+email+"'");
+            results.next();
+            player[0] = results.getString("id");
+            player[1] = "12";
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        //SERVER2SERVER HERE!
+        return player;
+    }
+    
+    /**
+     * Checks if friend request has been already sent.
+     * @param playerOne userID of first player
+     * @param playerTwo userID of second player
+     * @return true when such a request was sent
+     */
+    public boolean isFriendRequestSent(String playerOne, String playerTwo){
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Friendship\" WHERE (\"sender_id\" = '"+playerOne+"' AND \"receiver_id\" = '"+playerTwo+"') OR (\"sender_id\" = '"+playerTwo+"' AND \"receiver_id\" = '"+playerOne+"')");
+            while(results.next()){
+                count++;
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+            count = -1;
+        }
+        if(count > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
      * Confirms friendship between players (senderID and receiverID)
      * @param senderID id of player who sent request
      * @param senderServer address of sender's server
@@ -351,21 +405,7 @@ public class PersistenceManager {
 //        }
 //    }
     
-    public int getPlayerID(String email){
-        int id = 0;
-        try{
-            Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"email\" = '"+email+"'");
-            results.next();
-            id = results.getInt("id");
-            results.close();
-            stmt.close();
-        }catch (SQLException sqlExcept){
-            System.err.println(sqlExcept.getMessage());
-            this.error = sqlExcept.getMessage();
-        }
-        return id;
-    }
+    
     
     
     
@@ -398,27 +438,7 @@ public class PersistenceManager {
     
     
     
-    public boolean isFriendRequestSent(int playerOne, int playerTwo){
-        int count = 0;
-        try{
-            Statement stmt = connection.createStatement();
-            stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Friendship\" WHERE (\"sender_id\" = "+playerOne+" AND \"receiver_id\" = "+playerTwo+") OR (\"sender_id\" = "+playerTwo+" AND \"receiver_id\" = "+playerOne+")");
-            while(results.next()){
-                count++;
-            }
-            results.close();
-            stmt.close();
-        }catch (SQLException sqlExcept){
-            this.error = sqlExcept.getMessage();
-            count = -1;
-        }
-        if(count > 0){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    
     
     public boolean insert(String query){
         try{

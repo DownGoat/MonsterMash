@@ -90,31 +90,35 @@ public class MainPage extends HttpServlet {
 //            // Gets email from POST
 //            String email = request.getParameter("email");
 //            PersistenceManager pm = new PersistenceManager();
-//            Player selected = (Player)session.getAttribute("user");
+//            Player sender = (Player)session.getAttribute("user");
 //            // Checks if user with this email address exists
-//            int receiverID = pm.getPlayerID(email);
-//            if(receiverID <= 0){
+//            String[] receiver = pm.getPlayerIdAndServer(email);
+//            if(receiver[0].equals("0")){
 //                request.setAttribute("alertMessage", "Cannot find user with this email address.");
-//            }else if(pm.isFriendRequestSent(selected.getId(), receiverID)){
+//            }else if(pm.isFriendRequestSent(sender.getUserID(), receiver[0])){
 //                request.setAttribute("alertMessage", "Cannot send friend request to this player.");
-//            }else if(receiverID == selected.getId()){
+//            }else if(sender.getUserID().equals(receiver[0])){
 //                request.setAttribute("alertMessage", "Cannot send friend request to yourself.");
 //            }else{
-//                Player receiver = pm.getPlayer(receiverID);
 //                String message = "Friend request to <b>"+email+"</b> sent successfully.";
-//                // Add new notifications
-//                selected.addNotification(new Notification(message, "You have sent friend request to <b>"+email+"</b>.", selected));
-//                receiver.addNotification(new Notification("Received friend request from <b>"+selected.getEmail()+"</b>", "You have received friend request from <b>"+selected.getEmail()+"</b>.", receiver));
-//                // Store notifications in DB
-//                pm.storeNotifications(selected);
-//                pm.storeNotifications(receiver);
-//                // Add new friend request to current player
+//                sender.addNotification(new Notification(message, "You have sent friend request to <b>"+email+"</b>.", sender));
+//                pm.storeNotifications(sender);
 //                selected.addFriend(new Friend(receiverID, 0, email, "N")); // TODO: SERVER ID = 0 -> only for now
-//                // Store friend request in DB
-//                pm.addNewFriends(selected);
-//                // Save updated player's object in session
-//                session.setAttribute("user", selected);
-//                request.setAttribute("alertMessage", message);
+//                if(receiver[1].equals("12")){
+//                    //Receiver is on our server
+//                    Player receiverObject = pm.getPlayer(receiver[0]);
+//                    receiverObject.addNotification(new Notification("Received friend request from <b>"+sender.getUsername()+"</b>", "You have received friend request from <b>"+sender.getUsername()+"</b>.", receiverObject)); 
+//                    pm.storeNotifications(receiverObject);
+//                    
+//                    // Store friend request in DB
+//                    pm.addNewFriends(selected);
+//                    // Save updated player's object in session
+//                    session.setAttribute("user", selected);
+//                    request.setAttribute("alertMessage", message);
+//                }else{
+//                    //Receiver is on different server
+//                }
+//                
 //            }
 //        }
     }
