@@ -2,6 +2,7 @@ package database;
 
 import data.Monster;
 import data.*;
+import java.security.SecureRandom;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,14 +41,15 @@ public class PersistenceManager {
      * @param length length of a string
      * @return random string with specified length
      */
-    private String randomString(final int length) {
-        Random r = new Random();
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < length; i++) {
-            char c = (char)(r.nextInt((int)(Character.MAX_VALUE)));
-            sb.append(c);
+    private String randomString(int length){
+        Random random = new SecureRandom();
+        String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789+@";
+        String pw = "";
+        for (int i=0; i<length; i++){
+            int index = (int)(random.nextDouble()*letters.length());
+            pw += letters.substring(index, index+1);
         }
-        return sb.toString();
+        return pw;
     }
     
     /**
@@ -55,12 +57,12 @@ public class PersistenceManager {
      * @param email user's email address
      * @return true if account exists
      */
-    public boolean accountExists(String email){
+    public boolean accountExists(String userID){
         int count = 0;
         try{
             Statement stmt = connection.createStatement();
             stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Player\" WHERE \"email\" = '"+email+"'");
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Player\" WHERE \"username\" = '"+userID+"'");
             results.next();
             count = results.getInt(1);
             results.close();
@@ -68,6 +70,7 @@ public class PersistenceManager {
         }catch (SQLException sqlExcept){
             this.error = sqlExcept.getMessage();
         }
+        // TODO: Check other servers! (SERVER<->SERVER)
         if(count > 0){
             return true;
         }
@@ -84,12 +87,8 @@ public class PersistenceManager {
     public void storePlayer(Player p){
         try{
             Statement stmt = connection.createStatement();
-            String id = p.getId();
-            if(id.equals("0")){
-                id = this.randomString(16);
-            }
             // Add player to PLAYER table
-            stmt.execute("INSERT INTO \"Player\" (\"id\", \"email\", \"password\", \"money\") VALUES ('"+id+"', "+p.getEmail()+"', '"+p.getPassword()+"', "+p.getMoney()+")");
+            stmt.execute("INSERT INTO \"Player\" (\"id\", \"username\", \"password\", \"money\", \"server_id\") VALUES ('"+p.getUserID()+"', '"+p.getUsername()+"', '"+p.getPassword()+"', "+p.getMoney()+", "+p.getServerID()+")");
             stmt.close();
             // Save first notification in DB
             this.storeNotifications(p);
@@ -112,7 +111,7 @@ public class PersistenceManager {
                     Statement stmt = connection.createStatement();
                     Timestamp ts = new Timestamp(n.getTimeSent().getTime());
                     // Insert notification into DB
-                    stmt.execute("INSERT INTO \"Notification\" (\"short_message\", \"long_message\", \"player_id\", \"time\") VALUES ('"+n.getShortText()+"', '"+n.getLongText()+"', '"+n.getPlayer().getId()+"', '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
+                    stmt.execute("INSERT INTO \"Notification\" (\"short_message\", \"long_message\", \"player_id\", \"time\") VALUES ('"+n.getShortText()+"', '"+n.getLongText()+"', '"+p.getUserID()+"', '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
                     // Set ID of notification
                     ResultSet rs = stmt.getGeneratedKeys();
                     if(rs != null && rs.next()){
@@ -138,9 +137,8 @@ public class PersistenceManager {
                     Statement stmt = connection.createStatement();
                     // Insert monster into DB
                     m.setId(this.randomString(16));
-                    stmt.execute("INSERT INTO \"Monster\" (\"name\", \"dob\", \"dod\", \"base_strength\", \"current_strength\", \"base_defence\", \"current_defence\", \"base_health\", \"current_health\", \"fertility\", \"user_id\", \"sale_offer\", \"breed_offer\") "
-                            + "VALUES ('"+m.getId()+"', "+m.getName()+"', "+m.getDob().getTime()+", "+m.getDod().getTime()+", "+m.getBaseStrength()+", "+m.getCurrentStrength()+", "+m.getBaseDefence()+", "+m.getCurrentDefence()+", "+m.getBaseHealth()+", "+m.getCurrentHealth()+", "+m.getFertility()+", '"+m.getUserID()+"', "+m.getSaleOffer()+", "+m.getBreedOffer()+")", Statement.RETURN_GENERATED_KEYS);
-
+                    String query = "INSERT INTO \"Monster\" (\"id\", \"name\", \"dob\", \"dod\", \"base_strength\", \"current_strength\", \"base_defence\", \"current_defence\", \"base_health\", \"current_health\", \"fertility\", \"user_id\", \"sale_offer\", \"breed_offer\") VALUES ('"+m.getId()+"', '"+m.getName()+"', "+m.getDob().getTime()+", "+m.getDod().getTime()+", "+m.getBaseStrength()+", "+m.getCurrentStrength()+", "+m.getBaseDefence()+", "+m.getCurrentDefence()+", "+m.getBaseHealth()+", "+m.getCurrentHealth()+", "+m.getFertility()+", '"+p.getUserID()+"', "+m.getSaleOffer()+", "+m.getBreedOffer()+")";
+                    stmt.execute(query);
                 }catch(SQLException sqlExcept){
                     System.err.println("Adding monster to DB error:\n"+sqlExcept.getMessage());
                     this.error = sqlExcept.getMessage();
@@ -159,9 +157,9 @@ public class PersistenceManager {
         Player selected = null;
         try{
             Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"email\" = '"+email+"' AND \"password\" = '"+password+"'");
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+email+"' AND \"password\" = '"+password+"'");
             r.next();
-            selected = new Player(r.getString("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
+            selected = new Player(r.getString("id"), r.getString("username"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
             r.close();
             stmt.close();
         }catch (SQLException sqlExcept){
@@ -183,10 +181,10 @@ public class PersistenceManager {
             while(result.next()){
                 if(result.getString("sender_id").equals(playerID+"")){
                     // Sender String id, String name, int serverID
-                    friendList.add(new Player(result.getString("receiver_id"), this.getPlayerEmail(result.getString("receiver_id"), result.getInt("receiver_server_id")), result.getInt("receiver_server_id")));
+                    friendList.add(new Player(result.getString("receiver_id"), this.getPlayerUsername(result.getString("receiver_id"), result.getInt("receiver_server_id")), result.getInt("receiver_server_id")));
                 }else{
                     // Receiver
-                    friendList.add(new Player(result.getString("sender_id"), this.getPlayerEmail(result.getString("sender_id"), result.getInt("sender_server_id")), result.getInt("sender_server_id")));
+                    friendList.add(new Player(result.getString("sender_id"), this.getPlayerUsername(result.getString("sender_id"), result.getInt("sender_server_id")), result.getInt("sender_server_id")));
                 }
             }
             result.close();
@@ -207,9 +205,9 @@ public class PersistenceManager {
         ArrayList<Notification> notificationList = new ArrayList<Notification>();
         try{
             Statement stmt = connection.createStatement();
-            ResultSet result = stmt.executeQuery("SELECT * FROM \"Notification\" WHERE \"player_id\" = "+playerID+" ORDER BY \"time\" DESC");
+            ResultSet result = stmt.executeQuery("SELECT * FROM \"Notification\" WHERE \"player_id\" = '"+playerID+"' ORDER BY \"time\" DESC");
             while(result.next()){
-                notificationList.add(new Notification(result.getInt("id"), result.getString("message"), result.getString("long_message"), result.getDate("time")));
+                notificationList.add(new Notification(result.getInt("id"), result.getString("short_message"), result.getString("long_message"), result.getDate("time")));
             }
             result.close();
             stmt.close();
@@ -235,13 +233,13 @@ public class PersistenceManager {
      * @param id id of player
      * @return object of Player class, null when player doesn't exist
      */
-    public Player getPlayer(String playerID){
+    public Player getPlayer(String userID){
         Player selected = null;
         try{
             Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+playerID+"'");
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+userID+"'");
             r.next();
-            selected = new Player(r.getString("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
+            selected = new Player(r.getString("id"), r.getString("username"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
             r.close();
             stmt.close();
         }catch (SQLException sqlExcept){
@@ -376,7 +374,7 @@ public class PersistenceManager {
     
     
     // TODO: needs server-server communication
-    public String getPlayerEmail(String playerID, int serverID){
+    public String getPlayerUsername(String playerID, int serverID){
         if(serverID == 12){
             String email = null;
             try{
