@@ -45,7 +45,7 @@ public class FriendRequest extends HttpServlet {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Player player = pm.getPlayer(localUserID);
 
-            friend = new Friend(friendID, remoteUserID, localUserID, Integer.parseInt(remoteServerNumber), "N");
+            friend = new Friend(friendID, remoteUserID, localUserID, 12, Integer.parseInt(remoteServerNumber), "N");
             
             if(player != null) {
                 pm.addFriend(friend);

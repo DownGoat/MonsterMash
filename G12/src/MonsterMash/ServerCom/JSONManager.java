@@ -29,8 +29,8 @@ public class JSONManager {
 
         try {
             jObj.put("money", player.getMoney());
-            jObj.put("userID", player.getId());
-            jObj.put("name", player.getEmail());
+            jObj.put("userID", player.getUserID());
+            jObj.put("name", player.getUsername());
         } catch (JSONException ex) {
             Logger.getLogger(JSONManager.class.getName()).log(Level.SEVERE, null, ex);
         }

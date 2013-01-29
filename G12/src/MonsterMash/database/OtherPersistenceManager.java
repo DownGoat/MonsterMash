@@ -5,6 +5,7 @@
 package database;
 
 import data.Friend;
+import data.Monster;
 import data.Player;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
 
 /**
  *
@@ -58,7 +61,8 @@ public class OtherPersistenceManager extends PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '" + friendID + "'");
             results.next();
-            friend = new Friend(results.getString("id"), results.getString("reciver_id"), results.getString("sender_id"), results.getInt("reciver_server_id"), results.getString("confirmed"));
+
+            friend = new Friend(results.getString("id"), results.getString("reciver_id"), results.getString("sender_id"), results.getInt("reciver_server_id"), results.getInt("sender_server_id"), results.getString("confirmed"));
             results.close();
             stmt.close();
         } catch (SQLException sqlExcept) {
@@ -82,17 +86,22 @@ public class OtherPersistenceManager extends PersistenceManager {
     public void addFriend(Friend friend) {
         Statement stmt;
         try {
+            String confirmed = "N";
+            if(friend.isFriendshipConfirmed()){
+                confirmed = "Y";
+            }
             stmt = connection.createStatement();
-            stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+
-                friend.getFriendshipID()+", "+
-                    friend.getLocalUserID()+", 0, "+
-                    friend.getRemoteAddress()+", '"+
+            stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+
+                friend.getFriendshipID()+"', '"+
+                    friend.getLocalUserID()+"', '"+
+                    friend.getRemoteUserID()+"', "+
+                    friend.getLocalServerID()+", "+
+                    friend.getRemoteServerID()+", '"+
                     confirmed+"')",
                     Statement.RETURN_GENERATED_KEYS);
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
             this.error = ex.getMessage();
-            Logger.getLogger(PersistenceManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -102,7 +111,7 @@ public class OtherPersistenceManager extends PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\"");
             while (r.next()) {
-                players.add(new Player(r.getString("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id")));
+                players.add(new Player(r.getString("id"), r.getString("username"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id")));
             }
             r.close();
             stmt.close();
@@ -111,5 +120,36 @@ public class OtherPersistenceManager extends PersistenceManager {
             this.error = sqlExcept.getMessage();
         }
         return players;
+    }
+    
+    @Override
+    public ArrayList<Monster> getMonsterList(String playerID){
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"user_id\" = '"+playerID+"'");
+            while (r.next()) {
+                monsters.add(new Monster(r.getString("id"),
+                        r.getString("name"),
+                        new Date(r.getLong("dob")),
+                        new Date(r.getLong("dod")),
+                        r.getDouble("base_strength"), 
+                        r.getDouble("current_strength"),
+                        r.getDouble("base_defence"),
+                        r.getDouble("current_defence"),
+                        r.getDouble("base_health"),
+                        r.getDouble("current_health"), 
+                        r.getFloat("fertility"),
+                        r.getString("user_id"),
+                        r.getInt("sale_offer"),
+                        r.getInt("breed_offer")));
+            }
+            r.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return monsters;
     }
 }
