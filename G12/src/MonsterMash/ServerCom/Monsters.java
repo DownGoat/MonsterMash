@@ -4,9 +4,11 @@
  */
 package ServerCom;
 
+import data.Monster;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +39,13 @@ public class Monsters extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Monsters</title>");            
+            out.println("<title>Servlet Monsters</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Monsters at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
-        } finally {            
+        } finally {
             out.close();
         }
     }
@@ -61,17 +63,21 @@ public class Monsters extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
+
+
         String userID = request.getParameter("userID");
         String monsterID = request.getParameter("monsterID");
-        
-        if(userID != null) {
-            
+        PrintWriter out = response.getWriter();
+
+        if (userID != null) {
+            out.write(usersMonsters(Integer.parseInt(userID), response));
+        } 
+        else if (monsterID != null) {
+            out.write(singleMonster(monsterID, response));
         }
         
         else {
-            
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Speak Java please.");
         }
     }
 
@@ -99,10 +105,26 @@ public class Monsters extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    public JSONObject singleMonster(String monsterID) {
+
+    public String usersMonsters(int userID, HttpServletResponse response) throws IOException {
         PersistenceManager pm = new PersistenceManager();
-        Monster monster = pm.getMonster(monsterID);
-        JSONManager.jsonMonster(monster);
+        ArrayList<Monster> monsters = pm.getMonsterList(userID);
+
+        if (monsters == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
+        }
+
+        return JSONManager.jsonMonsterList(monsters).toString();
+    }
+
+    public String singleMonster(String monsterID, HttpServletResponse response) throws IOException {
+        PersistenceManager pm = new PersistenceManager();
+        Monster monster = pm.getMonster(Integer.parseInt(monsterID));
+
+        if (monster == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Monster not found");
+        }
+
+        return JSONManager.jsonMonster(monster).toString();
     }
 }

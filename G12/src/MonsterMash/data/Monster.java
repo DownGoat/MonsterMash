@@ -11,14 +11,16 @@ public class Monster {
     private String name;
     private Date dob;
     private Date dod;
-    private float genetic_strength;
-    private float age_rate;
+    private Double baseStrength;
+    private Double currentStrength;
+    private Double baseDefence;
+    private Double currentDefence;
+    private Double baseHealth;
+    private Double currentHealth;
     private float fertility;
-    private float health;
-    private float strength;
     private int userID;
-    private int forSale;
-    private int forBreed;
+    private int saleOffer;
+    private int breedOffer;
     
     public Monster(String name, int userID){
         this.id = 0;
@@ -26,13 +28,10 @@ public class Monster {
 	this.dob = new Date();
         this.dod = new Date();
         Random random = new Random();
-        this.genetic_strength = random.nextFloat();
-	this.strength = random.nextFloat();
 	this.fertility = random.nextFloat();
-	this.health = START_HEALTH;
         this.userID = userID;
-        this.forBreed = 0;
-        this.forSale = 0;
+        this.saleOffer = 0;
+        this.breedOffer = 0;
     }
 
     public int getId() {
@@ -55,44 +54,12 @@ public class Monster {
         return dob;
     }
 
-    public float getGenetic_strength() {
-        return genetic_strength;
-    }
-
-    public void setGenetic_strength(float genetic_strength) {
-        this.genetic_strength = genetic_strength;
-    }
-
-    public float getAge_rate() {
-        return age_rate;
-    }
-
-    public void setAge_rate(float age_rate) {
-        this.age_rate = age_rate;
-    }
-
     public float getFertility() {
         return fertility;
     }
 
     public void setFertility(float fertility) {
         this.fertility = fertility;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        this.health = health;
-    }
-
-    public float getStrength() {
-        return strength;
-    }
-
-    public void setStrength(float strength) {
-        this.strength = strength;
     }
     
     public int getUserID() {
@@ -107,19 +74,67 @@ public class Monster {
         return this.dod;
     }
 
-    public int getForSale() {
-        return forSale;
+    public Double getBaseStrength() {
+        return baseStrength;
     }
 
-    public void setForSale(int forSale) {
-        this.forSale = forSale;
+    public void setBaseStrength(Double baseStrength) {
+        this.baseStrength = baseStrength;
     }
 
-    public int getForBreed() {
-        return forBreed;
+    public Double getCurrentStrength() {
+        return currentStrength;
     }
 
-    public void setForBreed(int forBreed) {
-        this.forBreed = forBreed;
+    public void setCurrentStrength(Double currentStrength) {
+        this.currentStrength = currentStrength;
+    }
+
+    public Double getBaseDefence() {
+        return baseDefence;
+    }
+
+    public void setBaseDefence(Double baseDefence) {
+        this.baseDefence = baseDefence;
+    }
+
+    public Double getCurrentDefence() {
+        return currentDefence;
+    }
+
+    public void setCurrentDefence(Double currentDefence) {
+        this.currentDefence = currentDefence;
+    }
+
+    public Double getBaseHealth() {
+        return baseHealth;
+    }
+
+    public void setBaseHealth(Double baseHealth) {
+        this.baseHealth = baseHealth;
+    }
+
+    public Double getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(Double currentHealth) {
+        this.currentHealth = currentHealth;
+    }
+
+    public int getSaleOffer() {
+        return saleOffer;
+    }
+
+    public void setSaleOffer(int saleOffer) {
+        this.saleOffer = saleOffer;
+    }
+
+    public int getBreedOffer() {
+        return breedOffer;
+    }
+
+    public void setBreedOffer(int breedOffer) {
+        this.breedOffer = breedOffer;
     }
 }

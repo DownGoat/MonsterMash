@@ -382,4 +382,8 @@ public class PersistenceManager {
     public String getErrorMessage(){
         return this.error;
     }
+
+    public Monster getMonster(int monsterID) {
+        return null;
+    }
 }

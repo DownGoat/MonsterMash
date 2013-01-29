@@ -53,18 +53,11 @@ public class User extends HttpServlet {
             throws ServletException, IOException {
 
         PersistenceManager pm = new PersistenceManager();
-        String userEmail = request.getParameter("userID");
+        String userIDString = request.getParameter("userID");
 
-        if (userEmail != null) {
-            int userId = pm.getPlayerID(userEmail);
+        if (userIDString != null) {
             Player player = null;
-            System.out.println(userId);
-
-            if (userId != 0) {
-                player = pm.getPlayer(userId);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
-            }
+            player = pm.getPlayer(Integer.parseInt(userIDString));
 
             if (player != null) {
                 PrintWriter out = response.getWriter();

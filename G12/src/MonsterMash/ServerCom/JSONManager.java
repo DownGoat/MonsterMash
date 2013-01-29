@@ -6,8 +6,10 @@ package ServerCom;
 
 import data.Monster;
 import data.Player;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +29,7 @@ public class JSONManager {
 
         try {
             jObj.put("money", player.getMoney());
-            jObj.put("userID", player.getEmail());
+            jObj.put("userID", player.getId());
             jObj.put("name", player.getEmail());
         } catch (JSONException ex) {
             Logger.getLogger(JSONManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -42,16 +44,30 @@ public class JSONManager {
         try {
             jObj.put("monsterID", String.valueOf(monster.getId()));
             jObj.put("userID", String.valueOf(monster.getId()));
-            jObj.put("baseStrength", monster.getGenetic_strength());
-            jObj.put("defence", monster.getArmor());
-            jObj.put("dob", monster.getDob().getTime());
-            jObj.put("dod", monster.getDod().getTime());
-            jObj.put("forSale", monster.getForSale());
-            jObj.put("forBreed", monster.getForBreed());
+            jObj.put("baseStrength", monster.getBaseStrength());
+            jObj.put("currentStrength", monster.getCurrentStrength());
+            jObj.put("baseDefence", monster.getBaseDefence());
+            jObj.put("currentDefence", monster.getCurrentDefence());
+            jObj.put("baseHealth", monster.getBaseHealth());
+            jObj.put("currentHealth", monster.getCurrentHealth());
+            jObj.put("birthDate", monster.getDob().getTime());
+            jObj.put("lifespan", monster.getDod().getTime());
+            jObj.put("saleOffer", monster.getSaleOffer());
+            jObj.put("breedOffer", monster.getBreedOffer());
         } catch (JSONException ex) {
             Logger.getLogger(JSONManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return jObj;
+    }
+
+    static JSONArray jsonMonsterList(ArrayList<Monster> monsters) {
+        JSONArray ja = new JSONArray();
+        
+        for(Monster m: monsters) {
+            ja.put(jsonMonster(m));
+        }
+        
+        return ja;
     }
 }
