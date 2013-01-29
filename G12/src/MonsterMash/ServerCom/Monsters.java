@@ -70,10 +70,19 @@ public class Monsters extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         if (userID != null) {
-            out.write(usersMonsters(Integer.parseInt(userID), response));
+            String json = usersMonsters(Integer.parseInt(userID), response);
+            
+            if (json != null) {
+                out.write(json);
+            }
+            
         } 
         else if (monsterID != null) {
-            out.write(singleMonster(monsterID, response));
+            String json = singleMonster(monsterID, response);
+            
+            if (json != null) {
+                out.write(json);
+            }
         }
         
         else {
@@ -112,6 +121,8 @@ public class Monsters extends HttpServlet {
 
         if (monsters == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
+            
+            return null;
         }
 
         return JSONManager.jsonMonsterList(monsters).toString();
@@ -123,6 +134,8 @@ public class Monsters extends HttpServlet {
 
         if (monster == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Monster not found");
+            
+            return null;
         }
 
         return JSONManager.jsonMonster(monster).toString();
