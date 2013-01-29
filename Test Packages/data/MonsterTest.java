@@ -43,8 +43,8 @@ public class MonsterTest {
     @Test
     public void testGetId() {
         System.out.println("getId");
-        Monster monster = new Monster("Bob",1);
-        assertEquals("Expected id = 0", 0,monster.getId());
+        Monster monster = new Monster("Bob","1");
+        assertEquals("Expected id = 0", "0",monster.getId());
     }
 
     /**
@@ -53,9 +53,9 @@ public class MonsterTest {
     @Test
     public void testSetId() {
         System.out.println("setId");
-        Monster monster = new Monster("Bob",1);
-        monster.setId(23);
-        assertEquals("Expected id = 23", 23,monster.getId());
+        Monster monster = new Monster("Bob","1");
+        monster.setId("23");
+        assertEquals("Expected id = 23", "23",monster.getId());
     }
 
     /**
@@ -64,7 +64,7 @@ public class MonsterTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-         Monster monster = new Monster("Bob",1);
+         Monster monster = new Monster("Bob","1");
          assertEquals("Expected name 'Bob'","Bob",monster.getName());
          
     
@@ -76,7 +76,7 @@ public class MonsterTest {
     @Test
     public void testSetName() {
         System.out.println("setName");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         monster.setName("Bill");
         assertEquals("Expected name 'Bill'","Bill", monster.getName());
         
@@ -88,7 +88,7 @@ public class MonsterTest {
     @Test
     public void testGetDob() {
         System.out.println("getDob");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         Date now = new Date();
         assertEquals("That now = the monsters dob",now,monster.getDob());
     }
@@ -100,7 +100,7 @@ public class MonsterTest {
     @Test
     public void testGetBaseStrength() {
         System.out.println("getBaseStrength");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getBaseStrength() && monster.getBaseStrength()<1);
     }
 
@@ -110,7 +110,7 @@ public class MonsterTest {
     @Test
     public void testCurrentStrength() {
         System.out.println("getCurrentStrength");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getCurrentStrength() && monster.getCurrentStrength()<1);
     }
 
@@ -122,7 +122,7 @@ public class MonsterTest {
     @Test
     public void testGetBaseDefence() {
         System.out.println("BaseDefence");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getBaseDefence() && monster.getBaseDefence()<1);
     }
 
@@ -133,7 +133,7 @@ public class MonsterTest {
     @Test
     public void testCurrentDefence() {
         System.out.println("CurrentDefence");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getCurrentDefence() && monster.getCurrentDefence()<1);
     }
 
@@ -143,7 +143,7 @@ public class MonsterTest {
     @Test
     public void testGetBaseHealth() {
         System.out.println("getBaseHealth");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getBaseHealth() && monster.getBaseHealth()<1);
     }
 
@@ -153,7 +153,7 @@ public class MonsterTest {
     @Test
     public void testGetCurrentHealth() {
         System.out.println("getCurrentHealth");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getCurrentHealth() && monster.getCurrentHealth()<1);
     }
 

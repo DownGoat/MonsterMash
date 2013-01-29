@@ -55,8 +55,8 @@ public class PlayerTest {
     public void testSetId() {
         System.out.println("setId");
         Player player = new Player("jau1@aber.ac.uk", "password1", 100, "Bill");
-        player.setId(69);
-        assertEquals("Id should be 69", 69, player.getId());
+        player.setId("69");
+        assertEquals("Id should be 69", "69", player.getId());
 
     }
 

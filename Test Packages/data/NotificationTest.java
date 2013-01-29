@@ -17,22 +17,22 @@ import static org.junit.Assert.*;
  * @author Llionv
  */
 public class NotificationTest {
-    
+
     public NotificationTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -43,12 +43,10 @@ public class NotificationTest {
     @Test
     public void testGetId() {
         System.out.println("getId");
-        Notification instance = null;
-        int expResult = 0;
-        int result = instance.getId();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+        Notification notification = new Notification("jau1@aber.ac.uk", "password", player);
+        assertEquals("Id should be 0", 0, notification.getId());
+
     }
 
     /**
@@ -56,12 +54,12 @@ public class NotificationTest {
      */
     @Test
     public void testSetId() {
-        System.out.println("setId");
-        int id = 0;
-        Notification instance = null;
-        instance.setId(id);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("getId");
+        Player player = new Player();
+
+        Notification notification = new Notification("short message", "long message text", player);
+        notification.setId(1);
+        assertEquals("Id should be 1", 1, notification.getId());
     }
 
     /**
@@ -70,12 +68,11 @@ public class NotificationTest {
     @Test
     public void testGetShortText() {
         System.out.println("getShortText");
-        Notification instance = null;
-        String expResult = "";
-        String result = instance.getShortText();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+
+        Notification notification = new Notification("short message", "long message text", player);
+
+        assertEquals("It should be 'short message'", "short message", notification.getShortText());
     }
 
     /**
@@ -84,11 +81,11 @@ public class NotificationTest {
     @Test
     public void testSetShortText() {
         System.out.println("setShortText");
-        String shortText = "";
-        Notification instance = null;
-        instance.setShortText(shortText);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+
+        Notification notification = new Notification("short message", "long message text", player);
+        notification.setShortText("new short message");
+        assertEquals("It should be 'new short message'", "new short message", notification.getShortText());
     }
 
     /**
@@ -97,12 +94,9 @@ public class NotificationTest {
     @Test
     public void testGetLongText() {
         System.out.println("getLongText");
-        Notification instance = null;
-        String expResult = "";
-        String result = instance.getLongText();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+        Notification notification = new Notification("short message", "long message text", player);
+        assertEquals("It should be 'long message text'", "long message text", notification.getLongText());
     }
 
     /**
@@ -111,11 +105,10 @@ public class NotificationTest {
     @Test
     public void testSetLongText() {
         System.out.println("setLongText");
-        String longText = "";
-        Notification instance = null;
-        instance.setLongText(longText);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+        Notification notification = new Notification("short message", "long message text", player);
+        notification.setLongText("new longer text message");
+        assertEquals("It should be 'new longer text message'", "new longer text message", notification.getLongText());
     }
 
     /**
@@ -124,12 +117,10 @@ public class NotificationTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        Notification instance = null;
-        Player expResult = null;
-        Player result = instance.getPlayer();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+        player.setId("1");
+        Notification notification = new Notification("short message", "long message text", player);
+        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getId());
     }
 
     /**
@@ -138,11 +129,14 @@ public class NotificationTest {
     @Test
     public void testSetPlayer() {
         System.out.println("setPlayer");
-        Player player = null;
-        Notification instance = null;
-        instance.setPlayer(player);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player bob = new Player();
+        bob.setId("1");
+        Player bill = new Player();
+        bill.setId("2");
+        Notification notification = new Notification("short message", "long message text", bob);
+        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getId());
+        notification.setPlayer(bill);
+        assertEquals("Notification Player ID should be 2'", "2", notification.getPlayer().getId());
     }
 
     /**
@@ -151,12 +145,11 @@ public class NotificationTest {
     @Test
     public void testGetTimeSent() {
         System.out.println("getTimeSent");
-        Notification instance = null;
-        Date expResult = null;
-        Date result = instance.getTimeSent();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player();
+        player.setId("1");
+        Notification notification = new Notification("short message", "long message text", player);
+        Date now = new Date();
+        assertEquals("Time sent should be now'", now, notification.getTimeSent());
     }
 
     /**
@@ -165,10 +158,15 @@ public class NotificationTest {
     @Test
     public void testSetTimeSent() {
         System.out.println("setTimeSent");
-        Date timeSent = null;
-        Notification instance = null;
-        instance.setTimeSent(timeSent);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Date date = new Date();
+        Notification notification = new Notification(1, "short message", "long message", date);
+        assertEquals("time sent should be then", date, notification.getTimeSent());
+        date.setTime(656757645);
+        notification.setTimeSent(date);
+        if (notification.getTimeSent() != date) {
+            fail();
+        
+        }  
+        
     }
 }
