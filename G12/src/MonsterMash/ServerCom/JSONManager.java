@@ -61,7 +61,7 @@ public class JSONManager {
         return jObj;
     }
 
-    static JSONArray jsonMonsterList(ArrayList<Monster> monsters) {
+    public static JSONArray jsonMonsterList(ArrayList<Monster> monsters) {
         JSONArray ja = new JSONArray();
         
         for(Monster m: monsters) {
@@ -69,5 +69,15 @@ public class JSONManager {
         }
         
         return ja;
+    }
+    
+    public static String jsonUsers(ArrayList<Player> players) {
+       JSONArray ja = new JSONArray();
+        
+        for(Player p: players) {
+            ja.put(jsonPlayer(p));
+        }
+        
+        return ja.toString(); 
     }
 }

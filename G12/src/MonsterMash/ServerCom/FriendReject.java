@@ -5,12 +5,11 @@
 package ServerCom;
 
 import data.Friend;
-import data.Notification;
-import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sis13
  */
-public class FriendAccept extends HttpServlet {
+@WebServlet(name = "FriendReject", urlPatterns = {"/friends/reject"})
+public class FriendReject extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -42,15 +42,10 @@ public class FriendAccept extends HttpServlet {
             if(friend != null) {
                 pm.acceptFriendRequest(friend);
                 response.setStatus(200);
-                
-                Player sender = pm.getPlayer(friend.getRemoteUserID());
-                sender.addNotification(new Notification("Accepted friend request from "+friend.getLocalUserID(), "You have accepted friend request from "+friend.getLocalUserID(), sender));
-                pm.storeNotifications(sender);
             }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

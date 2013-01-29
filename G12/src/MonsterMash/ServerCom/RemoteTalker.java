@@ -11,7 +11,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import data.Friend;
 import data.Monster;
+import data.Notification;
 import data.Player;
+import database.OtherPersistenceManager;
+import database.PersistenceManager;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.ws.rs.core.MultivaluedMap;
@@ -111,17 +114,33 @@ public class RemoteTalker {
     
     public void remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         resource = client.resource(getRemoteAddress(serverNumber));
+        
         Friend friend = new Friend(String.valueOf((new Date()).getTime()), remoteUserID, localUser.getId(), serverNumber, "N");
         
-         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-         params.add("friendID", friend.getFriendshipID());
-         params.add("localUserID", localUser.getId());
-         params.add("remoteUserID", remoteUserID);
-         params.add("remoteServerNumber", String.valueOf(serverNumber));
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("friendID", friend.getFriendshipID());
+        params.add("localUserID", localUser.getId());
+        params.add("remoteUserID", remoteUserID);
+        params.add("remoteServerNumber", String.valueOf(serverNumber));
         
         String body = resource.path("friends/request").queryParams(params).get(String.class);
         
-        // TODO add Friend object to db when db method is made.
+        OtherPersistenceManager pm = new OtherPersistenceManager();
+        pm.addFriend(friend);
+        String message = "Friend request to <b>"+remoteUserID+"</b> sent successfully.";
+        localUser.addNotification(new Notification(message, "You have sent friend request to <b>"+remoteUserID+"</b>.", localUser));
+        pm.storeNotifications(localUser);
+    }
     
+    public void acceptRemoteFriendRequest(Friend friend) {
+        resource = client.resource(getRemoteAddress(friend.getServerID()));
+        
+        String body = resource.path("friends/accept").queryParam("friendID", friend.getFriendshipID()).get(String.class);
+    }
+    
+    public void rejectRemoteFriendRequest(Friend friend) {
+        resource = client.resource(getRemoteAddress(friend.getServerID()));
+        
+        String body = resource.path("friends/reject").queryParam("friendID", friend.getFriendshipID()).get(String.class);
     }
 }

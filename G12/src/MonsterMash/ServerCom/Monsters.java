@@ -70,7 +70,7 @@ public class Monsters extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         if (userID != null) {
-            String json = usersMonsters(Integer.parseInt(userID), response);
+            String json = usersMonsters(userID, response);
             
             if (json != null) {
                 out.write(json);
@@ -115,7 +115,7 @@ public class Monsters extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public String usersMonsters(int userID, HttpServletResponse response) throws IOException {
+    public String usersMonsters(String userID, HttpServletResponse response) throws IOException {
         PersistenceManager pm = new PersistenceManager();
         ArrayList<Monster> monsters = pm.getMonsterList(userID);
 
