@@ -4,22 +4,20 @@
  */
 package ServerCom;
 
-import data.Player;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 
 /**
  *
  * @author sis13
  */
-@WebServlet(name = "users", urlPatterns = {"/users"})
-public class User extends HttpServlet {
+public class Monsters extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -35,7 +33,19 @@ public class User extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
+        try {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Monsters</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet Monsters at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        } finally {            
+            out.close();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,31 +61,18 @@ public class User extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        PersistenceManager pm = new PersistenceManager();
-        String userEmail = request.getParameter("userID");
-
-        if (userEmail != null) {
-            int userId = pm.getPlayerID(userEmail);
-            Player player = null;
-            System.out.println(userId);
-
-            if (userId != 0) {
-                player = pm.getPlayer(userId);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
-            }
-
-            if (player != null) {
-                PrintWriter out = response.getWriter();
-                out.write(JSONManager.jsonPlayer(player).toString());
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
-            }
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
+        
+        
+        String userID = request.getParameter("userID");
+        String monsterID = request.getParameter("monsterID");
+        
+        if(userID != null) {
+            
         }
-
+        
+        else {
+            
+        }
     }
 
     /**
@@ -102,4 +99,10 @@ public class User extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public JSONObject singleMonster(String monsterID) {
+        PersistenceManager pm = new PersistenceManager();
+        Monster monster = pm.getMonster(monsterID);
+        JSONManager.jsonMonster(monster);
+    }
 }

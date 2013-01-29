@@ -10,32 +10,29 @@ public class Monster {
     private int id;
     private String name;
     private Date dob;
+    private Date dod;
     private float genetic_strength;
-    private float speed;
-    private float accuracy;
-    private float endurance;
-    private float armor;
-    private float dodge;
     private float age_rate;
     private float fertility;
     private float health;
     private float strength;
+    private int userID;
+    private int forSale;
+    private int forBreed;
     
-    public Monster(String name){
+    public Monster(String name, int userID){
         this.id = 0;
 	this.name = name;
 	this.dob = new Date();
+        this.dod = new Date();
         Random random = new Random();
         this.genetic_strength = random.nextFloat();
 	this.strength = random.nextFloat();
-	this.speed = random.nextFloat();
-	this.accuracy = random.nextFloat();
-	this.endurance = random.nextFloat();
-	this.armor = random.nextFloat();
-	this.dodge = random.nextFloat();
-	this.age_rate = random.nextFloat();
 	this.fertility = random.nextFloat();
 	this.health = START_HEALTH;
+        this.userID = userID;
+        this.forBreed = 0;
+        this.forSale = 0;
     }
 
     public int getId() {
@@ -64,46 +61,6 @@ public class Monster {
 
     public void setGenetic_strength(float genetic_strength) {
         this.genetic_strength = genetic_strength;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getAccuracy() {
-        return accuracy;
-    }
-
-    public void setAccuracy(float accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    public float getEndurance() {
-        return endurance;
-    }
-
-    public void setEndurance(float endurance) {
-        this.endurance = endurance;
-    }
-
-    public float getArmor() {
-        return armor;
-    }
-
-    public void setArmor(float armor) {
-        this.armor = armor;
-    }
-
-    public float getDodge() {
-        return dodge;
-    }
-
-    public void setDodge(float dodge) {
-        this.dodge = dodge;
     }
 
     public float getAge_rate() {
@@ -138,6 +95,31 @@ public class Monster {
         this.strength = strength;
     }
     
-    
+    public int getUserID() {
+        return this.userID;
+    }
 
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public Date getDod() {
+        return this.dod;
+    }
+
+    public int getForSale() {
+        return forSale;
+    }
+
+    public void setForSale(int forSale) {
+        this.forSale = forSale;
+    }
+
+    public int getForBreed() {
+        return forBreed;
+    }
+
+    public void setForBreed(int forBreed) {
+        this.forBreed = forBreed;
+    }
 }
