@@ -115,7 +115,7 @@ public class RemoteTalker {
     public void remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         resource = client.resource(getRemoteAddress(serverNumber));
         
-        Friend friend = new Friend(String.valueOf((new Date()).getTime()), remoteUserID, localUser.getId(), serverNumber, "N");
+        Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getId(), 12, serverNumber, "N");
         
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add("friendID", friend.getFriendshipID());
@@ -133,13 +133,13 @@ public class RemoteTalker {
     }
     
     public void acceptRemoteFriendRequest(Friend friend) {
-        resource = client.resource(getRemoteAddress(friend.getServerID()));
+        resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
         
         String body = resource.path("friends/accept").queryParam("friendID", friend.getFriendshipID()).get(String.class);
     }
     
     public void rejectRemoteFriendRequest(Friend friend) {
-        resource = client.resource(getRemoteAddress(friend.getServerID()));
+        resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
         
         String body = resource.path("friends/reject").queryParam("friendID", friend.getFriendshipID()).get(String.class);
     }

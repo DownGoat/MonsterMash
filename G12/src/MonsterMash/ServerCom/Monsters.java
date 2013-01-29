@@ -5,6 +5,7 @@
 package ServerCom;
 
 import data.Monster;
+import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -64,7 +65,6 @@ public class Monsters extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
         String userID = request.getParameter("userID");
         String monsterID = request.getParameter("monsterID");
         PrintWriter out = response.getWriter();
@@ -116,7 +116,7 @@ public class Monsters extends HttpServlet {
     }// </editor-fold>
 
     public String usersMonsters(String userID, HttpServletResponse response) throws IOException {
-        PersistenceManager pm = new PersistenceManager();
+        OtherPersistenceManager pm = new OtherPersistenceManager();
         ArrayList<Monster> monsters = pm.getMonsterList(userID);
 
         if (monsters == null) {

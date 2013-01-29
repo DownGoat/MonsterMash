@@ -34,6 +34,23 @@ public class Monster {
         this.breedOffer = 0;
     }
 
+    public Monster(String id, String name, Date dob, Date dod, Double baseStrength, Double currentStrength, Double baseDefence, Double currentDefence, Double baseHealth, Double currentHealth, float fertility, String userID, int saleOffer, int breedOffer) {
+        this.id = id;
+        this.name = name;
+        this.dob = dob;
+        this.dod = dod;
+        this.baseStrength = baseStrength;
+        this.currentStrength = currentStrength;
+        this.baseDefence = baseDefence;
+        this.currentDefence = currentDefence;
+        this.baseHealth = baseHealth;
+        this.currentHealth = currentHealth;
+        this.fertility = fertility;
+        this.userID = userID;
+        this.saleOffer = saleOffer;
+        this.breedOffer = breedOffer;
+    }
+
     public Monster() {
         
     }
