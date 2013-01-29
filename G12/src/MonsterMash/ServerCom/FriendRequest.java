@@ -4,6 +4,7 @@
  */
 package ServerCom;
 
+import data.Friend;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -29,6 +30,7 @@ public class FriendRequest extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Friend friend = null;
         String friendID = request.getParameter("friendID");
         String localUserID = request.getParameter("localUserID");
         String remoteUserID = request.getParameter("remoteUserID");
@@ -37,7 +39,7 @@ public class FriendRequest extends HttpServlet {
         if (friendID == null || localUserID == null || remoteServerNumber == null || remoteUserID == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         } else {
-            // TODO FIXME add this when PM is updated to handle cross server frienship
+            friend = new Friend(friendID, remoteUserID, localUserID, remoteServerNumber, "N");
         }
     }
 

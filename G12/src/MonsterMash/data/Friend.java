@@ -5,23 +5,23 @@ package data;
  * @author sjk4
  */
 public class Friend {
-    private int friendshipID;
-    private int friendID, serverID;
-    private String email;
+    private String friendshipID;
+    private String remoteUserID, localUserID;
+    private String remoteAddress;
     private boolean friendshipConfirmed;
     
-    public Friend(int friendshipID, int friendID, int serverID, String email, String confirmed){
+    public Friend(String friendshipID, String remoteUserID, String localUserID, String remoteAddress, String confirmed){
         this.friendshipID = friendshipID;
-        this.friendID = friendID;
-        this.serverID = serverID;
-        this.email = email;
+        this.remoteUserID = remoteUserID;
+        this.remoteAddress = remoteAddress;
+        this.localUserID = localUserID;
         if (confirmed.equals("Y")) {
             friendshipConfirmed = true;
         } else {
             friendshipConfirmed = false;
         }
     }
-    
+    /*
     public Friend(int friendID, int serverID, String email, String confirmed){
         this.friendshipID = 0;
         this.friendID = friendID;
@@ -32,39 +32,7 @@ public class Friend {
         } else {
             friendshipConfirmed = false;
         }
-    }
-
-    public int getFriendshipID() {
-        return friendshipID;
-    }
-
-    public void setFriendshipID(int friendshipID) {
-        this.friendshipID = friendshipID;
-    }
-
-    public int getFriendID() {
-        return friendID;
-    }
-
-    public void setFriendID(int friendID) {
-        this.friendID = friendID;
-    }
-
-    public int getServerID() {
-        return serverID;
-    }
-
-    public void setServerID(int serverID) {
-        this.serverID = serverID;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    }*/
 
     public boolean isFriendshipConfirmed() {
         return friendshipConfirmed;
@@ -85,8 +53,36 @@ public class Friend {
         public boolean isFriendshipConfirmed(Friend f) {
         return f.friendshipConfirmed;
     }
-        
-        public int getId(Friend f){
-            return f.friendID;
-        }
+
+    public String getFriendshipID() {
+        return friendshipID;
+    }
+
+    public void setFriendshipID(String friendshipID) {
+        this.friendshipID = friendshipID;
+    }
+
+    public String getRemoteUserID() {
+        return remoteUserID;
+    }
+
+    public void setRemoteUserID(String remoteUserID) {
+        this.remoteUserID = remoteUserID;
+    }
+
+    public String getLocalUserID() {
+        return localUserID;
+    }
+
+    public void setLocalUserID(String localUserID) {
+        this.localUserID = localUserID;
+    }
+
+    public String getRemoteAddress() {
+        return remoteAddress;
+    }
+
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
+    }
 }
