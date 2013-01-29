@@ -5,6 +5,7 @@
 package ServerCom;
 
 import data.Player;
+import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,12 +53,12 @@ public class User extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        PersistenceManager pm = new PersistenceManager();
+        OtherPersistenceManager pm = new OtherPersistenceManager();
         String userIDString = request.getParameter("userID");
 
         if (userIDString != null) {
             Player player = null;
-            player = pm.getPlayer(Integer.parseInt(userIDString));
+            player = pm.getPlayer(userIDString);
 
             if (player != null) {
                 PrintWriter out = response.getWriter();
@@ -66,7 +67,8 @@ public class User extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
             }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
+            PrintWriter out = response.getWriter();
+            out.write(JSONManager.jsonUsers(pm.getPlayers()));
         }
 
     }

@@ -84,6 +84,7 @@ public class CreateAccountPage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
+        String username = request.getParameter("username");
         String monsterName = request.getParameter("monster");
         String password = request.getParameter("password");
         String cpassword = request.getParameter("cpassword");
@@ -91,7 +92,7 @@ public class CreateAccountPage extends HttpServlet {
         PersistenceManager pm = new PersistenceManager();
         // Simple validation
         if(email.length() < 1 || !isValidEmailAddress(email)){
-            errorMessage = "Please enter correct email address.";
+            errorMessage = "Please enter correct email address."; 
         }else if(monsterName.length() < 5 || monsterName.length() > 32){
             errorMessage = "Please enter correct monster name.";
         }else if(password.length() < 5 || password.length() > 255){
@@ -102,7 +103,7 @@ public class CreateAccountPage extends HttpServlet {
             errorMessage = "There is already account with this email address.";
         }else{
             password = MD5(password);
-            Player tmp = new Player(email, password, MONEY_AMOUNT, monsterName);
+            Player tmp = new Player(email, username, password, MONEY_AMOUNT, monsterName);
             // Store player in DB
             pm.storePlayer(tmp);
             // Redirect to login page

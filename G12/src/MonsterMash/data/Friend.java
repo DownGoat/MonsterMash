@@ -7,13 +7,14 @@ package data;
 public class Friend {
     private String friendshipID;
     private String remoteUserID, localUserID;
-    private int serverID;
+    private int localServerID, remoteServerID;
     private boolean friendshipConfirmed;
     
-    public Friend(String friendshipID, String remoteUserID, String localUserID, int serverID, String confirmed){
+    public Friend(String friendshipID, String remoteUserID, String localUserID, int localServerID, int remoteServerID, String confirmed){
         this.friendshipID = friendshipID;
         this.remoteUserID = remoteUserID;
-        this.serverID = serverID;
+        this.localServerID = localServerID;
+        this.remoteServerID = remoteServerID;
         this.localUserID = localUserID;
         if (confirmed.equals("Y")) {
             friendshipConfirmed = true;
@@ -78,11 +79,19 @@ public class Friend {
         this.localUserID = localUserID;
     }
 
-    public int getServerID() {
-        return serverID;
+    public int getLocalServerID() {
+        return localServerID;
     }
 
-    public void setServerID(int serverID) {
-        this.serverID = serverID;
+    public void setLocalServerID(int localServerID) {
+        this.localServerID = localServerID;
+    }
+
+    public int getRemoteServerID() {
+        return remoteServerID;
+    }
+
+    public void setRemoteServerID(int remoteServerID) {
+        this.remoteServerID = remoteServerID;
     }
 }

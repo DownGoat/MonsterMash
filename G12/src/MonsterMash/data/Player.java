@@ -7,9 +7,9 @@ import java.util.Random;
 
 public class Player {
     /** Attributes */
-    private String id;
+    private String userID;
     private String password;
-    private String email;
+    private String username;
     private int money;
     private int serverID;
     private ArrayList<Player> friends;
@@ -17,15 +17,15 @@ public class Player {
     private ArrayList<Monster> monsters;
 
     /**
-     * Creates object of a new "friend.
+     * Creates object of a new "friend".
      * @param email username (email address)
      * @param password encrypted password
      * @param money default amount of money
      * @param initialMonsterName name of random initial monster
      */
-    public Player(String id, String name, int serverID){
-    	this.id = id; 
-    	this.email = name;
+    public Player(String userID, String username, int serverID){
+    	this.userID = userID; 
+    	this.username = username;
     	this.password = null;
         this.friends = null;
         this.notifications = null;
@@ -40,16 +40,16 @@ public class Player {
      * @param money default amount of money
      * @param initialMonsterName name of random initial monster
      */
-    public Player(String email, String password, int money, String initialMonsterName){
-    	this.id = "0"; 
-    	this.email = email;
+    public Player(String userID, String username, String password, int money, String initialMonsterName){
+    	this.userID = userID;
+    	this.username = username;
     	this.password = password;
     	this.money = money;
         this.friends = new ArrayList<Player>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
         this.serverID = 12;
-    	//monsters.add(new Monster(initialMonsterName));
+    	monsters.add(new Monster(initialMonsterName, this.userID));
         // Add first notifications:
         notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
         notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
@@ -65,9 +65,9 @@ public class Player {
      * @param notifications list of player's notifications
      * @param monsters list of player's monsters
      */
-    public Player(String id, String email, String password, int money, ArrayList<Player> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters, int serverID){
-        this.id = id;
-        this.email = email;
+    public Player(String userID, String username, String password, int money, ArrayList<Player> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters, int serverID){
+        this.userID = userID;
+        this.username = username;
         this.password = password;
         this.money = money;
         this.friends = friends;
@@ -80,28 +80,28 @@ public class Player {
         
     }
 
-    public String getId() {
-        return id;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public int getMoney() {

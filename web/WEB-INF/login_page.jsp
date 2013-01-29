@@ -21,7 +21,7 @@
 				Sign-in to your account
 			</div>
 			<form class="login" action="login" method="post">
-				<p>Username:<input type="text" name="email" maxlength="255" /></p>
+				<p>Email:<input type="text" name="email" maxlength="255" /></p>
 				<p style="padding:0;">Password:<input type="password" name="password" maxlength="255" /></p>
                                 <c:choose>
                                     <c:when test="${not empty message}">

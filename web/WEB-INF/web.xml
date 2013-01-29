@@ -25,16 +25,16 @@
         <servlet-class>ServerCom.Monsters</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FriendRequest</servlet-name>
-        <servlet-class>ServerCom.FriendRequest</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>FriendAccept</servlet-name>
         <servlet-class>ServerCom.FriendAccept</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HighscoresPage</servlet-name>
         <servlet-class>HighscoresPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FriendRequest</servlet-name>
+        <servlet-class>ServerCom.FriendRequest</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginPage</servlet-name>
@@ -63,6 +63,10 @@
     <servlet-mapping>
         <servlet-name>HighscoresPage</servlet-name>
         <url-pattern>/highscores</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FriendRequest</servlet-name>
+        <url-pattern>/friends/request</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>90</session-timeout>

@@ -6,6 +6,7 @@ package ServerCom;
 
 import data.Friend;
 import data.Player;
+import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,9 +42,10 @@ public class FriendRequest extends HttpServlet {
         if (friendID == null || localUserID == null || remoteServerNumber == null || remoteUserID == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
         } else {
-            PersistenceManager pm = new PersistenceManager();
-            Player player = pm.getPlayer(Integer.parseInt(localUserID));
-            friend = new Friend(friendID, remoteUserID, localUserID, remoteServerNumber, "N");
+            OtherPersistenceManager pm = new OtherPersistenceManager();
+            Player player = pm.getPlayer(localUserID);
+
+            friend = new Friend(friendID, remoteUserID, localUserID, Integer.parseInt(remoteServerNumber), "N");
             
             if(player != null) {
                 pm.addFriend(friend);
@@ -67,6 +69,7 @@ public class FriendRequest extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("asd");
         processRequest(request, response);
     }
 
