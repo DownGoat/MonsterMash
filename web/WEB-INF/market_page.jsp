@@ -1,7 +1,7 @@
 <%-- 
     Document   : market_page
     Created on : 2013-01-29, 14:08:56
-    Author     : 
+    Author     : asdf
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
