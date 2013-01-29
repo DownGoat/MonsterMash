@@ -1,6 +1,6 @@
 <%-- 
-    Document   : main_page
-    Created on : 2012-12-10, 12:47:05
+    Document   : highscores_page
+    Created on : 2013-01-29, 00:50:40
     Author     : sjk4
 --%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -71,18 +71,17 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
 	<div class="content">
-		<div id="updates">
-                    <c:forEach items="${notificationList}" var="current">
-                        <h3>
-				<div style="float:left;">${current.shortText}</div>
-				<div class="date">${current.timeSent}</div>
-				<div style="clear:both;"></div>
-			</h3>
-			<div>
-				<p>${current.longText}</p>
-			</div>
-                    </c:forEach>
-		</div>
+			<h1><span style="font-size: 25px;">H</span>IGHSCORES:</h1>
+			<table style="width:100%" cellspacing="0">
+				<tr class="head">
+					<td>Rank</td>
+					<td>Name</td>
+					<td>Money</td>
+				</tr>
+                                <c:forEach items="${highscores}" var="row">
+                                    ${row}
+                                </c:forEach>
+			</table>
 	</div>
 </body>
 </html>

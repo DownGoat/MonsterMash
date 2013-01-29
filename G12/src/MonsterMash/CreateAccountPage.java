@@ -19,9 +19,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author sjk4
  */
 public class CreateAccountPage extends HttpServlet {
+    /** SET INITIAL MONEY AMOUNT **/
     private final int MONEY_AMOUNT = 10;
     
-    
+    /**
+     * Check if email address is correct.
+     * @param email user's email address
+     * @return true when email address is correct
+     */
     private boolean isValidEmailAddress(String email) {
         boolean result = true;
         try {
@@ -33,6 +38,11 @@ public class CreateAccountPage extends HttpServlet {
         return result;
     }
     
+    /**
+     * Encode password using MD5.
+     * @param md5 password
+     * @return encoded password
+     */
     public String MD5(String md5) {
         try {
              java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
@@ -43,6 +53,7 @@ public class CreateAccountPage extends HttpServlet {
             }
              return sb.toString();
          } catch (java.security.NoSuchAlgorithmException e) {
+             
          }
          return null;
      }
@@ -73,34 +84,34 @@ public class CreateAccountPage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
+        String monsterName = request.getParameter("monster");
         String password = request.getParameter("password");
         String cpassword = request.getParameter("cpassword");
-        String message = null;
         String errorMessage = null;
         PersistenceManager pm = new PersistenceManager();
-        if(email.length() < 1 || password.length() < 1 || cpassword.length() < 1){
-            errorMessage = "Please fill in all text fields.";
-        }else if(!isValidEmailAddress(email)){
+        // Simple validation
+        if(email.length() < 1 || !isValidEmailAddress(email)){
             errorMessage = "Please enter correct email address.";
+        }else if(monsterName.length() < 5 || monsterName.length() > 32){
+            errorMessage = "Please enter correct monster name.";
+        }else if(password.length() < 5 || password.length() > 255){
+            errorMessage = "Please enter correct password.";
         }else if(!password.equals(cpassword)){
             errorMessage = "Passwords are not the same.";
         }else if(pm.accountExists(email)){
             errorMessage = "There is already account with this email address.";
         }else{
             password = MD5(password);
-            Player tmp = new Player(email, password, MONEY_AMOUNT, "First Monster");
-            pm.addNewPlayer(tmp);
-            message = "Account created successfully. You can sign in now.";
-        }
-        
-        if(message != null){
-            request.setAttribute("message", message);
+            Player tmp = new Player(email, password, MONEY_AMOUNT, monsterName);
+            // Store player in DB
+            pm.storePlayer(tmp);
+            // Redirect to login page
+            request.setAttribute("message", "Account created successfully. You can sign in now.");
             request.getRequestDispatcher("/WEB-INF/login_page.jsp").forward(request, response);
+            return;
         }
-        if(errorMessage != null){
-            request.setAttribute("errorMessage", errorMessage);
-            request.getRequestDispatcher("/WEB-INF/create_account_page.jsp").forward(request, response);
-        }
-        
+        // Display error message
+        request.setAttribute("errorMessage", errorMessage);
+        request.getRequestDispatcher("/WEB-INF/create_account_page.jsp").forward(request, response);
     }
 }

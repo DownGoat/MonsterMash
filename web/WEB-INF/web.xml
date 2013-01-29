@@ -57,16 +57,10 @@
         <url-pattern>/monsters</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FriendRequest</servlet-name>
-        <url-pattern>/friends/request</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FriendAccept</servlet-name>
-        <url-pattern>/friends/accept</url-pattern>
+        <servlet-name>HighscoresPage</servlet-name>
+        <url-pattern>/highscores</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 </web-app>
