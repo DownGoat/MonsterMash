@@ -7,10 +7,11 @@ import java.util.Random;
 
 public class Player {
     /** Attributes */
-    private int id;
+    private String id;
     private String password;
     private String email;
     private int money;
+    private int serverID;//
     private ArrayList<Friend> friends;
     private ArrayList<Notification> notifications; 
     private ArrayList<Monster> monsters;
@@ -23,13 +24,14 @@ public class Player {
      * @param initialMonsterName name of random initial monster
      */
     public Player(String email, String password, int money, String initialMonsterName){
-    	this.id = 0; 
+    	this.id = "0"; 
     	this.email = email;
     	this.password = password;
     	this.money = money;
         this.friends = new ArrayList<Friend>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
+        this.serverID = 12;
     	monsters.add(new Monster(initialMonsterName));
         // Add first notifications:
         notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
@@ -46,7 +48,7 @@ public class Player {
      * @param notifications list of player's notifications
      * @param monsters list of player's monsters
      */
-    public Player(int id, String email, String password, int money, ArrayList<Friend> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters){
+    public Player(String id, String email, String password, int money, ArrayList<Friend> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters, int serverID){
         this.id = id;
         this.email = email;
         this.password = password;
@@ -54,13 +56,24 @@ public class Player {
         this.friends = friends;
         this.notifications = notifications;
         this.monsters = monsters;
+        this.serverID = serverID;
+    }
+    
+    public Player(String email, String id, int money) {
+        this.email = email;
+        this.id = id;
+        this.money = money;
+    }
+    
+    public Player() {
+        
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -111,6 +124,14 @@ public class Player {
 
     public void setMonsters(ArrayList<Monster> monsters) {
         this.monsters = monsters;
+    }
+
+    public int getServerID() {
+        return serverID;
+    }
+
+    public void setServerID(int serverID) {
+        this.serverID = serverID;
     }
     
     
