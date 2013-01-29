@@ -8,7 +8,10 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import data.Monster;
 import data.Player;
+import java.util.ArrayList;
+import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +38,7 @@ public class RemoteTalker {
         String body = resource.path("users").queryParam("userID", userID).get(String.class);
 	JSONObject json = new JSONObject(body);
         
+        player = new Player();
         player.setEmail(json.getString("name"));
         player.setMoney(json.getInt("money"));
         player.setId(json.getString("userID"));
@@ -42,7 +46,39 @@ public class RemoteTalker {
         return player;
     }
     
+    public Monster getRemoteMonster(String monsterID, String remoteAddress) throws JSONException {
+        Monster monster = null;
+        resource = client.resource(remoteAddress);
+        
+        String body = resource.path("monsters").queryParam("MonsterID", monsterID).get(String.class);
+	JSONObject json = new JSONObject(body);
+        
+        monster = new Monster();
+        monster.setBaseStrength(json.getDouble("baseStrength"));
+        monster.setCurrentStrength(json.getDouble("currentStrength"));
+        monster.setBaseDefence(json.getDouble("baseDefence"));
+        monster.setCurrentDefence(json.getDouble("currentDefence"));
+        monster.setBaseHealth(json.getDouble("baseHealth"));
+        monster.setCurrentHealth(json.getDouble("currentHealth"));
+        monster.setUserID(json.getString("userID"));
+        monster.setId(json.getString("monsterID"));
+        monster.setDob(new Date(json.getInt("birthDate")));
+        monster.setDod(new Date(json.getInt("lifespan")));
+        monster.setBreedOffer(json.getInt("breedOffer"));
+        monster.setSaleOffer(json.getInt("saleOffer"));
+        
+        return monster;
+    }
     
+    public ArrayList<Monster> getRemoteUsersMonsters(String userID, String remoteAddress) {
+        ArrayList<Monster> monsters = null;  
+        resource = client.resource(remoteAddress);
+        
+        String body = resource.path("monsters").queryParam("MonsterID", monsterID).get(String.class);
+	JSONObject json = new JSONObject(body);
+        
+        return monsters;
+    }
     
     public String getRemoteAddress(int serverNumber) {
         resource = client.resource("http://monstermash.digitdex.com/directory");

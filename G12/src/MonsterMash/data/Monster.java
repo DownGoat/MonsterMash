@@ -7,7 +7,7 @@ public class Monster {
     private final int START_HEALTH = 100;
     
     /** Attributes **/    
-    private int id;
+    private String id;
     private String name;
     private Date dob;
     private Date dod;
@@ -18,12 +18,12 @@ public class Monster {
     private Double baseHealth;
     private Double currentHealth;
     private float fertility;
-    private int userID;
+    private String userID;
     private int saleOffer;
     private int breedOffer;
     
-    public Monster(String name, int userID){
-        this.id = 0;
+    public Monster(String name, String userID){
+        this.id = "0";
 	this.name = name;
 	this.dob = new Date();
         this.dod = new Date();
@@ -34,11 +34,15 @@ public class Monster {
         this.breedOffer = 0;
     }
 
-    public int getId() {
+    public Monster() {
+        
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,11 +66,11 @@ public class Monster {
         this.fertility = fertility;
     }
     
-    public int getUserID() {
+    public String getUserID() {
         return this.userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -137,4 +141,13 @@ public class Monster {
     public void setBreedOffer(int breedOffer) {
         this.breedOffer = breedOffer;
     }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public void setDod(Date dod) {
+        this.dod = dod;
+    }
+    
 }
