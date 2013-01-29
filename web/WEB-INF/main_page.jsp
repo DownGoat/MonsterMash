@@ -43,7 +43,7 @@
                             </li>
                         </c:if>
                     </c:forEach>
-                    <c:forEach items="${friendshipList}" var="friend">
+                    <c:forEach items="${friendList}" var="friend">
                         <c:if test="${friend.friendshipConfirmed}">
                             <li><a title="Send Fight Request" href="fight?request=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
                         </c:if>

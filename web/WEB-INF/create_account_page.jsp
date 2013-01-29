@@ -21,6 +21,7 @@
 	</div>
         <form class="login" action="create-account" method="post">
             <p><b>E-Mail</b> <i>(5 to 255 char.)</i>:<input type="text" name="email" maxlength="255" /></p>
+            <p><b>Username</b> <i>(5 to 255 char.)</i>:<input type="text" name="username" maxlength="255" /></p>
             <p><b>Monster name</b> <i>(5 to 32 char.)</i>:<input type="text" name="monster" maxlength="32" /></p>
             <p><b>Password</b> <i>(5 to 255 char.)</i>:<input type="password" name="password" maxlength="255" /></p>
             <p><b>Confirm Password</b> <i>(repeat)</i>:<input type="password" name="cpassword" maxlength="255" /></p>

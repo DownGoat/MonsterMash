@@ -4,8 +4,7 @@ import data.Monster;
 import data.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 /**
  *
@@ -34,6 +33,21 @@ public class PersistenceManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Generates random string, which will be used as IDs for monsters/players etc.
+     * @param length length of a string
+     * @return random string with specified length
+     */
+    private String randomString(final int length) {
+        Random r = new Random();
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < length; i++) {
+            char c = (char)(r.nextInt((int)(Character.MAX_VALUE)));
+            sb.append(c);
+        }
+        return sb.toString();
     }
     
     /**
@@ -70,13 +84,12 @@ public class PersistenceManager {
     public void storePlayer(Player p){
         try{
             Statement stmt = connection.createStatement();
-            // Add player to PLAYER table
-            stmt.execute("INSERT INTO \"Player\" (\"email\", \"password\", \"money\") VALUES ('"+p.getEmail()+"', '"+p.getPassword()+"', "+p.getMoney()+")", Statement.RETURN_GENERATED_KEYS);
-            // Set new player id
-            ResultSet rs = stmt.getGeneratedKeys(); 
-            if(rs != null && rs.next()) {
-                p.setId(rs.getInt(1));
+            String id = p.getId();
+            if(id.equals("0")){
+                id = this.randomString(16);
             }
+            // Add player to PLAYER table
+            stmt.execute("INSERT INTO \"Player\" (\"id\", \"email\", \"password\", \"money\") VALUES ('"+id+"', "+p.getEmail()+"', '"+p.getPassword()+"', "+p.getMoney()+")");
             stmt.close();
             // Save first notification in DB
             this.storeNotifications(p);
@@ -99,7 +112,7 @@ public class PersistenceManager {
                     Statement stmt = connection.createStatement();
                     Timestamp ts = new Timestamp(n.getTimeSent().getTime());
                     // Insert notification into DB
-                    stmt.execute("INSERT INTO \"Notification\" (\"message\", \"long_message\", \"player_id\", \"time\") VALUES ('"+n.getShortText()+"', '"+n.getLongText()+"', "+n.getPlayer().getId()+", '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
+                    stmt.execute("INSERT INTO \"Notification\" (\"short_message\", \"long_message\", \"player_id\", \"time\") VALUES ('"+n.getShortText()+"', '"+n.getLongText()+"', '"+n.getPlayer().getId()+"', '"+ts.toString()+"')", Statement.RETURN_GENERATED_KEYS);
                     // Set ID of notification
                     ResultSet rs = stmt.getGeneratedKeys();
                     if(rs != null && rs.next()){
@@ -120,19 +133,16 @@ public class PersistenceManager {
     public void storeMonsters(Player p){
         for(Monster m: p.getMonsters()){
             // If ID equals 0, monster hasn't been saved in DB
-            if(m.getId() == 0){ 
+            if(m.getId().equals("0")){ 
                 try{
                     Statement stmt = connection.createStatement();
-                    Timestamp ts = new Timestamp(m.getDob().getTime());
                     // Insert monster into DB
-//                    stmt.execute("INSERT INTO \"Monster\" (\"name\", \"dob\", \"genetic_strength\", \"speed\", \"accuracy\", \"armor\", \"dodge\", \"age_rate\", \"fertility\", \"health\", \"owner_id\") "
-//                            + "VALUES ('"+m.getName()+"', '"+ts.toString()+"', "+m.getGenetic_strength()+", "+m.getSpeed()+", "+m.getAccuracy()+", "+m.getArmor()+", "+m.getDodge()+", "+m.getAge_rate()+", "+m.getFertility()+", "+m.getHealth()+", "+p.getId()+")", Statement.RETURN_GENERATED_KEYS);
-                    // Set ID of monster
-                    ResultSet rs = stmt.getGeneratedKeys();
-                    if(rs != null && rs.next()){
-                        m.setId(rs.getInt(1));
-                    }
+                    m.setId(this.randomString(16));
+                    stmt.execute("INSERT INTO \"Monster\" (\"name\", \"dob\", \"dod\", \"base_strength\", \"current_strength\", \"base_defence\", \"current_defence\", \"base_health\", \"current_health\", \"fertility\", \"user_id\", \"sale_offer\", \"breed_offer\") "
+                            + "VALUES ('"+m.getId()+"', "+m.getName()+"', "+m.getDob().getTime()+", "+m.getDod().getTime()+", "+m.getBaseStrength()+", "+m.getCurrentStrength()+", "+m.getBaseDefence()+", "+m.getCurrentDefence()+", "+m.getBaseHealth()+", "+m.getCurrentHealth()+", "+m.getFertility()+", '"+m.getUserID()+"', "+m.getSaleOffer()+", "+m.getBreedOffer()+")", Statement.RETURN_GENERATED_KEYS);
+
                 }catch(SQLException sqlExcept){
+                    System.err.println("Adding monster to DB error:\n"+sqlExcept.getMessage());
                     this.error = sqlExcept.getMessage();
                 }
             }
@@ -151,7 +161,7 @@ public class PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"email\" = '"+email+"' AND \"password\" = '"+password+"'");
             r.next();
-            selected = new Player(r.getInt("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getInt("id")), this.getNotificationList(r.getInt("id")), this.getMonsterList(r.getInt("id")));
+            selected = new Player(r.getString("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
             r.close();
             stmt.close();
         }catch (SQLException sqlExcept){
@@ -161,33 +171,28 @@ public class PersistenceManager {
     }
     
     /**
-     * Gets all friends and friend requests from DB of specified player
+     * Gets all friends from DB of specified player
      * @param playerID ID of player
      * @return list of friends and friend requests
      */
-    public ArrayList<Friend> getFriendList(int playerID){
-        ArrayList<Friend> friendList = new ArrayList<Friend>();
+    public ArrayList<Player> getFriendList(String playerID){
+        ArrayList<Player> friendList = new ArrayList<Player>();
         try{
             Statement stmt = connection.createStatement();
-            ResultSet result = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE (\"sender_id\" = "+playerID+" OR \"receiver_id\" = "+playerID+")");
+            ResultSet result = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE (\"sender_id\" = '"+playerID+"' OR \"receiver_id\" = '"+playerID+"') AND \"confirmed\" = 'Y'");
             while(result.next()){
-                // If friendship confirmed check whether logged player is sender or receiver
-                if(result.getString("CONFIRMED").equals("Y")){
-                    if(result.getInt("sender_id") == playerID){
-                        friendList.add(new Friend(result.getInt("id"), result.getInt("receiver_id"), result.getInt("receiver_server_id"), this.getPlayersEmail(result.getInt("receiver_id"), result.getInt("receiver_server_id")), result.getString("CONFIRMED")));
-                    }else{
-                        friendList.add(new Friend(result.getInt("id"), result.getInt("sender_id"), result.getInt("sender_server_id"), this.getPlayersEmail(result.getInt("sender_id"), result.getInt("sender_server_id")), result.getString("CONFIRMED")));
-                    }
+                if(result.getString("sender_id").equals(playerID+"")){
+                    // Sender String id, String name, int serverID
+                    friendList.add(new Player(result.getString("receiver_id"), this.getPlayerEmail(result.getString("receiver_id"), result.getInt("receiver_server_id")), result.getInt("receiver_server_id")));
                 }else{
-                    // If friendship unconfirmed, select only friend requests (logged player id == receiver id)
-                    if(result.getInt("receiver_id") == playerID){
-                        friendList.add(new Friend(result.getInt("id"), result.getInt("sender_id"), result.getInt("sender_server_id"), this.getPlayersEmail(result.getInt("sender_id"), result.getInt("sender_server_id")), result.getString("CONFIRMED")));
-                    }
+                    // Receiver
+                    friendList.add(new Player(result.getString("sender_id"), this.getPlayerEmail(result.getString("sender_id"), result.getInt("sender_server_id")), result.getInt("sender_server_id")));
                 }
             }
             result.close();
             stmt.close();
         }catch (SQLException sqlExcept){
+            System.err.println("Selecting friendships from DB error:\n"+sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
         return friendList;
@@ -198,7 +203,7 @@ public class PersistenceManager {
      * @param playerID id of player
      * @return list of notifications
      */
-    public ArrayList<Notification> getNotificationList(int playerID){
+    public ArrayList<Notification> getNotificationList(String playerID){
         ArrayList<Notification> notificationList = new ArrayList<Notification>();
         try{
             Statement stmt = connection.createStatement();
@@ -220,7 +225,7 @@ public class PersistenceManager {
      * @param playerID id of player
      * @return list of monsters owned
      */
-    public ArrayList<Monster> getMonsterList(int playerID){
+    public ArrayList<Monster> getMonsterList(String playerID){
         // TODO: Implement this method.
         return new ArrayList<Monster>();
     }
@@ -230,13 +235,13 @@ public class PersistenceManager {
      * @param id id of player
      * @return object of Player class, null when player doesn't exist
      */
-    public Player getPlayer(int playerID){
+    public Player getPlayer(String playerID){
         Player selected = null;
         try{
             Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = "+playerID);
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+playerID+"'");
             r.next();
-            selected = new Player(r.getInt("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getInt("id")), this.getNotificationList(r.getInt("id")), this.getMonsterList(r.getInt("id")));
+            selected = new Player(r.getString("id"), r.getString("email"), r.getString("password"), r.getInt("money"), this.getFriendList(r.getString("id")), this.getNotificationList(r.getString("id")), this.getMonsterList(r.getString("id")), r.getInt("server_id"));
             r.close();
             stmt.close();
         }catch (SQLException sqlExcept){
@@ -248,12 +253,14 @@ public class PersistenceManager {
     /**
      * Confirms friendship between players (senderID and receiverID)
      * @param senderID id of player who sent request
+     * @param senderServer address of sender's server
      * @param receiverID id of player who accepted request
+     * @param receiverServer address of receivers's server
      */
-    public void confirmFriendship(int senderID, int receiverID){
+    public void confirmFriendship(String senderID, int senderServer, String receiverID, int receiverServer){
         try{
             Statement stmt = connection.createStatement();
-            stmt.execute("UPDATE \"Friendship\" SET \"CONFIRMED\" = 'Y' WHERE \"receiver_id\" = "+receiverID+" AND \"sender_id\" = "+senderID+"");
+            stmt.execute("UPDATE \"Friendship\" SET \"confirmed\" = 'Y' WHERE \"receiver_id\" = '"+receiverID+"' AND \"receiver_server_id\" = "+receiverServer+" AND \"sender_id\" = '"+senderID+"' AND \"sender_server_id\" = "+senderServer+"");
             stmt.close();
         }catch(SQLException sqlExcept){
             this.error = sqlExcept.getMessage();
@@ -263,12 +270,14 @@ public class PersistenceManager {
     /**
      * Cancle friendship request between players (senderID and receiverID)
      * @param senderID id of player who sent request
+     * @param senderServer address of sender's server
      * @param receiverID id of player who accepted request
+     * @param receiverServer address of receivers's server
      */
-    public void rejectFriendship(int senderID, int receiverID){
+    public void rejectFriendship(String senderID, int senderServer, String receiverID, int receiverServer){
         try{
             Statement stmt = connection.createStatement();
-            stmt.execute("DELETE FROM \"Friendship\" WHERE \"sender_id\" = "+senderID+" AND \"receiver_id\" = "+receiverID+"");
+            stmt.execute("DELETE FROM \"Friendship\" WHERE \"receiver_id\" = '"+receiverID+"' AND \"receiver_server_id\" = "+receiverServer+" AND \"sender_id\" = '"+senderID+"' AND \"sender_server_id\" = "+senderServer+"");
             stmt.close();
         }catch(SQLException sqlExcept){
             this.error = sqlExcept.getMessage();
@@ -281,21 +290,21 @@ public class PersistenceManager {
      * @param playerID id of logged player
      * @return ArrayList of HTML table rows
      */
-    public ArrayList<String> getHighscores(int playerID){
-        ArrayList<Friend> friends =  this.getFriendList(playerID);
-        ArrayList<Integer> friendIDs = new ArrayList<Integer>();
+    public ArrayList<String> getHighscores(String playerID){
+        ArrayList<Player> friends =  this.getFriendList(playerID);
+        ArrayList<String> friendIDs = new ArrayList<String>();
         ArrayList<String> toReturn = new ArrayList<String>();
-        for(Friend f: friends){
-            if(f.getServerID() == 0){
-                friendIDs.add(f.getFriendID());
+        for(Player p: friends){
+            if(p.getServerID() == 12){
+                friendIDs.add(p.getId());
             }else{
                 // TODO: get player's money amount from different server
             }
         }
         // Preparing query
         String query = "SELECT * FROM \"Player\" WHERE ";
-        for(Integer i: friendIDs){
-            query += "\"id\" = "+i+" OR ";
+        for(String s: friendIDs){
+            query += "\"id\" = '"+s+"' OR ";
         }
         query = query.substring(0, query.length()-4);
         query += "ORDER BY \"money\"";
@@ -319,30 +328,30 @@ public class PersistenceManager {
     
     
     
-    public void addNewFriends(Player p){
-        ArrayList<Friend> toRemove = new ArrayList<Friend>();
-        for(Friend f: p.getFriends()){
-            // If friendship ID equals 0 it means user sent friend request and friendship hasn't been saved in DB
-            if(f.getFriendshipID() == 0){
-                try{
-                    Statement stmt = connection.createStatement();
-                    // Insert notification into DB
-                    String confirmed = "N";
-                    if(f.isFriendshipConfirmed()){
-                        confirmed = "Y";
-                    }
-                    stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
-                    toRemove.add(f);
-                }catch(SQLException sqlExcept){
-                    System.err.println(sqlExcept.getMessage());
-                    this.error = sqlExcept.getMessage();
-                }
-            }
-        }
-        for(Friend f: toRemove){
-            p.getFriends().remove(f);
-        }
-    }
+//    public void addNewFriends(Player p){
+//        ArrayList<Player> toRemove = new ArrayList<Friend>();
+//        for(Friend f: p.getFriends()){
+//            // If friendship ID equals 0 it means user sent friend request and friendship hasn't been saved in DB
+//            if(f.getFriendshipID() == 0){
+//                try{
+//                    Statement stmt = connection.createStatement();
+//                    // Insert notification into DB
+//                    String confirmed = "N";
+//                    if(f.isFriendshipConfirmed()){
+//                        confirmed = "Y";
+//                    }
+//                    stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
+//                    toRemove.add(f);
+//                }catch(SQLException sqlExcept){
+//                    System.err.println(sqlExcept.getMessage());
+//                    this.error = sqlExcept.getMessage();
+//                }
+//            }
+//        }
+//        for(Friend f: toRemove){
+//            p.getFriends().remove(f);
+//        }
+//    }
     
     public int getPlayerID(String email){
         int id = 0;
@@ -367,12 +376,12 @@ public class PersistenceManager {
     
     
     // TODO: needs server-server communication
-    public String getPlayersEmail(int playerID, int serverID){
-        if(serverID == 0){
+    public String getPlayerEmail(String playerID, int serverID){
+        if(serverID == 12){
             String email = null;
             try{
                 Statement stmt = connection.createStatement();
-                ResultSet r = stmt.executeQuery("SELECT \"email\" FROM \"Player\" WHERE \"id\" = "+playerID+"");
+                ResultSet r = stmt.executeQuery("SELECT \"email\" FROM \"Player\" WHERE \"id\" = '"+playerID+"'");
                 r.next();
                 email = r.getString("email");
                 r.close();
@@ -476,22 +485,22 @@ public class PersistenceManager {
         return null;
     }
     
-    public void addFriend(Friend friend) {
-        
-                    // Insert notification into DB
-        String confirmed = "N";
-        if(friend.isFriendshipConfirmed()){
-            confirmed = "Y";
-        }
-        Statement stmt;
-        try {
-            stmt = connection.createStatement();
-            stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+
-                friend.getRemoteAddress()+", "+friend.getLocalUserID()+", 0, "+friend.getRemoteAddress()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
-        } catch (SQLException ex) {
-            System.err.println(ex.getMessage());
-            this.error = ex.getMessage();
-            Logger.getLogger(PersistenceManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void addFriend(Friend friend) {
+//        
+//                    // Insert notification into DB
+//        String confirmed = "N";
+//        if(friend.isFriendshipConfirmed()){
+//            confirmed = "Y";
+//        }
+//        Statement stmt;
+//        try {
+//            stmt = connection.createStatement();
+//            stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+
+//                friend.getRemoteAddress()+", "+friend.getLocalUserID()+", 0, "+friend.getRemoteAddress()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
+//        } catch (SQLException ex) {
+//            System.err.println(ex.getMessage());
+//            this.error = ex.getMessage();
+//            Logger.getLogger(PersistenceManager.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }

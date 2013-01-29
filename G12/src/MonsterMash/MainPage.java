@@ -39,7 +39,7 @@ public class MainPage extends HttpServlet {
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
             // Saves all friends and friend requests to attribute
-            request.setAttribute("friendshipList", current.getFriends());
+            request.setAttribute("friendList", current.getFriends());
 
             request.getRequestDispatcher("/WEB-INF/main_page.jsp").forward(request, response);
         }

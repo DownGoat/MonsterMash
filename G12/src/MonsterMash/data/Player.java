@@ -11,11 +11,28 @@ public class Player {
     private String password;
     private String email;
     private int money;
-    private int serverID;//
-    private ArrayList<Friend> friends;
+    private int serverID;
+    private ArrayList<Player> friends;
     private ArrayList<Notification> notifications; 
     private ArrayList<Monster> monsters;
 
+    /**
+     * Creates object of a new "friend.
+     * @param email username (email address)
+     * @param password encrypted password
+     * @param money default amount of money
+     * @param initialMonsterName name of random initial monster
+     */
+    public Player(String id, String name, int serverID){
+    	this.id = id; 
+    	this.email = name;
+    	this.password = null;
+        this.friends = null;
+        this.notifications = null;
+        this.monsters = null;
+        this.serverID = serverID;
+    }
+    
     /**
      * Creates object of a new player.
      * @param email username (email address)
@@ -28,11 +45,11 @@ public class Player {
     	this.email = email;
     	this.password = password;
     	this.money = money;
-        this.friends = new ArrayList<Friend>();
+        this.friends = new ArrayList<Player>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
         this.serverID = 12;
-    	monsters.add(new Monster(initialMonsterName));
+    	//monsters.add(new Monster(initialMonsterName));
         // Add first notifications:
         notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
         notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
@@ -48,7 +65,7 @@ public class Player {
      * @param notifications list of player's notifications
      * @param monsters list of player's monsters
      */
-    public Player(String id, String email, String password, int money, ArrayList<Friend> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters, int serverID){
+    public Player(String id, String email, String password, int money, ArrayList<Player> friends, ArrayList<Notification> notifications, ArrayList<Monster> monsters, int serverID){
         this.id = id;
         this.email = email;
         this.password = password;
@@ -57,12 +74,6 @@ public class Player {
         this.notifications = notifications;
         this.monsters = monsters;
         this.serverID = serverID;
-    }
-    
-    public Player(String email, String id, int money) {
-        this.email = email;
-        this.id = id;
-        this.money = money;
     }
     
     public Player() {
@@ -101,12 +112,12 @@ public class Player {
         this.money = money;
     }
 
-    public ArrayList<Friend> getFriends() {
+    public ArrayList<Player> getFriends() {
         return friends;
     }
 
     
-    public Friend getFriend(int i){
+    public Player getFriend(int i){
         return friends.get(i);
     }
 
@@ -142,7 +153,7 @@ public class Player {
      * @param friend
      * @return 
      */
-    public void addFriend(Friend friend){
+    public void addFriend(Player friend){
         friends.add(friend);
     }
     /**
