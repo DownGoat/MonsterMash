@@ -274,11 +274,32 @@ public class PersistenceManager {
     }
     
     
-    public ArrayList<String> getHighscores(){
-         ArrayList<String> toReturn = new ArrayList<String>();
-         try{
+    /**
+     * Get highscores for logged player, ordered by amount of money
+     * @param playerID id of logged player
+     * @return ArrayList of HTML table rows
+     */
+    public ArrayList<String> getHighscores(int playerID){
+        ArrayList<Friend> friends =  this.getFriendList(playerID);
+        ArrayList<Integer> friendIDs = new ArrayList<Integer>();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(Friend f: friends){
+            if(f.getServerID() == 0){
+                friendIDs.add(f.getFriendID());
+            }else{
+                // TODO: get player's money amount from different server
+            }
+        }
+        // Preparing query
+        String query = "SELECT * FROM \"Player\" WHERE ";
+        for(Integer i: friendIDs){
+            query += "\"id\" = "+i+" OR ";
+        }
+        query = query.substring(0, query.length()-4);
+        query += "ORDER BY \"money\"";
+        try{
             Statement stmt = connection.createStatement();
-            ResultSet result = stmt.executeQuery("SELECT * FROM \"Player\" ORDER BY \"money\" DESC");
+            ResultSet result = stmt.executeQuery(query);
             int i = 1;
             while(result.next()){
                 toReturn.add("<tr><td>"+i+".</td><td><b>"+result.getString("email")+"</b></td><td>"+result.getInt("money")+"$</td></tr>");
