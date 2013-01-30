@@ -4,9 +4,7 @@
  */
 package ServerCom;
 
-import data.Friend;
-import data.Notification;
-import data.Player;
+import data.FightRequest;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sis13
  */
-public class FriendAccept extends HttpServlet {
+public class FightWon extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -33,24 +31,17 @@ public class FriendAccept extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String friendID = request.getParameter("friendID");
+        String fightID = request.getParameter("fightID");
+        Double strength = Double.parseDouble(request.getParameter("strength"));
+        Double defence = Double.parseDouble(request.getParameter("defence"));
+        Double health = Double.parseDouble(request.getParameter("health"));
         
-        if(friendID != null) {
+        if (fightID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
-            Friend friend = pm.getFriend(friendID);
-            
-            if(friend != null) {
-                pm.acceptFriendRequest(friend);
-                response.setStatus(200);
-                
-                Player sender = pm.getPlayer(friend.getLocalUserID());
-                sender.addNotification(new Notification("Accepted friend request from "+friend.getRemoteUserID(), "You have accepted friend request from "+friend.getRemoteUserID(), sender));
-                pm.storeNotifications(sender);
-            }
+            FightRequest fr = pm.getFightRequest(fightID);
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid friendID");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight won.");
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

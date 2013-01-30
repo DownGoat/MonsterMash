@@ -40,7 +40,7 @@ public class FriendRequest extends HttpServlet {
         String remoteServerNumber = request.getParameter("remoteServerNumber");
         
         if (friendID == null || localUserID == null || remoteServerNumber == null || remoteUserID == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for friend request.");
         } else {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Player player = pm.getPlayer(localUserID);

@@ -44,7 +44,7 @@ public class FriendReject extends HttpServlet {
                 response.setStatus(200);
             }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request invalid friendID for friend reject.");
         }
     }
 

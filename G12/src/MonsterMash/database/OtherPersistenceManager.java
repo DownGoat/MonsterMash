@@ -4,6 +4,7 @@
  */
 package database;
 
+import data.FightRequest;
 import data.Friend;
 import data.Monster;
 import data.Player;
@@ -151,5 +152,52 @@ public class OtherPersistenceManager extends PersistenceManager {
             this.error = sqlExcept.getMessage();
         }
         return monsters;
+    }
+
+    public void storeFightRequest(FightRequest fr) {
+//        Statement stmt;
+//        try {
+//            stmt = connection.createStatement();
+//            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"money\", \"monster_id\", \"sender_monster_id\", \"fight_key\", \"offer_sent_time\") VALUES ('"+
+//                    
+//                    Statement.RETURN_GENERATED_KEYS);
+//        } catch (SQLException ex) {
+//            System.err.println(ex.getMessage());
+//            this.error = ex.getMessage();
+//        }
+//        }
+    }
+    
+    public Monster getMonster(String monsterID) {
+        Monster monster = null;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"id\" = '" + monsterID + "'");
+            r.next();
+            monster = new Monster(r.getString("id"),
+                        r.getString("name"),
+                        new Date(r.getLong("dob")),
+                        new Date(r.getLong("dod")),
+                        r.getDouble("base_strength"), 
+                        r.getDouble("current_strength"),
+                        r.getDouble("base_defence"),
+                        r.getDouble("current_defence"),
+                        r.getDouble("base_health"),
+                        r.getDouble("current_health"), 
+                        r.getFloat("fertility"),
+                        r.getString("user_id"),
+                        r.getInt("sale_offer"),
+                        r.getInt("breed_offer"));
+            r.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return monster;
+    }
+
+    public FightRequest getFightRequest(String fightID) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
