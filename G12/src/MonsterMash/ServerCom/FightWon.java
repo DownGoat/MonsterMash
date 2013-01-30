@@ -5,6 +5,7 @@
 package ServerCom;
 
 import data.FightRequest;
+import data.Monster;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +40,12 @@ public class FightWon extends HttpServlet {
         if (fightID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             FightRequest fr = pm.getFightRequest(fightID);
+            
+            if(fr != null) {
+                Monster monster = pm.getMonster(fr.getSenderMonsterID());
+            } else {
+               response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight id."); 
+            }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight won.");
         }
