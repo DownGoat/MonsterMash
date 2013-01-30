@@ -17,6 +17,8 @@ public class FightRequest {
     private String receiverMonsterID;
     private int senderServerID;
     private int recieverServerID;
+    
+    private final int MONEY = 20;
 
     public FightRequest(String senderID, String recieverID, String fightID, String senderMonsterID, String receiverMonsterID, int senderServerID, int recieverServerID) {
         this.senderID = senderID;
@@ -82,5 +84,9 @@ public class FightRequest {
 
     public void setRecieverServerID(int recieverServerID) {
         this.recieverServerID = recieverServerID;
+    }
+
+    public int getMONEY() {
+        return MONEY;
     }
 }
