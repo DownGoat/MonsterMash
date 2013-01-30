@@ -517,7 +517,7 @@ public class PersistenceManager {
     }
     
     /**
-     * 
+     * TODO: check if monster dies
      * @param playerID
      * @return 
      */
@@ -559,7 +559,7 @@ public class PersistenceManager {
     }
     
     /**
-     * 
+     * TODO: check if monster dies
      * @param playerID
      * @return 
      */
@@ -666,6 +666,38 @@ public class PersistenceManager {
     }
     
     /**
+     * 
+     * @param userID
+     * @param monsterID
+     * @return 
+     */
+    public boolean cancelBreedingOffer(String userID, String monsterID){
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            results.next();
+            count = results.getInt(1);
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        if(count < 1){
+            return false;
+        }
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"breed_offer\" = 0 WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            stmt.close();
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        return true;
+    }
+    
+    /**
      * Only from our DB
      * @param monsterID
      * @return 
@@ -747,6 +779,44 @@ public class PersistenceManager {
         }
     }
     
+    /**
+     * 
+     * @param playersMoney
+     * @param monsterID
+     * @param serverID
+     * @return 
+     */
+    public boolean canUserBreedMonster(int playersMoney, String monsterID, int serverID){
+        if(serverID == 12){
+            try{
+                Statement stmt = connection.createStatement();
+                stmt = connection.createStatement();
+                ResultSet results = stmt.executeQuery("SELECT \"breed_offer\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
+                results.next();
+                int offer = results.getInt("breed_offer");
+                results.close();
+                stmt.close();
+                if(offer <= playersMoney){
+                    return true;
+                }else{
+                    return false;
+                }
+            }catch (SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+            return false;
+        }else{
+            // TODO: outside server
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * @param userID
+     * @param monsterID
+     * @param serverID 
+     */
     public void buyMonster(String userID, String monsterID, int serverID){
         if(serverID == 12){
             try{
@@ -770,13 +840,47 @@ public class PersistenceManager {
                     this.storeMonsters(exOwner);
                     exOwner.addNotification(new Notification("You run out of monsters.", "You run out of monsters. We have generated new monster for you: <b>"+name+"</b>.", exOwner));
                     this.storeNotifications(exOwner);
-                    // TODO: ask user about name of a monster
+                    // TODO: ask user about name of a monster / generate random name
                 }
             }catch(SQLException sqlExcept){
                 this.error = sqlExcept.getMessage();
             }
         }else{
             // TODO: outside server
+        }
+    }
+    
+    public Monster getMonster(String monsterID, int serverID){
+        if(serverID == 12){
+            Monster monster = null;
+            try {
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"id\" = '" + monsterID + "'");
+                r.next();
+                monster = new Monster(r.getString("id"),
+                            r.getString("name"),
+                            new java.util.Date(r.getLong("dob")),
+                            new java.util.Date(r.getLong("dod")),
+                            r.getDouble("base_strength"), 
+                            r.getDouble("current_strength"),
+                            r.getDouble("base_defence"),
+                            r.getDouble("current_defence"),
+                            r.getDouble("base_health"),
+                            r.getDouble("current_health"), 
+                            r.getFloat("fertility"),
+                            r.getString("user_id"),
+                            r.getInt("sale_offer"),
+                            r.getInt("breed_offer"));
+                r.close();
+                stmt.close();
+            } catch (SQLException sqlExcept) {
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }
+            return monster;
+        }else{
+            // TODO: SERVER2SERVER
+            return null;
         }
     }
     

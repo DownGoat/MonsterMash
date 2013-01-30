@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Toshiba
+ * @author sjk4
  */
 public class MarketPage extends HttpServlet {
 
@@ -79,7 +79,7 @@ public class MarketPage extends HttpServlet {
             // Prepare strings:
             ArrayList<String> monstersForSale = new ArrayList<String>();
             for(Monster m: monsters){
-                monstersForSale.add("<li><a href=\"market?monster="+m.getId()+"&server="+m.getServerID()+"\"><b>Name:</b> "+m.getName()+" | <b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getSaleOffer()+"$ | <b>Stats:</b> def: "+(int)(m.getCurrentDefence()*100)+" /  hp: "+(int)(m.getCurrentHealth()*100)+" / str: "+(int)(m.getCurrentStrength()*100)+" </a></li>");
+                monstersForSale.add("<li><a href=\"market?monster="+m.getId()+"&server="+m.getServerID()+"\"><b>Name:</b> "+m.getName()+" | <b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getSaleOffer()+"$ | <b>Stats:</b> DEF: "+(int)(m.getBaseDefence()*100)+" /  HP: "+(int)(m.getBaseHealth()*100)+" / STR: "+(int)(m.getBaseStrength()*100)+" </a></li>");
             }
             request.setAttribute("monstersForSale", monstersForSale);
             this.getDataFromDB(request, response);
@@ -90,7 +90,7 @@ public class MarketPage extends HttpServlet {
         String monsterID = request.getParameter("cancelOffer");
         if(monsterID != null){
             if(pm.cancelMonsterOffer(current.getUserID(), monsterID)){
-                current.addNotification(new Notification("You have canceled your offer of <b>"+pm.getMonsterName(monsterID)+"</b>.", "<b>"+pm.getMonsterName(monsterID)+"</b> offer has been canceled by you. Now offer will not apper on the market.", current));
+                current.addNotification(new Notification("You have canceled your offer of <b>"+pm.getMonsterName(monsterID)+"</b>.", "<b>"+pm.getMonsterName(monsterID)+"</b> offer has been canceled by you. Now offer will not appear on the market.", current));
                 pm.storeNotifications(current);
             }
         }

@@ -62,7 +62,7 @@
 	<div id="monsterlist">
             <ul class="list">
                 <c:forEach items="${monsterList}" var="monster">
-                    <c:if test="${monster.saleOffer == 0}" >
+                    <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                         <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
                     </c:if>
                 </c:forEach>
@@ -105,7 +105,7 @@
                 <form action="market" method="POST">
                     <c:set var="anyAvailableMonsters" value="0" />
                         <c:forEach items="${monsterList}" var="monster">
-                            <c:if test="${monster.saleOffer == 0}" >
+                            <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                                 <c:set var="anyAvailableMonsters" value="1" />
                             </c:if>
                         </c:forEach>
@@ -114,7 +114,7 @@
                     <p style="text-align:center">  
                         <select name="monsterID">
                             <c:forEach items="${monsterList}" var="monster">
-                                <c:if test="${monster.saleOffer == 0}" >
+                                <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                                     <option value="${monster.id}">${monster.name}</option>
                                 </c:if>
                             </c:forEach>

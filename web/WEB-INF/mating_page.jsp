@@ -48,7 +48,7 @@
 	<div id="monsterlist">
             <ul class="list">
                 <c:forEach items="${monsterList}" var="monster">
-                    <c:if test="${monster.saleOffer == 0}" >
+                    <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                         <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
                     </c:if>
                 </c:forEach>
@@ -62,48 +62,69 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
         <div class="content">
-            <form action="" method="post">
                 <h1><span style="font-size: 25px;">O</span>FFERED <span style="font-size: 25px;">F</span>OR <span style="font-size: 25px;">B</span>REEDING:</h1>
                 <ul id="buylist">
-                    <c:if test="${empty monstersForSale}">
-                        <li style="text-align:center;">No breeding offers at the moment.</li>
+                    <form action="" method="get">
+                    <c:if test="${empty monstersForBreed}">
+                        <li style="text-align:center;">No offers at the moment.</li>
                     </c:if>
-                    <c:forEach items="${monstersForSale}" var="monster">
-                        <li><a href="market?monster=${monster.id}&server=${monster.serverID}"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
+                        <input id="monsterID" type="hidden" name="monster" />
+                        <input id="serverID" type="hidden" name="server" />
+                    <c:forEach items="${monstersForBreed}" var="monster">
+                        ${monster}
                     </c:forEach>
+                    </form>
                 </ul>
+                <p style="text-align:center;font-weight:bold">Breed with:
+                    <select name="myMonster">
+                        <c:forEach items="${monsterList}" var="monster">
+                            <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
+                                <option value="${monster.id}">${monster.name}</option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </p>
                 <hr />
                 <h1><span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTERS <span style="font-size: 25px;">O</span>FFERED <span style="font-size: 25px;">F</span>OR <span style="font-size: 25px;">B</span>REEDING</h1>
                 <ul id="selllist">
                     <c:set var="anyOffer" value="0" />
                     <c:forEach items="${monsterList}" var="monster">
-                        <c:if test="${monster.saleOffer != 0}" >
+                        <c:if test="${monster.breedOffer != 0}" >
                             <c:set var="anyOffer" value="1" />
-                            <li><a href="#" title="Cancel your offer"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
+                            <li><a href="mating?cancelOffer=${monster.id}" title="Cancel your offer"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.breedOffer}$</a></li>
                         </c:if>
                     </c:forEach>
                     <c:if test="${anyOffer == 0}">
-                        <li style="text-align:center;">You are not offering any monster for breeding at the moment.</li>
+                        <li style="text-align:center;">You are not offering any monsters for breeding at the moment.</li>
                     </c:if>
                 </ul><br />
                 <hr />
                 <h1><span style="font-size: 25px;">O</span>FFER <span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTER:</h1>
-                <form action="" method="POST">
+                <form action="market" method="POST">
+                    <c:set var="anyAvailableMonsters" value="0" />
+                        <c:forEach items="${monsterList}" var="monster">
+                            <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
+                                <c:set var="anyAvailableMonsters" value="1" />
+                            </c:if>
+                        </c:forEach>
+                    <c:if test="${anyAvailableMonsters == 1}">
                     <p style="text-align:center">Choose monster:</p>
-                    <p style="text-align:center">
-                        <select name="monster">
+                    <p style="text-align:center">  
+                        <select name="monsterID">
                             <c:forEach items="${monsterList}" var="monster">
-                                <c:if test="${monster.saleOffer == 0}" >
+                                <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                                     <option value="${monster.id}">${monster.name}</option>
                                 </c:if>
                             </c:forEach>
                         </select>
                     </p>
-                    <p style="text-align:center">Your offer:</p>
-                    <p style="text-align:center"><input type="text" name="amount" /></p>
-                    <p style="text-align:center"><input type="submit" value="Offer monster" /></p>
+                    <p style="text-align:center">Your offer: <input type="text" name="offerAmount" size="1" onkeypress="validate(event)" />$</p>
+                    <p style="text-align:center"><input type="submit" value="Sell monster" /></p>
+                    </c:if>
+                    <c:if test="${anyAvailableMonsters == 0}">
+                        <p style="font-weight:bold;color:red;font-style:italic;text-align:center">You have no monsters.</p>
+                    </c:if>
                 </form>
-            </form>
         </div>
     </body>
 </html>
