@@ -599,35 +599,186 @@ public class PersistenceManager {
          */
         return monsters;
     }
+
+    /**
+     * 
+     * @param userID
+     * @param monsterID
+     * @param offerAmount
+     * @return 
+     */
+    public boolean makeNewMarketOffer(String userID, String monsterID, int offerAmount){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"sale_offer\" = "+offerAmount+" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            stmt.close();
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            results.next();
+            count = results.getInt(1);
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        if(count > 0){
+            return true;
+        }
+        return false;
+    }
     
+    /**
+     * 
+     * @param userID
+     * @param monsterID
+     * @return 
+     */
+    public boolean cancelMonsterOffer(String userID, String monsterID){
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            results.next();
+            count = results.getInt(1);
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        if(count < 1){
+            return false;
+        }
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"sale_offer\" = 0 WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            stmt.close();
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        return true;
+    }
     
-//    public void addNewFriends(Player p){
-//        ArrayList<Player> toRemove = new ArrayList<Friend>();
-//        for(Friend f: p.getFriends()){
-//            // If friendship ID equals 0 it means user sent friend request and friendship hasn't been saved in DB
-//            if(f.getFriendshipID() == 0){
-//                try{
-//                    Statement stmt = connection.createStatement();
-//                    // Insert notification into DB
-//                    String confirmed = "N";
-//                    if(f.isFriendshipConfirmed()){
-//                        confirmed = "Y";
-//                    }
-//                    stmt.execute("INSERT INTO \"Friendship\" (\"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"CONFIRMED\") VALUES ("+p.getId()+", "+f.getFriendID()+", 0, "+f.getServerID()+", '"+confirmed+"')", Statement.RETURN_GENERATED_KEYS);
-//                    toRemove.add(f);
-//                }catch(SQLException sqlExcept){
-//                    System.err.println(sqlExcept.getMessage());
-//                    this.error = sqlExcept.getMessage();
-//                }
-//            }
-//        }
-//        for(Friend f: toRemove){
-//            p.getFriends().remove(f);
-//        }
-//    }
+    /**
+     * Only from our DB
+     * @param monsterID
+     * @return 
+     */
+    public String getMonsterName(String monsterID){
+        String monsterName = null;
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT \"name\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
+            r.next();
+            monsterName = r.getString("name");
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        return monsterName;
+    }
     
+    /**
+     * 
+     * @param monsterID
+     * @param serverID
+     * @return 
+     */
+    public boolean monsterExists(String monsterID, int serverID){
+        if(serverID == 12){
+            int count = 0;
+            try{
+                Statement stmt = connection.createStatement();
+                stmt = connection.createStatement();
+                ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
+                results.next();
+                count = results.getInt(1);
+                results.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+            if(count > 0){
+                return true;
+            }
+            return false;
+        }else{
+            // TODO: outside server
+            return false;
+        }
+    }
     
+    /**
+     * 
+     * @param playersMoney
+     * @param monsterID
+     * @param serverID
+     * @return 
+     */
+    public boolean canUserBuyMonster(int playersMoney, String monsterID, int serverID){
+        if(serverID == 12){
+            try{
+                Statement stmt = connection.createStatement();
+                stmt = connection.createStatement();
+                ResultSet results = stmt.executeQuery("SELECT \"sale_offer\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
+                results.next();
+                int offer = results.getInt("sale_offer");
+                results.close();
+                stmt.close();
+                if(offer <= playersMoney){
+                    return true;
+                }else{
+                    return false;
+                }
+            }catch (SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+            return false;
+        }else{
+            // TODO: outside server
+            return false;
+        }
+    }
     
+    public void buyMonster(String userID, String monsterID, int serverID){
+        if(serverID == 12){
+            try{
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery("SELECT \"sale_offer\", \"user_id\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
+                r.next();
+                int price = r.getInt("sale_offer");
+                String oldOwner = r.getString("user_id");
+                r.close();
+                stmt.execute("UPDATE \"Monster\" SET \"sale_offer\" = 0, \"user_id\" = '"+userID+"' WHERE \"id\" = '"+monsterID+"'");
+                stmt.execute("UPDATE \"Player\" SET \"money\" = \"money\"+"+price+" WHERE \"id\" = '"+oldOwner+"'");
+                stmt.execute("UPDATE \"Player\" SET \"money\" = \"money\"-"+price+" WHERE \"id\" = '"+userID+"'");
+                stmt.close();
+                Player exOwner = this.getPlayer(oldOwner);
+                exOwner.addNotification(new Notification("You have sold <b>"+this.getMonsterName(monsterID) +"</b> for <b>"+price+"$</b>.", "You have sold <b>"+this.getMonsterName(monsterID) +"</b> for <b>"+price+"$</b>. Money are now on your account.", exOwner));
+                this.storeNotifications(exOwner);
+                if(this.getMonsterList(oldOwner).size() < 1){
+                    // Old owner doesn't have any monsters
+                    String name = "Random Name";
+                    exOwner.addMonster(new Monster(name, oldOwner));
+                    this.storeMonsters(exOwner);
+                    exOwner.addNotification(new Notification("You run out of monsters.", "You run out of monsters. We have generated new monster for you: <b>"+name+"</b>.", exOwner));
+                    this.storeNotifications(exOwner);
+                    // TODO: ask user about name of a monster
+                }
+            }catch(SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+        }else{
+            // TODO: outside server
+        }
+    }
     
     
     
@@ -677,9 +828,7 @@ public class PersistenceManager {
         return this.error;
     }
 
-    public Monster getMonster(int monsterID) {
-        return null;
-    }
+    
     
 //    public void addFriend(Friend friend) {
 //        

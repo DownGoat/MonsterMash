@@ -22,10 +22,24 @@
         <script type="text/javascript">
             $(function() {
                 $( "#buylist" ).menu();
-            });
-            $(function() {
                 $( "#selllist" ).menu();
+                <c:if test="${not empty alertMessage}">
+                    alert("${alertMessage}");
+                </c:if> 
             });
+        </script>
+        <script type="text/javascript">
+        function validate(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode( key );
+            var regex = /[0-9]/;
+            if( !regex.test(key) ) {
+                theEvent.returnValue = false;
+                if(theEvent.preventDefault)
+                    theEvent.preventDefault();
+            }
+        }
         </script>
     </head>
     <body>
@@ -69,7 +83,7 @@
                         <li style="text-align:center;">No offers at the moment.</li>
                     </c:if>
                     <c:forEach items="${monstersForSale}" var="monster">
-                        <li><a href="market?monster=${monster.id}&server=${monster.serverID}"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
+                        ${monster}
                     </c:forEach>
                 </ul>
                 <hr />
@@ -79,7 +93,7 @@
                     <c:forEach items="${monsterList}" var="monster">
                         <c:if test="${monster.saleOffer != 0}" >
                             <c:set var="anyOffer" value="1" />
-                            <li><a href="#" title="Cancel your offer"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
+                            <li><a href="market?cancelOffer=${monster.id}" title="Cancel your offer"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}$</a></li>
                         </c:if>
                     </c:forEach>
                     <c:if test="${anyOffer == 0}">
@@ -88,10 +102,17 @@
                 </ul><br />
                 <hr />
                 <h1><span style="font-size: 25px;">S</span>ELL <span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTER:</h1>
-                <form action="" method="POST">
+                <form action="market" method="POST">
+                    <c:set var="anyAvailableMonsters" value="0" />
+                        <c:forEach items="${monsterList}" var="monster">
+                            <c:if test="${monster.saleOffer == 0}" >
+                                <c:set var="anyAvailableMonsters" value="1" />
+                            </c:if>
+                        </c:forEach>
+                    <c:if test="${anyAvailableMonsters == 1}">
                     <p style="text-align:center">Choose monster:</p>
-                    <p style="text-align:center">
-                        <select name="monster">
+                    <p style="text-align:center">  
+                        <select name="monsterID">
                             <c:forEach items="${monsterList}" var="monster">
                                 <c:if test="${monster.saleOffer == 0}" >
                                     <option value="${monster.id}">${monster.name}</option>
@@ -99,9 +120,12 @@
                             </c:forEach>
                         </select>
                     </p>
-                    <p style="text-align:center">Your offer:</p>
-                    <p style="text-align:center"><input type="text" name="amount" /></p>
+                    <p style="text-align:center">Your offer: <input type="text" name="offerAmount" size="1" onkeypress="validate(event)" />$</p>
                     <p style="text-align:center"><input type="submit" value="Sell monster" /></p>
+                    </c:if>
+                    <c:if test="${anyAvailableMonsters == 0}">
+                        <p style="font-weight:bold;color:red;font-style:italic;text-align:center">You have no monsters.</p>
+                    </c:if>
                 </form>
             </form>
         </div>

@@ -46,9 +46,9 @@
 			<div class="login-header">
 				Create an account
 			</div>
-                    Monster Mash is a fun educational game, in which you and your friends battle and breed
+                    <p style="text-align: justify;">Monster Mash is a fun educational game, in which you and your friends battle and breed
                     monsters while learning about evolution and genetics. 
-                        A fun new world awaits!
+                        A fun new world awaits!</p>
                         <p style="text-align: center;"><a href="create-account"><img src="images/create_account.png" width="125" height="32" alt="submit" /></a></p>
 		</div>
 	</div>
