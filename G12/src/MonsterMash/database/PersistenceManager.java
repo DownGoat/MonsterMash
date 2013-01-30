@@ -224,8 +224,20 @@ public class PersistenceManager {
      * @return list of monsters owned
      */
     public ArrayList<Monster> getMonsterList(String playerID){
-        // TODO: Implement this method.
-        return new ArrayList<Monster>();
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"user_id\" = '"+playerID+"'");
+            while(r.next()){
+                monsters.add(new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer")));
+            }
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return monsters;
     }
     
     /**
@@ -504,7 +516,89 @@ public class PersistenceManager {
         }
     }
     
+    /**
+     * 
+     * @param playerID
+     * @return 
+     */
+    public ArrayList<Monster> getMonstersForSale(String playerID){
+        ArrayList<Player> friends =  this.getFriendList(playerID);
+        // Build query
+        String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
+        for(Player p: friends){
+            if(p.getServerID() == 12){
+                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
+            }
+        }
+        query = query.substring(0, query.length()-4);
+        query += ")";
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery(query);
+            while(r.next()){
+                Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
+                tmp.setServerID(12);
+                monsters.add(tmp);
+            }
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        /**
+         * TODO: need to download monster from other servers
+         * for(Player p: friends){
+         *   if(p.getServerID() != 12){
+         * 
+         *   }
+         * }
+         */
+        return monsters;
+    }
     
+    /**
+     * 
+     * @param playerID
+     * @return 
+     */
+    public ArrayList<Monster> getMonstersForBreeding(String playerID){
+        ArrayList<Player> friends =  this.getFriendList(playerID);
+        // Build query
+        String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
+        for(Player p: friends){
+            if(p.getServerID() == 12){
+                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
+            }
+        }
+        query = query.substring(0, query.length()-4);
+        query += ")";
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery(query);
+            while(r.next()){
+                Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
+                tmp.setServerID(12);
+                monsters.add(tmp);
+            }
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        /**
+         * TODO: need to download monster from other servers
+         * for(Player p: friends){
+         *   if(p.getServerID() != 12){
+         * 
+         *   }
+         * }
+         */
+        return monsters;
+    }
     
     
 //    public void addNewFriends(Player p){

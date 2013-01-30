@@ -49,10 +49,12 @@
 	<div id="monsterlist">
             <ul class="list">
                 <c:forEach items="${monsterList}" var="monster">
-                    <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                    <c:if test="${monster.saleOffer == 0}" >
+                        <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                    </c:if>
                 </c:forEach>
             </ul>
-	</div>
+        </div>
 	<ul class="menu">
 		<li id="home"><a href="main">Home</a></li>
 		<li id="market"><a href="market">Market</a></li>

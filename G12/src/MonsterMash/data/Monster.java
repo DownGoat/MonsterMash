@@ -22,12 +22,20 @@ public class Monster {
     private int saleOffer;
     private int breedOffer;
     
+    private int serverID;
+    
     public Monster(String name, String userID){
         this.id = "0";
 	this.name = name;
 	this.dob = new Date();
         this.dod = new Date();
         Random random = new Random();
+        this.baseStrength = random.nextDouble();
+        this.currentStrength = random.nextDouble();
+        this.baseDefence = random.nextDouble();
+        this.currentDefence = random.nextDouble();
+        this.baseHealth = random.nextDouble();
+        this.currentHealth = random.nextDouble();
 	this.fertility = random.nextFloat();
         this.userID = userID;
         this.saleOffer = 0;
@@ -55,6 +63,14 @@ public class Monster {
         
     }
 
+    public int getServerID() {
+        return serverID;
+    }
+
+    public void setServerID(int serverID) {
+        this.serverID = serverID;
+    }
+    
     public String getId() {
         return id;
     }

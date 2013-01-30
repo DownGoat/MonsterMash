@@ -43,6 +43,8 @@ public class MainPage extends HttpServlet {
             request.setAttribute("friendList", current.getFriends());
             // Saves all friend requests to attribute
             request.setAttribute("requestList", pm.getFriendRequestList(current.getUserID()));
+            // Saves all monsters to attribute
+            request.setAttribute("monsterList", pm.getMonsterList(current.getUserID()));
             request.getRequestDispatcher("/WEB-INF/main_page.jsp").forward(request, response);
         }
     }

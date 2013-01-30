@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import data.Monster;
 import data.Player;
 import database.PersistenceManager;
 import java.io.IOException;
@@ -30,19 +31,23 @@ public class MarketPage extends HttpServlet {
      */
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if(session == null || session.getAttribute("user") == null){
             // Redirects when user is not logged in
             response.sendRedirect("");
-        } else {
-            Player current = (Player) session.getAttribute("user");
+        }else{
+            Player current = (Player)session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
             // Updates player informations
-            current = pm.getPlayer(current.getId());
+            current = pm.getPlayer(current.getUserID());
+            session.setAttribute("user", current);
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
             // Saves all friends and friend requests to attribute
-            request.setAttribute("friendshipList", current.getFriends());
-            // Load JSP page
+            request.setAttribute("friendList", current.getFriends());
+            // Saves all friend requests to attribute
+            request.setAttribute("requestList", pm.getFriendRequestList(current.getUserID()));
+            // Saves all monsters to attribute
+            request.setAttribute("monsterList", pm.getMonsterList(current.getUserID()));
             request.getRequestDispatcher("/WEB-INF/market_page.jsp").forward(request, response);
         }
     }
@@ -65,10 +70,8 @@ public class MarketPage extends HttpServlet {
         } else {
             PersistenceManager pm = new PersistenceManager();
             Player current = (Player) session.getAttribute("user");
-            ArrayList<String> buylist = pm.getMarketBuyList(current.getId());
-            request.setAttribute("buylist", buylist);
-            ArrayList<String> selllist = pm.getMarketSellList(current.getId());
-            request.setAttribute("selllist", buylist);
+            ArrayList<Monster> monstersForSale = pm.getMonstersForSale(current.getUserID());
+            request.setAttribute("monstersForSale", monstersForSale);
             this.getDataFromDB(request, response);
         }
     }

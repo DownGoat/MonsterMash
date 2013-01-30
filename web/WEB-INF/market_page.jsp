@@ -1,7 +1,7 @@
 <%-- 
     Document   : market_page
     Created on : 2013-01-29, 14:08:56
-    Author     : asdf
+    Author     : 
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -30,60 +30,79 @@
     </head>
     <body>
         <div id="friendslist">
-            <ul class="list">
-                <c:forEach items="${friendshipList}" var="friend">
-                    <c:if test="${! friend.friendshipConfirmed}">
-                        <li class="friend-request">
-                            <a><img src="images/avatar.jpg" alt="" /> ${friend.email}</a>
-                            <ul class="subrequest">
-                                <li><a href="main?acceptFriendRequest=${friend.friendshipID}">Accept Request</a></li>
-                                <li><a href="main?cancelFriendRequest=${friend.friendshipID}">Cancel Request</a></li>
-                            </ul>
-                        </li>
-                    </c:if>
-                </c:forEach>
-                <c:forEach items="${friendshipList}" var="friend">
-                    <c:if test="${friend.friendshipConfirmed}">
-                        <li><a title="Send Fight Request" href="fight?request=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
-                    </c:if>
-                </c:forEach>
-            </ul>
-        </div>
-        <div id="friend-request">
-            <form action="main" method="post">
-                <p><input id="friendRequestName" type="text" value="Enter email ..." name="email" maxlength="255" /></p>
-                <p><input type="submit" value="Send request" /></p>
-            </form>
-        </div>
-        <div id="monsterlist">
+		<ul class="list">
+                    <c:forEach items="${requestList}" var="request">
+                        ${request}
+                    </c:forEach>
+                    <c:forEach items="${friendList}" var="friend">
+                        <li><a title="Send Fight Request" href="fight?user=${friend.userID}&server=${friend.serverID}"><img src="images/avatar.jpg" alt="" /> ${friend.username}</a></li>
+                    </c:forEach>
+		</ul>
+	</div>
+	<div id="friend-request">
+		<form action="main" method="post">
+			<p><input id="friendRequestName" type="text" value="Enter email ..." name="email" maxlength="255" /></p>
+                        <p><input type="submit" value="Send request" /></p>
+		</form>
+	</div>
+	<div id="monsterlist">
             <ul class="list">
                 <c:forEach items="${monsterList}" var="monster">
-                    <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                    <c:if test="${monster.saleOffer == 0}" >
+                        <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                    </c:if>
                 </c:forEach>
             </ul>
         </div>
-        <ul class="menu">
-            <li id="home"><a href="main-panel.html">Home</a></li>
-            <li id="market"><a href="market.html">Market</a></li>
-            <li id="mating"><a href="mating.html">Mating</a></li>
-            <li id="highscores"><a href="highscores.html">Highscores</a></li>
-            <li id="logout"><a href="index.html">Logout</a></li>
-        </ul>
+	<ul class="menu">
+		<li id="home"><a href="main">Home</a></li>
+		<li id="market"><a href="market">Market</a></li>
+		<li id="mating"><a href="mating">Mating</a></li>
+		<li id="highscores"><a href="highscores">Highscores</a></li>
+		<li id="logout"><a href="logout">Logout</a></li>
+	</ul>
         <div class="content">
             <form action="" method="post">
-                <h1><span style="font-size: 25px;">B</span>UY:</h1>
+                <h1><span style="font-size: 25px;">B</span>UY <span style="font-size: 25px;">F</span>RIEND'S <span style="font-size: 25px;">M</span>ONSTERS:</h1>
                 <ul id="buylist">
-                    <c:forEach items="${buylist}" var="row">
-                        <li>${row}</li>
+                    <c:if test="${empty monstersForSale}">
+                        <li style="text-align:center;">No offers at the moment.</li>
+                    </c:if>
+                    <c:forEach items="${monstersForSale}" var="monster">
+                        <li><a href="market?monster=${monster.id}&server=${monster.serverID}"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
                     </c:forEach>
                 </ul>
                 <hr />
-                <h1><span style="font-size: 25px;">S</span>ELL:</h1>
+                <h1><span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTERS <span style="font-size: 25px;">F</span>OR <span style="font-size: 25px;">S</span>ALE :</h1>
                 <ul id="selllist">
-                    <c:forEach items="${selllist}" var="row">
-                        <li>${row}</li>
+                    <c:set var="anyOffer" value="0" />
+                    <c:forEach items="${monsterList}" var="monster">
+                        <c:if test="${monster.saleOffer != 0}" >
+                            <c:set var="anyOffer" value="1" />
+                            <li><a href="#" title="Cancel your offer"><b>Name:</b> ${monster.name} | <b>Price:</b> ${monster.saleOffer}</a></li>
+                        </c:if>
                     </c:forEach>
-                </ul>
+                    <c:if test="${anyOffer == 0}">
+                        <li style="text-align:center;">You are not selling any monsters at the moment.</li>
+                    </c:if>
+                </ul><br />
+                <hr />
+                <h1><span style="font-size: 25px;">S</span>ELL <span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTER:</h1>
+                <form action="" method="POST">
+                    <p style="text-align:center">Choose monster:</p>
+                    <p style="text-align:center">
+                        <select name="monster">
+                            <c:forEach items="${monsterList}" var="monster">
+                                <c:if test="${monster.saleOffer == 0}" >
+                                    <option value="${monster.id}">${monster.name}</option>
+                                </c:if>
+                            </c:forEach>
+                        </select>
+                    </p>
+                    <p style="text-align:center">Your offer:</p>
+                    <p style="text-align:center"><input type="text" name="amount" /></p>
+                    <p style="text-align:center"><input type="submit" value="Sell monster" /></p>
+                </form>
             </form>
         </div>
     </body>

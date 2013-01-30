@@ -36,6 +36,14 @@
         <servlet-name>FriendRequest</servlet-name>
         <servlet-class>ServerCom.FriendRequest</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MarketPage</servlet-name>
+        <servlet-class>MarketPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MatingPage</servlet-name>
+        <servlet-class>MatingPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginPage</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -67,6 +75,14 @@
     <servlet-mapping>
         <servlet-name>FriendRequest</servlet-name>
         <url-pattern>/friends/request</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MarketPage</servlet-name>
+        <url-pattern>/market</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MatingPage</servlet-name>
+        <url-pattern>/mating</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>90</session-timeout>

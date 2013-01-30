@@ -171,6 +171,7 @@ hr {
 	margin: 0 5px;
 	margin-bottom: 10px;
 	color: #999999;
+        text-shadow: 0.1em 0.1em 0.2em #000;
 }
 /* Create an account */
 .box{
