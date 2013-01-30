@@ -72,7 +72,7 @@ public class LoginPage extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         if(email.length() < 1 || password.length() < 1){
-            request.setAttribute("errorMessage", "Please fill in both your email and password.");
+            request.setAttribute("errorMessage", "Please enter both your email and password.");
             request.getRequestDispatcher("/WEB-INF/login_page.jsp").forward(request, response);
         }else{
             PersistenceManager pm = new PersistenceManager();
