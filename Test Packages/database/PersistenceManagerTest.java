@@ -5,7 +5,9 @@
 package database;
 
 import data.Monster;
+import data.Notification;
 import data.Player;
+import database.PersistenceManager;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,13 +47,10 @@ public class PersistenceManagerTest {
     @Test
     public void testAccountExists() {
         System.out.println("accountExists");
-        String userID = "";
-        PersistenceManager instance = new PersistenceManager();
-        boolean expResult = false;
-        boolean result = instance.accountExists(userID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        pm.storePlayer(player);
+        assertTrue(pm.accountExists("pal11@aber.ac.uk"));
     }
 
     /**
@@ -60,11 +59,15 @@ public class PersistenceManagerTest {
     @Test
     public void testStorePlayer() {
         System.out.println("storePlayer");
-        Player p = null;
-        PersistenceManager instance = new PersistenceManager();
-        instance.storePlayer(p);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        pm.storePlayer(player);
+        assertTrue(pm.accountExists("pal11@aber.ac.uk"));
+        
+        Player playerTwo = new Player("Pavels","pal111@aber.ac.uk", "password", 100, "Bill");
+        pm.storePlayer(playerTwo);
+        assertTrue(pm.accountExists("pal111@aber.ac.uk"));
+        
     }
 
     /**
@@ -73,11 +76,11 @@ public class PersistenceManagerTest {
     @Test
     public void testStoreNotifications() {
         System.out.println("storeNotifications");
-        Player p = null;
-        PersistenceManager instance = new PersistenceManager();
-        instance.storeNotifications(p);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        pm.storeNotifications(player);
+        assertNotNull(pm.getNotificationList("pal11@aber.ac.uk"));
+        
     }
 
     /**
@@ -86,11 +89,11 @@ public class PersistenceManagerTest {
     @Test
     public void testStoreMonsters() {
         System.out.println("storeMonsters");
-        Player p = null;
-        PersistenceManager instance = new PersistenceManager();
-        instance.storeMonsters(p);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        PersistenceManager pm = new PersistenceManager();
+        pm.storeMonsters(player);
+        assertNotNull(pm.getMonsterList("Bill"));
+
     }
 
     /**
@@ -99,14 +102,10 @@ public class PersistenceManagerTest {
     @Test
     public void testDoLogin() {
         System.out.println("doLogin");
-        String email = "";
-        String password = "";
-        PersistenceManager instance = new PersistenceManager();
-        Player expResult = null;
-        Player result = instance.doLogin(email, password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");        
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.doLogin("pal11@aber.ac.uk", "password"));
+        //TODO
     }
 
     /**
@@ -115,13 +114,14 @@ public class PersistenceManagerTest {
     @Test
     public void testGetFriendList() {
         System.out.println("getFriendList");
-        String playerID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getFriendList(playerID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Pavels","pal111@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("pal111@aber.ac.uk", "pal11@aber.ac.uk", 12);
+        pm.acceptFriendRequest("pal11@aber.ac.uk", "pal111@aber.ac.uk");
+        assertEquals(pm.getFriendList("pal11@aber.ac.uk").get(0), playerTwo);
     }
 
     /**
@@ -130,13 +130,10 @@ public class PersistenceManagerTest {
     @Test
     public void testGetNotificationList() {
         System.out.println("getNotificationList");
-        String playerID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getNotificationList(playerID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        PersistenceManager pm = new PersistenceManager();
+        pm.storePlayer(player);
+        assertNotNull(pm.getNotificationList("pal11@aber.ac.uk"));
     }
 
     /**
@@ -145,13 +142,9 @@ public class PersistenceManagerTest {
     @Test
     public void testGetMonsterList() {
         System.out.println("getMonsterList");
-        String playerID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getMonsterList(playerID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.getMonsterList("pal11@aber.ac.uk"));
     }
 
     /**
@@ -160,13 +153,9 @@ public class PersistenceManagerTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        String userID = "";
-        PersistenceManager instance = new PersistenceManager();
-        Player expResult = null;
-        Player result = instance.getPlayer(userID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.getPlayer("pal11@aber.ac.uk"));
     }
 
     /**
@@ -175,13 +164,9 @@ public class PersistenceManagerTest {
     @Test
     public void testGetPlayerIdAndServer() {
         System.out.println("getPlayerIdAndServer");
-        String email = "";
-        PersistenceManager instance = new PersistenceManager();
-        String[] expResult = null;
-        String[] result = instance.getPlayerIdAndServer(email);
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                        
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.getPlayerIdAndServer("pal11@aber.ac.uk"));
     }
 
     /**
@@ -253,13 +238,9 @@ public class PersistenceManagerTest {
     @Test
     public void testGetHighscores() {
         System.out.println("getHighscores");
-        String playerID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getHighscores(playerID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                        
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.getHighscores("pal11@aber.ac.uk"));
     }
 
     /**
@@ -268,14 +249,10 @@ public class PersistenceManagerTest {
     @Test
     public void testGetPlayerUsername() {
         System.out.println("getPlayerUsername");
-        String playerID = "";
-        int serverID = 0;
-        PersistenceManager instance = new PersistenceManager();
-        String expResult = "";
-        String result = instance.getPlayerUsername(playerID, serverID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                                
+        int serverID = 12;
+        PersistenceManager pm = new PersistenceManager();
+        assertNotNull(pm.getPlayerUsername("pal11@aber.ac.uk", 12));
     }
 
     /**
