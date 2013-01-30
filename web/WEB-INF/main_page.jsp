@@ -32,21 +32,11 @@
 <body>
 	<div id="friendslist">
 		<ul class="list">
-                    <c:forEach items="${friendshipList}" var="friend">
-                        <c:if test="${! friend.friendshipConfirmed}">
-                            <li class="friend-request">
-				<a><img src="images/avatar.jpg" alt="" /> ${friend.email}</a>
-				<ul class="subrequest">
-					<li><a href="main?acceptFriendRequest=${friend.friendshipID}">Accept Request</a></li>
-					<li><a href="main?cancelFriendRequest=${friend.friendshipID}">Cancel Request</a></li>
-				</ul>
-                            </li>
-                        </c:if>
+                    <c:forEach items="${requestList}" var="request">
+                        ${request}
                     </c:forEach>
                     <c:forEach items="${friendList}" var="friend">
-                        <c:if test="${friend.friendshipConfirmed}">
-                            <li><a title="Send Fight Request" href="fight?request=${friend.friendID}"><img src="images/avatar.jpg" alt="" /> ${friend.email}</a></li>
-                        </c:if>
+                        <li><a title="Send Fight Request" href="fight?user=${friend.userID}&server=${friend.serverID}"><img src="images/avatar.jpg" alt="" /> ${friend.username}</a></li>
                     </c:forEach>
 		</ul>
 	</div>

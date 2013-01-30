@@ -35,12 +35,14 @@ public class HighscoresPage extends HttpServlet {
             Player current = (Player)session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
             // Updates player informations
-            current = pm.getPlayer(current.getId());
+            current = pm.getPlayer(current.getUserID());
+            session.setAttribute("user", current);
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
             // Saves all friends and friend requests to attribute
-            request.setAttribute("friendshipList", current.getFriends());
-            // Load JSP page
+            request.setAttribute("friendList", current.getFriends());
+            // Saves all friend requests to attribute
+            request.setAttribute("requestList", pm.getFriendRequestList(current.getUserID()));
             request.getRequestDispatcher("/WEB-INF/highscores_page.jsp").forward(request, response);
         }
     }
@@ -63,7 +65,7 @@ public class HighscoresPage extends HttpServlet {
         }else{
             PersistenceManager pm = new PersistenceManager();
             Player current = (Player)session.getAttribute("user");
-            ArrayList<String> highscores = pm.getHighscores(current.getId());
+            ArrayList<String> highscores = pm.getHighscores(current.getUserID());
             request.setAttribute("highscores", highscores);
             this.getDataFromDB(request, response);
         }

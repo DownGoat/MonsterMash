@@ -43,7 +43,7 @@ public class PersistenceManager {
      */
     private String randomString(int length){
         Random random = new SecureRandom();
-        String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789+@";
+        String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
         String pw = "";
         for (int i=0; i<length; i++){
             int index = (int)(random.nextDouble()*letters.length());
@@ -257,10 +257,10 @@ public class PersistenceManager {
     public String[] getPlayerIdAndServer(String email){
         String[] player = new String[2];
         player[0] = "0";
-        player[1] = "1";
+        player[1] = "0";
         try{
             Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"username\" = '"+email+"'");
+            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"id\" = '"+email+"'");
             results.next();
             player[0] = results.getString("id");
             player[1] = "12";
@@ -299,6 +299,23 @@ public class PersistenceManager {
             return true;
         }else{
             return false;
+        }
+    }
+    
+    /**
+     * Adds new record to "Friendship" table and if user is on different server, sends JSON object.
+     * @param senderID userID of sender (always our server)
+     * @param receiverID userID of reciver
+     * @param receiverServerID  server ID of receiver
+     */
+    public void sendFriendRequest(String senderID, String receiverID, int receiverServerID){
+        try{
+            Statement stmt = connection.createStatement();
+            String id = this.randomString(16);
+            stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', 12, "+receiverServerID+", 'N')");
+        }catch(SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
         }
     }
     
@@ -348,34 +365,144 @@ public class PersistenceManager {
         ArrayList<String> toReturn = new ArrayList<String>();
         for(Player p: friends){
             if(p.getServerID() == 12){
-                friendIDs.add(p.getId());
+                friendIDs.add(p.getUserID());
             }else{
                 // TODO: get player's money amount from different server
             }
         }
+        friendIDs.add(playerID);
         // Preparing query
         String query = "SELECT * FROM \"Player\" WHERE ";
         for(String s: friendIDs){
             query += "\"id\" = '"+s+"' OR ";
         }
         query = query.substring(0, query.length()-4);
-        query += "ORDER BY \"money\"";
+        query += "ORDER BY \"money\" DESC";
         try{
             Statement stmt = connection.createStatement();
             ResultSet result = stmt.executeQuery(query);
             int i = 1;
             while(result.next()){
-                toReturn.add("<tr><td>"+i+".</td><td><b>"+result.getString("email")+"</b></td><td>"+result.getInt("money")+"$</td></tr>");
+                toReturn.add("<tr><td>"+i+".</td><td><b>"+result.getString("username")+"</b></td><td>"+result.getInt("money")+"$</td></tr>");
                 i++;
             }
             result.close();
             stmt.close();
         }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
         return toReturn;
     }
     
+    /**
+     * Gets player username by player id and server id.
+     * TODO: needs server-server communication
+     * @param playerID id of selected player
+     * @param serverID id of player's sever
+     * @return player's username
+     */
+    public String getPlayerUsername(String playerID, int serverID){
+        if(serverID == 12){
+            String email = null;
+            try{
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery("SELECT \"username\" FROM \"Player\" WHERE \"id\" = '"+playerID+"'");
+                r.next();
+                email = r.getString("username");
+                r.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }
+            return email;
+        }else{
+            return "Player Outside";
+        }
+    }
+    
+    /**
+     * 
+     * @param userID
+     * @return 
+     */
+    public ArrayList<String> getFriendRequestList(String userID){
+        ArrayList<String> toReturn = new ArrayList<String>();
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"receiver_id\" = '"+userID+"' AND \"confirmed\" = 'N'");
+            while(results.next()){
+                toReturn.add("<li class=\"friend-request\"><a><img src=\"images/avatar.jpg\" alt=\"\" /> "+this.getPlayerUsername(results.getString("sender_id"), results.getInt("sender_server_id"))+"</a><ul class=\"subrequest\"><li><a href=\"main?acceptFriendRequest="+results.getString("id")+"\">Accept Request</a></li><li><a href=\"main?cancelFriendRequest="+results.getString("id")+"\">Cancel Request</a></li></ul></li>");
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return toReturn;
+    }
+    
+    /**
+     * 
+     * @param requestID
+     * @param receiverID 
+     */
+    public void acceptFriendRequest(String requestID, String receiverID){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '"+requestID+"' AND \"receiver_id\" = '"+receiverID+"'");
+            if(results.next()){
+                this.confirmFriendship(results.getString("sender_id"), results.getInt("sender_server_id"), receiverID, results.getInt("receiver_server_id"));
+                Player receiver = this.getPlayer(receiverID);
+                String senderUsername = this.getPlayerUsername(results.getString("sender_id"), results.getInt("sender_server_id"));
+                receiver.addNotification(new Notification("Accepted friend request from <b>"+senderUsername+"</b>.", "You have accepted friend request from <b>"+senderUsername+"</b>.", receiver));
+                this.storeNotifications(receiver);
+                Player sender = this.getPlayer(results.getString("sender_id"));
+                if(sender != null){
+                    // Sender is from our server, add notification
+                    sender.addNotification(new Notification("Accepted friend request from <b>"+receiver.getUsername()+"</b>.", "<b>"+receiver.getUsername()+"</b> has accepted your friend request.", sender));
+                    this.storeNotifications(sender);
+                }
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    /**
+     * 
+     * @param requestID
+     * @param receiverID 
+     */
+    public void cancelFriendRequest(String requestID, String receiverID){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '"+requestID+"' AND \"receiver_id\" = '"+receiverID+"'");
+            if(results.next()){
+                this.rejectFriendship(results.getString("sender_id"), results.getInt("sender_server_id"), receiverID, results.getInt("receiver_server_id"));
+                Player receiver = this.getPlayer(receiverID);
+                String senderUsername = this.getPlayerUsername(results.getString("sender_id"), results.getInt("sender_server_id"));
+                receiver.addNotification(new Notification("Rejected friend request from <b>"+senderUsername+"</b>.", "You have rejected friend request from <b>"+senderUsername+"</b>.", receiver));
+                this.storeNotifications(receiver);
+                Player sender = this.getPlayer(results.getString("sender_id"));
+                if(sender != null){
+                    // Sender is from our server, add notification
+                    sender.addNotification(new Notification("Rejected friend request from <b>"+receiver.getUsername()+"</b>.", "<b>"+receiver.getUsername()+"</b> has rejected your friend request.", sender));
+                    this.storeNotifications(sender);
+                }
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+    }
     
     
     
@@ -413,26 +540,7 @@ public class PersistenceManager {
     
     
     
-    // TODO: needs server-server communication
-    public String getPlayerUsername(String playerID, int serverID){
-        if(serverID == 12){
-            String email = null;
-            try{
-                Statement stmt = connection.createStatement();
-                ResultSet r = stmt.executeQuery("SELECT \"email\" FROM \"Player\" WHERE \"id\" = '"+playerID+"'");
-                r.next();
-                email = r.getString("email");
-                r.close();
-                stmt.close();
-            }catch (SQLException sqlExcept){
-                System.err.println(sqlExcept.getMessage());
-                this.error = sqlExcept.getMessage();
-            }
-            return email;
-        }else{
-            return "Player Outside";
-        }
-    }
+    
     
     
     
@@ -470,30 +578,6 @@ public class PersistenceManager {
         }
     }
 
-     public ArrayList<String> getFriendRequestList(long id){
-        ArrayList<String> toReturn = new ArrayList<String>();
-        try{
-            Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"receiver_id\" = "+id+" AND \"CONFIRMED\" = 'N'");
-            while(results.next()){
-                int tmp = 0;
-                if(results.getInt(2) == id){
-                    tmp = results.getInt(3);
-                }else{
-                    tmp = results.getInt(2);
-                }
-                ResultSet res = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = "+tmp+"");
-                res.next();
-                toReturn.add(res.getString(2));
-                res.close();
-            }
-            results.close();
-            stmt.close();
-        }catch (SQLException sqlExcept){
-            this.error = sqlExcept.getMessage();
-        }
-        return toReturn;
-    }
     
     public String getErrorMessage(){
         return this.error;
