@@ -182,5 +182,11 @@ public class Monster {
     public void setDod(Date dod) {
         this.dod = dod;
     }
+
+    public void updateStats(Double strength, Double defence, Double health) {
+        this.currentStrength = strength;
+        this.currentDefence = defence;
+        this.currentHealth = health;
+    }
     
 }

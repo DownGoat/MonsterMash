@@ -158,7 +158,7 @@ public class OtherPersistenceManager extends PersistenceManager {
         Statement stmt;
         try {
             stmt = connection.createStatement();
-            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"money\", \"monster_id\", \"sender_monster_id\") "
+            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"money\", \"receiver_monster_id\", \"sender_monster_id\") "
                     + "VALUES ('"+fr.getFightID()+"', '"+fr.getSenderID()+"', '"+fr.getRecieverID()+"', "+fr.getSenderServerID()+", "+fr.getRecieverServerID()+", "+fr.getMONEY()+", '"+fr.getReceiverMonsterID()+"', '"+fr.getSenderMonsterID()+"') ");
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
@@ -208,7 +208,7 @@ public class OtherPersistenceManager extends PersistenceManager {
                     r.getString("receiver_id"),
                     r.getString("id"),
                     r.getString("sender_monster_id"),
-                    r.getString("monster_id"),
+                    r.getString("receiver_monster_id"),
                     r.getInt("sender_server_id"),
                     r.getInt("receiver_server_id")
                     );
@@ -219,5 +219,54 @@ public class OtherPersistenceManager extends PersistenceManager {
         }
         
         return fr;
+    }
+
+    public void updateMonster(Monster monster) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"current_strength\" = "+monster.getCurrentStrength()
+                    +", \"current_defence\" = "+monster.getCurrentDefence()
+                    +", \"current_health\" = "+monster.getCurrentHealth()+" WHERE \"id\" = '"+monster.getId()+"'"
+                        );
+           
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+
+    public void removeFightRequest(FightRequest fr) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Fight_request\" WHERE \"id\" = '" + fr.getFightID() + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    public void updateMoney(Player player) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Player\" SET \"money\" = "+player.getMoney()+" WHERE \"id\" = '"+player.getUserID()+"'");
+           
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+
+    public void removeMonster(String senderMonsterID) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Monster\" WHERE \"id\" = '" + senderMonsterID + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
     }
 }

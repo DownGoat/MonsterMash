@@ -6,6 +6,8 @@ package ServerCom;
 
 import data.FightRequest;
 import data.Monster;
+import data.Notification;
+import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +45,26 @@ public class FightWon extends HttpServlet {
             
             if(fr != null) {
                 Monster monster = pm.getMonster(fr.getSenderMonsterID());
+                Player player = pm.getPlayer(fr.getSenderID());
+                
+                if(monster != null && player != null) {
+                    monster.updateStats(strength, defence, health);
+                    pm.updateMonster(monster);
+                    player.addNotification(new Notification(
+                            "Fight won!",
+                            "Congratulations! You are the winner of the epic battle between you and "+
+                                fr.getRecieverID()+" and your mongrel pets "+monster.getName()+" and "+
+                                fr.getReceiverMonsterID()+". The bards will songs about this heroic battle for thousands of years to come.",
+                            player
+                            ));
+                    
+                    pm.storeNotifications(player);
+                    pm.removeFightRequest(fr);
+                    player.setMoney(fr.getMONEY()+player.getMoney());
+                    pm.updateMoney(player);
+                } else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight request data."); 
+                }     
             } else {
                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight id."); 
             }

@@ -19,12 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 
-
 /**
  *
  * @author sis13
  */
-public class FightRequestServlet extends HttpServlet {
+public class FightLost extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -37,37 +36,44 @@ public class FightRequestServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, JSONException {
+            throws ServletException, IOException {
         String fightID = request.getParameter("fightID");
-        String recieverMonsterID = request.getParameter("localMonsterID");
-        String senderMonsterID = request.getParameter("remoteMonsterID");
-        int senderServerID = Integer.parseInt(request.getParameter("remoteServerNumber"));
         
-        if(fightID != null && recieverMonsterID != null && senderMonsterID != null) {
+        if(fightID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
-            Monster reciverMonster = pm.getMonster(recieverMonsterID);
-            RemoteTalker rt = new RemoteTalker();
-            Monster senderMonster = rt.getRemoteMonster(senderMonsterID, rt.getRemoteAddress(senderServerID));
+            FightRequest fr = pm.getFightRequest(fightID);
             
-            if(reciverMonster != null && senderMonster != null) {            
-                Player p = pm.getPlayer(reciverMonster.getUserID());
-                if(p != null) {
-                    FightRequest fr = new FightRequest(senderMonster.getUserID(), reciverMonster.getUserID(), fightID, senderMonsterID, recieverMonsterID, senderServerID, 12);
-                    pm.storeFightRequest(fr);
-                    p.addNotification(
-                            new Notification(
-                                "You got a new figth request from "+senderMonster.getUserID(),
-                                senderMonster.getUserID()+" has challenged you to a epic battle! His monster "+senderMonster.getId()+" versus your monster "+reciverMonster.getName(),
-                                p));
-                    pm.storeNotifications(p);
-                } else {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, Player ID not found.");
+            if(fr != null) {
+               Player player = pm.getPlayer(fr.getSenderID());
+               RemoteTalker rt = new RemoteTalker();
+               Monster senderMonster = pm.getMonster(fr.getSenderMonsterID());
+               Monster receiverMonster = null;
+                try {
+                    receiverMonster = rt.getRemoteMonster(fr.getReceiverMonsterID(), rt.getRemoteAddress(fr.getRecieverServerID()));
+                } catch (JSONException ex) {
+                    Logger.getLogger(FightLost.class.getName()).log(Level.SEVERE, null, ex);
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cannot contact remote server!");
                 }
+               if(player != null && senderMonster != null && receiverMonster != null) {
+                   
+                   player.addNotification( new Notification (
+                           "The battle is lost!",
+                           "Your enemy fights with no honor and has won the battle. You lost your pet monster "+senderMonster.getName()+
+                                "against the demonic and unjust "+receiverMonster.getId()+". "+fr.getRecieverID()+" is now enjoing the spoils of war.",
+                           player)
+                           );
+                   
+                   pm.storeNotifications(player);
+                   pm.removeMonster(fr.getSenderMonsterID());
+                   pm.removeFightRequest(fr);
+               } else {
+                   response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unkown player id in fight request.");
+               }
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid monster IDS.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight id.");
             }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight request.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight lost.");
         }
     }
 
@@ -84,11 +90,7 @@ public class FightRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (JSONException ex) {
-            Logger.getLogger(FightRequestServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -103,11 +105,7 @@ public class FightRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (JSONException ex) {
-            Logger.getLogger(FightRequestServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

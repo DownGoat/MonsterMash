@@ -52,6 +52,10 @@
         <servlet-name>FightWon</servlet-name>
         <servlet-class>ServerCom.FightWon</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FightLost</servlet-name>
+        <servlet-class>ServerCom.FightLost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginPage</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -99,6 +103,10 @@
     <servlet-mapping>
         <servlet-name>FightWon</servlet-name>
         <url-pattern>/fight/won</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FightLost</servlet-name>
+        <url-pattern>/fight/lost</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>90</session-timeout>
