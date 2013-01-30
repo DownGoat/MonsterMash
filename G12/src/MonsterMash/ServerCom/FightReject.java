@@ -5,25 +5,21 @@
 package ServerCom;
 
 import data.FightRequest;
-import data.Monster;
 import data.Notification;
 import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.JSONException;
 
 /**
  *
  * @author sis13
  */
-public class FightLost extends HttpServlet {
+public class FightReject extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -44,36 +40,25 @@ public class FightLost extends HttpServlet {
             FightRequest fr = pm.getFightRequest(fightID);
             
             if(fr != null) {
-               Player player = pm.getPlayer(fr.getSenderID());
-               RemoteTalker rt = new RemoteTalker();
-               Monster senderMonster = pm.getMonster(fr.getSenderMonsterID());
-               Monster receiverMonster = null;
-                try {
-                    receiverMonster = rt.getRemoteMonster(fr.getReceiverMonsterID(), rt.getRemoteAddress(fr.getRecieverServerID()));
-                } catch (JSONException ex) {
-                    Logger.getLogger(FightLost.class.getName()).log(Level.SEVERE, null, ex);
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cannot contact remote server!");
+                Player sender = pm.getPlayer(fr.getSenderID());
+                
+                if(sender != null) {
+                    sender.addNotification(new Notification(
+                            "Battle rejected",
+                            "The craven "+fr.getRecieverID()+" has rejected your offer for battle.",
+                            sender
+                            ));
+                    pm.storeNotifications(sender);
+                    pm.removeFightRequest(fr);
+                } else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown player in fight request.");
                 }
-               if(player != null && senderMonster != null && receiverMonster != null) {
-                   
-                   player.addNotification( new Notification (
-                           "The battle is lost!",
-                           "Your enemy fights with no honor and has won the battle. You lost your pet monster "+senderMonster.getName()+
-                                " against the demonic and unjust "+receiverMonster.getId()+". "+fr.getRecieverID()+" is now enjoing the spoils of war.",
-                           player)
-                           );
-                   
-                   pm.storeNotifications(player);
-                   pm.removeMonster(fr.getSenderMonsterID());
-                   pm.removeFightRequest(fr);
-               } else {
-                   response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unkown player id in fight request.");
-               }
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight id.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown fightID.");
             }
+            
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight lost.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight reject.");
         }
     }
 

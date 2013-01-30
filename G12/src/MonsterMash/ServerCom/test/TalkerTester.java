@@ -6,6 +6,7 @@ package ServerCom.test;
 
 import ServerCom.JSONManager;
 import ServerCom.RemoteTalker;
+import data.FightRequest;
 import data.Friend;
 import data.Monster;
 import data.Player;
@@ -82,6 +83,63 @@ public class TalkerTester extends HttpServlet {
             RemoteTalker rt = new RemoteTalker();
             Player p = rt.getRemotePlayer(request.getParameter("userID"), rt.getRemoteAddress(12));
             System.out.println(JSONManager.jsonPlayer(p).toString());
+        }
+        
+        else if(type.equals("sendfr")) {
+            RemoteTalker rt = new RemoteTalker();
+            
+            String fightID = request.getParameter("fightID");
+            String recieverMonsterID = request.getParameter("localMonsterID");
+            String senderMonsterID = request.getParameter("remoteMonsterID");
+            String senderID = request.getParameter("senderID");
+            String receiverID = request.getParameter("receiverID");
+            
+            FightRequest fr = new FightRequest(senderID, receiverID, fightID, senderMonsterID, recieverMonsterID, 12, 12);
+            
+            rt.remoteFightRequest(fr, 12);
+         
+        }
+        
+        else if(type.equals("won")) {
+            RemoteTalker rt = new RemoteTalker();
+            
+            String fightID = request.getParameter("fightID");
+            String recieverMonsterID = request.getParameter("localMonsterID");
+            String senderMonsterID = request.getParameter("remoteMonsterID");
+            String senderID = request.getParameter("senderID");
+            String receiverID = request.getParameter("receiverID");
+            
+            FightRequest fr = new FightRequest(senderID, receiverID, fightID, senderMonsterID, recieverMonsterID, 12, 12);
+            
+            
+            
+            rt.wonRemoteFight(fr, 12, rt.getRemoteMonster(senderMonsterID, rt.getRemoteAddress(12)));
+        }
+        
+        else if(type.equals("lost")) {
+            RemoteTalker rt = new RemoteTalker();
+            String fightID = request.getParameter("fightID");
+            String recieverMonsterID = request.getParameter("localMonsterID");
+            String senderMonsterID = request.getParameter("remoteMonsterID");
+            String senderID = request.getParameter("senderID");
+            String receiverID = request.getParameter("receiverID");
+            
+            FightRequest fr = new FightRequest(senderID, receiverID, fightID, senderMonsterID, recieverMonsterID, 12, 12);
+            
+            rt.lostRemoteFight(fr, 12);
+        }
+        
+        else if(type.equals("rejectfr")) {
+            RemoteTalker rt = new RemoteTalker();
+            String fightID = request.getParameter("fightID");
+            String recieverMonsterID = request.getParameter("localMonsterID");
+            String senderMonsterID = request.getParameter("remoteMonsterID");
+            String senderID = request.getParameter("senderID");
+            String receiverID = request.getParameter("receiverID");
+            
+            FightRequest fr = new FightRequest(senderID, receiverID, fightID, senderMonsterID, recieverMonsterID, 12, 12);
+            
+            rt.rejectRemoteFight(fr, 12);
         }
     }
 

@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import data.FightRequest;
 import data.Friend;
 import data.Monster;
 import data.Notification;
@@ -143,4 +144,41 @@ public class RemoteTalker {
         
         String body = resource.path("friends/reject").queryParam("friendID", friend.getFriendshipID()).get(String.class);
     }
+    
+    public void remoteFightRequest(FightRequest fightRequest, int serverNumber) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("fightID", fightRequest.getFightID());
+        params.add("localMonsterID", fightRequest.getReceiverMonsterID());
+        params.add("remoteMonsterID", fightRequest.getSenderMonsterID());
+        params.add("remoteServerNumber", String.valueOf(fightRequest.getSenderServerID()));
+        
+        String body = resource.path("fight/request").queryParams(params).get(String.class);
+        
+        // TODO save FR to DB.
+    }
+    
+    public void wonRemoteFight(FightRequest fightRequest, int serverNumber, Monster monster) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("fightID", fightRequest.getFightID());
+        params.add("strength", String.valueOf(monster.getCurrentStrength()));
+        params.add("defence", String.valueOf(monster.getCurrentDefence()));
+        params.add("health", String.valueOf(monster.getCurrentHealth()));
+        
+        String body = resource.path("fight/won").queryParams(params).get(String.class);
+    }
+    
+    public void lostRemoteFight(FightRequest fightRequest, int serverNumber) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        String body = resource.path("fight/lost").queryParam("fightID", fightRequest.getFightID()).get(String.class);
+    }
+    
+    public void rejectRemoteFight(FightRequest fightRequest, int serverNumber) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        String body = resource.path("fight/reject").queryParam("fightID", fightRequest.getFightID()).get(String.class);
+    }
 }
+//
