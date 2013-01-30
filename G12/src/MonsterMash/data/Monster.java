@@ -24,6 +24,8 @@ public class Monster {
     
     private int serverID;
     
+    private final int MAX_CHILDREN = 10;
+    
     public Monster(String name, String userID){
         this.id = "0";
 	this.name = name;
@@ -61,6 +63,66 @@ public class Monster {
 
     public Monster() {
         
+    }
+    /**
+     * Breeding class to breed new monsters
+     * 
+     * @param other Monster that is being bred with
+     * @return Monster[] and array of the children
+     */
+    
+    public Monster[] breeding(Monster other) {
+        Random r = new Random(); 
+        int numberofchildren = (int) Math.sqrt(fertility * other.fertility) * MAX_CHILDREN;
+    	Monster[] children = new Monster[numberofchildren + 1]; 
+        
+        for (int i = 0; i<= numberofchildren; i++){
+            children[i]=new Monster();
+            children[i].dob=new Date();
+            //this is assuming that the children go to the owner of the monster that calls the method
+            children[i].userID=userID; 
+            
+            //generating inherited defense
+            if(r.nextInt(100)<5){
+                 children[i].baseDefence=r.nextDouble();
+            }
+            else if(r.nextInt(100)<50){
+                 children[i].baseDefence=baseDefence;
+            }
+            else { children[i].baseDefence=other.baseDefence;
+            }
+            //generating inherited strength
+            if(r.nextInt(100)<5){
+                 children[i].baseStrength=r.nextDouble();
+            }
+            else if(r.nextInt(100)<50){
+                 children[i].baseStrength=baseStrength;
+            }
+            else { children[i].baseStrength=other.baseStrength;
+            }
+            //generating inherited health
+            if(r.nextInt(100)<5){
+                 children[i].baseHealth=r.nextDouble();
+            }
+            else if(r.nextInt(100)<50){
+                 children[i].baseHealth=baseHealth;
+            }
+            else { children[i].baseHealth=other.baseHealth;
+            }
+            //generating inherited fertility
+            if(r.nextInt(100)<5){
+                 children[i].fertility=r.nextFloat();
+            }
+            else if(r.nextInt(100)<50){
+                 children[i].fertility=fertility;
+            }
+            else { children[i].fertility=other.fertility;
+            }
+             
+            
+        }
+            
+        return children;
     }
 
     public int getServerID() {

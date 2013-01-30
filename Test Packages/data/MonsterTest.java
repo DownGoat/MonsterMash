@@ -37,6 +37,19 @@ public class MonsterTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testBreeding(){
+        Monster m1 = new Monster("testMonster", "jau1");
+        Monster m2 = new Monster("testMonster2", "qwe");
+        Monster[] testChildren = m1.breeding(m2);
+        assertNotNull(testChildren[0].getBaseDefence());
+        assertNotNull(testChildren[0].getBaseHealth());
+        assertNotNull(testChildren[0].getBaseStrength());
+        
+    }
+    
+    
+    
     /**
      * Test of getId method, of class Monster.
      */
