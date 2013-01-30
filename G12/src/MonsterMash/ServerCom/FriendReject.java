@@ -34,13 +34,13 @@ public class FriendReject extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String friendID = request.getParameter("friendID");
-        
+
         if(friendID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Friend friend = pm.getFriend(friendID);
             
             if(friend != null) {
-                pm.acceptFriendRequest(friend);
+                pm.rejectFriend(friend);
                 response.setStatus(200);
             }
         } else {

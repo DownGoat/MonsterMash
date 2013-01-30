@@ -46,9 +46,9 @@ public class RemoteTalker {
 	JSONObject json = new JSONObject(body);
         
         player = new Player();
-        player.setEmail(json.getString("name"));
+        player.setUsername(json.getString("name"));
         player.setMoney(json.getInt("money"));
-        player.setId(json.getString("userID"));
+        player.setUserID(json.getString("userID"));
         
         return player;
     }
@@ -115,11 +115,11 @@ public class RemoteTalker {
     public void remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         resource = client.resource(getRemoteAddress(serverNumber));
         
-        Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getId(), 12, serverNumber, "N");
+        Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getUserID(), 12, serverNumber, "N");
         
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add("friendID", friend.getFriendshipID());
-        params.add("localUserID", localUser.getId());
+        params.add("localUserID", localUser.getUserID());
         params.add("remoteUserID", remoteUserID);
         params.add("remoteServerNumber", String.valueOf(serverNumber));
         

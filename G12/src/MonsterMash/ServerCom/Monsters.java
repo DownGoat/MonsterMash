@@ -129,8 +129,8 @@ public class Monsters extends HttpServlet {
     }
 
     public String singleMonster(String monsterID, HttpServletResponse response) throws IOException {
-        PersistenceManager pm = new PersistenceManager();
-        Monster monster = pm.getMonster(Integer.parseInt(monsterID));
+        OtherPersistenceManager pm = new OtherPersistenceManager();
+        Monster monster = pm.getMonster(monsterID);
 
         if (monster == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Monster not found");

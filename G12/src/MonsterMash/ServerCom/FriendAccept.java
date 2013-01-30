@@ -43,8 +43,8 @@ public class FriendAccept extends HttpServlet {
                 pm.acceptFriendRequest(friend);
                 response.setStatus(200);
                 
-                Player sender = pm.getPlayer(friend.getRemoteUserID());
-                sender.addNotification(new Notification("Accepted friend request from "+friend.getLocalUserID(), "You have accepted friend request from "+friend.getLocalUserID(), sender));
+                Player sender = pm.getPlayer(friend.getLocalUserID());
+                sender.addNotification(new Notification("Accepted friend request from "+friend.getRemoteUserID(), "You have accepted friend request from "+friend.getRemoteUserID(), sender));
                 pm.storeNotifications(sender);
             }
         } else {
