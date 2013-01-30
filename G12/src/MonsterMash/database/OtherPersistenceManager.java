@@ -155,17 +155,15 @@ public class OtherPersistenceManager extends PersistenceManager {
     }
 
     public void storeFightRequest(FightRequest fr) {
-//        Statement stmt;
-//        try {
-//            stmt = connection.createStatement();
-//            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"money\", \"monster_id\", \"sender_monster_id\", \"fight_key\", \"offer_sent_time\") VALUES ('"+
-//                    
-//                    Statement.RETURN_GENERATED_KEYS);
-//        } catch (SQLException ex) {
-//            System.err.println(ex.getMessage());
-//            this.error = ex.getMessage();
-//        }
-//        }
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"money\", \"monster_id\", \"sender_monster_id\") "
+                    + "VALUES ('"+fr.getFightID()+"', '"+fr.getSenderID()+"', '"+fr.getRecieverID()+"', "+fr.getSenderServerID()+", "+fr.getRecieverServerID()+", "+fr.getMONEY()+", '"+fr.getReceiverMonsterID()+"', '"+fr.getSenderMonsterID()+"') ");
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            this.error = ex.getMessage();
+        }
     }
     
     public Monster getMonster(String monsterID) {
