@@ -198,6 +198,28 @@ public class OtherPersistenceManager extends PersistenceManager {
     }
 
     public FightRequest getFightRequest(String fightID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        FightRequest fr = null;
+        
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Fight_request\" WHERE \"id\" = '" + fightID + "'");
+            r.next();
+            
+            fr = new FightRequest(
+                    r.getString("sender_id"),
+                    r.getString("receiver_id"),
+                    r.getString("id"),
+                    r.getString("sender_monster_id"),
+                    r.getString("monster_id"),
+                    r.getInt("sender_server_id"),
+                    r.getInt("receiver_server_id")
+                    );
+            
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        
+        return fr;
     }
 }
