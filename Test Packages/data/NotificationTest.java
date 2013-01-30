@@ -118,9 +118,9 @@ public class NotificationTest {
     public void testGetPlayer() {
         System.out.println("getPlayer");
         Player player = new Player();
-        player.setId("1");
+        player.setUserID("1");
         Notification notification = new Notification("short message", "long message text", player);
-        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getId());
+        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getUserID());
     }
 
     /**
@@ -130,13 +130,13 @@ public class NotificationTest {
     public void testSetPlayer() {
         System.out.println("setPlayer");
         Player bob = new Player();
-        bob.setId("1");
+        bob.setUserID("1");
         Player bill = new Player();
-        bill.setId("2");
+        bill.setUserID("2");
         Notification notification = new Notification("short message", "long message text", bob);
-        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getId());
+        assertEquals("Notification Player ID should be 1'", "1", notification.getPlayer().getUserID());
         notification.setPlayer(bill);
-        assertEquals("Notification Player ID should be 2'", "2", notification.getPlayer().getId());
+        assertEquals("Notification Player ID should be 2'", "2", notification.getPlayer().getUserID());
     }
 
     /**
@@ -146,7 +146,7 @@ public class NotificationTest {
     public void testGetTimeSent() {
         System.out.println("getTimeSent");
         Player player = new Player();
-        player.setId("1");
+        player.setUserID("1");
         Notification notification = new Notification("short message", "long message text", player);
         Date now = new Date();
         assertEquals("Time sent should be now'", now, notification.getTimeSent());

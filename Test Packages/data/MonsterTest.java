@@ -173,7 +173,7 @@ public class MonsterTest {
     @Test
     public void testGetFertility() {
         System.out.println("getFertility");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getFertility() && monster.getFertility()<1);
     }
 

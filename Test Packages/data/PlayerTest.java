@@ -43,8 +43,8 @@ public class PlayerTest {
     @Test
     public void testGetId() {
         System.out.println("getId");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        assertEquals("Id should be 0", 0, player.getId());
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
+        assertEquals("Id should be James", "James", player.getUserID());
 
     }
 
@@ -54,9 +54,9 @@ public class PlayerTest {
     @Test
     public void testSetId() {
         System.out.println("setId");
-        Player player = new Player("jau1@aber.ac.uk", "password1", 100, "Bill");
-        player.setId("69");
-        assertEquals("Id should be 69", "69", player.getId());
+        Player player = new Player("James","jau1@aber.ac.uk", "password1", 100, "Bill");
+        player.setUserID("69");
+        assertEquals("Id should be 69", "69", player.getUserID());
 
     }
 
@@ -66,7 +66,7 @@ public class PlayerTest {
     @Test
     public void testGetPassword() {
         System.out.println("getPassword");
-        Player player = new Player("jau1@aber.ac.uk", "password1", 100, "Bill");
+        Player player = new Player("James","jau1@aber.ac.uk", "password1", 100, "Bill");
         assertEquals("password should be password1", "password1", player.getPassword());
 
     }
@@ -77,7 +77,7 @@ public class PlayerTest {
     @Test
     public void testSetPassword() {
         System.out.println("setPassword");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
         player.setPassword("mittens");
         assertEquals("password should be mittens", "mittens", player.getPassword());
 
@@ -90,8 +90,8 @@ public class PlayerTest {
     @Test
     public void testGetEmail() {
         System.out.println("getEmail");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        assertEquals("the email should be jau1@aber.ac.uk", "jau1@aber.ac.uk", player.getEmail());
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
+        assertEquals("the email should be jau1@aber.ac.uk", "jau1@aber.ac.uk", player.getUsername());
 
     }
 
@@ -101,9 +101,9 @@ public class PlayerTest {
     @Test
     public void testSetEmail() {
         System.out.println("setEmail");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        player.setEmail("lwv@aber.ac.uk");
-        assertEquals("the email should be lwv@aber.ac.uk", "lwv@aber.ac.uk", player.getEmail());
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
+        player.setUsername("lwv@aber.ac.uk");
+        assertEquals("the email should be lwv@aber.ac.uk", "lwv@aber.ac.uk", player.getUsername());
 
     }
 
@@ -113,7 +113,7 @@ public class PlayerTest {
     @Test
     public void testGetMoney() {
         System.out.println("getMoney");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
         assertEquals("the money should be 100", 100, player.getMoney());
 
     }
@@ -124,7 +124,7 @@ public class PlayerTest {
     @Test
     public void testSetMoney() {
         System.out.println("setMoney");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
         player.setMoney(200);
         assertEquals("money should be 200", 200, player.getMoney());
 
@@ -136,10 +136,10 @@ public class PlayerTest {
     @Test
     public void testGetFriendY() {
         System.out.println("getFriends");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
-        Friend friend = new Friend(12,23,11, "lwv@aber.ac.uk", "N");
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
+        Player friend = new Player("Llion","lwv@aber.ac.uk", 12);
         player.addFriend(friend);
-        assertEquals("friend ID should be 23", 23, friend.getId(player.getFriend(0)));
+        assertEquals("friend ID should be Llion", "Llion", player.getFriend(0).getUserID());
     }
 
     /**
@@ -148,7 +148,7 @@ public class PlayerTest {
     @Test
     public void testGetFriendN() {
         System.out.println("getFriends");
-        Player player = new Player("jau1@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
         Friend friend = new Friend(12,23,11, "lwv@aber.ac.uk", "N");
         player.addFriend(friend);
         assertEquals("Confirmed should be no",
@@ -215,7 +215,7 @@ public class PlayerTest {
     @Test
     public void testAddFriend() {
         System.out.println("addFriend");
-        Friend friend = null;
+        Player friend = null;
         Player instance = null;
         instance.addFriend(friend);
         // TODO review the generated test code and remove the default call to fail.
