@@ -180,5 +180,15 @@ public class RemoteTalker {
         resource = client.resource(getRemoteAddress(serverNumber));
         String body = resource.path("fight/reject").queryParam("fightID", fightRequest.getFightID()).get(String.class);
     }
+    
+    public void sendBreedRequest(String monsterID, int serverNumber) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        String body = resource.path("breed").queryParam("monsterID", monsterID).get(String.class);
+    }
+    
+    public void sendBuyRequest(String monsterID, int serverNumber) {
+        resource = client.resource(getRemoteAddress(serverNumber));
+        String body = resource.path("buy").queryParam("monsterID", monsterID).get(String.class);
+    }
 }
 //
