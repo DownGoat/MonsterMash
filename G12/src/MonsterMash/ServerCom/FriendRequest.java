@@ -46,7 +46,7 @@ public class FriendRequest extends HttpServlet {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Player player = pm.getPlayer(localUserID);
 
-            friend = new Friend(friendID, localUserID, remoteUserID, CONFIG.OUR_SERVER, Integer.parseInt(remoteServerNumber), "N");
+            friend = new Friend(friendID, localUserID, remoteUserID, Integer.parseInt(remoteServerNumber), CONFIG.OUR_SERVER, "N");
             
             if(player != null) {
                 System.out.println("Player exists on my server.");

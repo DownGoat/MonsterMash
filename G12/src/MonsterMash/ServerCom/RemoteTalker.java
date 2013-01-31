@@ -139,9 +139,9 @@ public class RemoteTalker {
 
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add("friendID", friend.getFriendshipID());
-        params.add("localUserID", localUser.getUserID());
-        params.add("remoteUserID", remoteUserID);
-        params.add("remoteServerNumber", String.valueOf(serverNumber));
+        params.add("localUserID", remoteUserID);
+        params.add("remoteUserID", localUser.getUserID());
+        params.add("remoteServerNumber", CONFIG.OUR_SERVER+"");
         String body = null;
 
         try {

@@ -44,7 +44,6 @@ public class MainPage extends HttpServlet {
             session.setAttribute("user", current);
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
-            System.err.println(current.getNotifications().size());
             // Saves all friends to attribute
             request.setAttribute("friendList", current.getFriends());
             // Saves all friend requests to attribute

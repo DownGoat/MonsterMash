@@ -353,14 +353,14 @@ public class PersistenceManager {
      */
     public void sendFriendRequest(String senderID, String receiverID, int receiverServerID){
         if(receiverServerID == CONFIG.OUR_SERVER){
-            try{
-                Statement stmt = connection.createStatement();
-                String id = this.randomString(16);
-                stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', "+CONFIG.OUR_SERVER+", "+receiverServerID+", 'N')");
-            }catch(SQLException sqlExcept){
-                System.err.println(sqlExcept.getMessage());
-                this.error = sqlExcept.getMessage();
-            }    
+        try{
+            Statement stmt = connection.createStatement();
+            String id = this.randomString(16);
+            stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', "+CONFIG.OUR_SERVER+", "+receiverServerID+", 'N')");
+        }catch(SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }    
         }else{
             remote.remoteFriendRequest(this.getPlayer(senderID), receiverID, receiverServerID);
         }
