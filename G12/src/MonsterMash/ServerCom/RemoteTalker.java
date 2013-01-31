@@ -32,7 +32,6 @@ import org.json.JSONObject;
  */
 public class RemoteTalker {
 
-    private final int OUR_SERVER = CONFIG.OUR_SERVER;
     private Client client;
     private WebResource resource;
 
@@ -54,7 +53,7 @@ public class RemoteTalker {
             return null;
         }
         JSONObject json = new JSONObject(body);
-
+        System.out.println("Get player "+userID+" on server: "+remoteAddress);
         player = new Player();
         player.setUsername(json.getString("name"));
         player.setMoney(json.getInt("money"));

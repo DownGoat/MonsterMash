@@ -35,6 +35,8 @@ public class HighscoresPage extends HttpServlet {
         }else{
             Player current = (Player)session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
+            // Check if any monster dies:
+            pm.checkIfAnyMonsterDies();
             // Updates player informations
             current = pm.getPlayer(current.getUserID());
             session.setAttribute("user", current);

@@ -28,27 +28,6 @@ import org.json.JSONException;
 @WebServlet(name = "FightingPage", urlPatterns = {"/fight"})
 public class FightingPage extends HttpServlet {
 
-
-    /**
-     * Handles the HTTP
-     * <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("user") == null){
-            // Redirects when user is not logged in
-            response.sendRedirect("");
-        }else{
-            this.getDataFromDB(request, response);
-        }
-    }
-    
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
@@ -64,6 +43,8 @@ public class FightingPage extends HttpServlet {
             }
             Player current = (Player)session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
+            // Check if any monster dies:
+            pm.checkIfAnyMonsterDies();
             // Updates player informations
             current = pm.getPlayer(current.getUserID());
             session.setAttribute("user", current);
@@ -94,6 +75,27 @@ public class FightingPage extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/fight_page.jsp").forward(request, response);
         }
     }
+    
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if(session == null || session.getAttribute("user") == null){
+            // Redirects when user is not logged in
+            response.sendRedirect("");
+        }else{
+            this.getDataFromDB(request, response);
+        }
+    }
+
 
     /**
      * Handles the HTTP

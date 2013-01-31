@@ -276,8 +276,6 @@ public class PersistenceManager {
      * @return object of Player class, null when player doesn't exist
      */
     public Player getPlayer(String userID){
-        // Check if any monster on a server died:
-        this.checkIfAnyMonsterDies();
         Player selected = null;
         try{
             Statement stmt = connection.createStatement();
