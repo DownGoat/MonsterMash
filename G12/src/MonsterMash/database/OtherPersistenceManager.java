@@ -295,4 +295,19 @@ public class OtherPersistenceManager extends PersistenceManager {
         
         return friends;
      }
+    
+    public void removeUser(String userID) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Fight_request\" WHERE \"sender_id\" = '" + userID + "' OR \"receiver_id\" = '"+userID+"'");
+            stmt.execute("DELETE FROM \"Friendship\" WHERE \"sender_id\" = '" + userID + "' OR \"receiver_id\" = '"+userID+"'");
+            stmt.execute("DELETE FROM \"Monster\" WHERE \"user_id\" = '" + userID + "'");
+            stmt.execute("DELETE FROM \"Notification\" WHERE \"player_id\" = '" + userID + "'");
+            stmt.execute("DELETE FROM \"Player\" WHERE \"id\" = '" + userID + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
 }

@@ -68,6 +68,10 @@
         <servlet-name>BreedServlet</servlet-name>
         <servlet-class>ServerCom.BreedServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Unregister</servlet-name>
+        <servlet-class>Unregister</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginPage</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -131,6 +135,10 @@
     <servlet-mapping>
         <servlet-name>BreedServlet</servlet-name>
         <url-pattern>/breed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Unregister</servlet-name>
+        <url-pattern>/unregister</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>90</session-timeout>
