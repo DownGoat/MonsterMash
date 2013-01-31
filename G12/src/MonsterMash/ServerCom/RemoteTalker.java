@@ -43,7 +43,7 @@ public class RemoteTalker {
 
     }
 
-    public Player getRemotePlayer(String userID, String remoteAddress) throws JSONException {
+    public Player getRemotePlayer(String userID, String remoteAddress) {
         Player player = null;
         resource = client.resource(remoteAddress);
         String body = null;
@@ -52,13 +52,19 @@ public class RemoteTalker {
         } catch (Exception err) {
             return null;
         }
-        JSONObject json = new JSONObject(body);
-        System.out.println("JSONObject contains: "+json.toString());
-        System.out.println("Get player "+userID+" on server: "+remoteAddress);
-        player = new Player();
-        player.setUsername(json.getString("name"));
-        player.setMoney(json.getInt("money"));
-        player.setUserID(json.getString("userID"));
+        JSONObject json;
+        try {
+            json = new JSONObject(body);
+            System.out.println("JSONObject contains: "+json.toString());
+            System.out.println("Get player "+userID+" on server: "+remoteAddress);
+            player = new Player();
+            player.setUsername(json.getString("name"));
+            player.setMoney(json.getInt("money"));
+            player.setUserID(json.getString("userID"));
+        } catch (JSONException ex) {
+            Logger.getLogger(RemoteTalker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return player;
     }
 
@@ -301,25 +307,21 @@ public class RemoteTalker {
             player.setServerID(CONFIG.OUR_SERVER);
         }
 
-        for (int i = 11; i < 13 && player == null; i++) {
+        for (int i = 1; i < 20 && player == null; i++) {
             if(i == CONFIG.OUR_SERVER){
                 continue;
             }
             String addr = null;
-            try {
-                addr = getRemoteAddress(i);
-                if (addr.length() == 0) {
-                    continue;
-                }
 
-                System.out.printf("ServerID: %d, server address: %s\n", i, addr);
-                player = getRemotePlayer(userID, addr);
-                if (player != null) {
-                    player.setServerID(i);
-                }
+            addr = getRemoteAddress(i);
+            if (addr.length() == 0) {
+                continue;
+            }
 
-            } catch (JSONException ex) {
-                Logger.getLogger(RemoteTalker.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.printf("ServerID: %d, server address: %s\n", i, addr);
+            player = getRemotePlayer(userID, addr);
+            if (player != null) {
+                player.setServerID(i);
             }
 
             if (player != null) {
@@ -359,12 +361,9 @@ public class RemoteTalker {
             Player theFriend = null;
 
             if (friendServerID != CONFIG.OUR_SERVER) {
-                try {
-                    theFriend = rt.getRemotePlayer(friendUserID, rt.getRemoteAddress(friendServerID));
-                } catch (JSONException ex) {
-                    System.err.println("Can not get remote friend data, server down?");
-                    Logger.getLogger(RemoteTalker.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+                theFriend = rt.getRemotePlayer(friendUserID, rt.getRemoteAddress(friendServerID));
+
 
                 continue;
             } else {

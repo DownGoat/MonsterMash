@@ -68,6 +68,7 @@ public class User extends HttpServlet {
             if (player != null) {
                 PrintWriter out = response.getWriter();
                 out.write(JSONManager.jsonPlayer(player).toString());
+                System.out.println("doGet"+JSONManager.jsonPlayer(player).toString());
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
             }

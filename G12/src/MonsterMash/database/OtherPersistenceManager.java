@@ -315,16 +315,20 @@ public class OtherPersistenceManager extends PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+userID+"'");
-            r.next();
-            selected = new Player();
-            selected.setMoney(r.getInt("money"));
-            selected.setUserID((r.getString("id")));
-            selected.setUsername(r.getString("username"));
+            if(r.next()){
+                selected = new Player();
+                selected.setMoney(r.getInt("money"));
+                selected.setUserID((r.getString("id")));
+                selected.setUsername(r.getString("username"));
+            }else{
+                return null;
+            }
             r.close();
             stmt.close();
         }catch (SQLException sqlExcept){
             this.error = sqlExcept.getMessage();
         }
+
         return selected;
     }
 }
