@@ -310,13 +310,10 @@ public class PersistenceManager {
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-//        if(playerInfo[0].equals("0") || playerInfo[1].equals("0")){
-//            Player user = remote.findUser(userID);
-//            if(user != null){
-//                playerInfo[0] = user.getUsername();
-//                playerInfo[1] = user.getServerID()+"";
-//            }
-//        }
+        if(serverID == 0){
+            Player user = remote.findUser(userID);
+            serverID = user.getServerID();
+        }
         return serverID;
     }
     
