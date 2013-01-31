@@ -73,9 +73,8 @@ public class Monster {
     
     public Monster[] breeding(Monster other) {
         Random r = new Random(); 
-        int numberofchildren = (int) Math.sqrt(fertility * other.fertility) * MAX_CHILDREN;
+        int numberofchildren = (int) (Math.sqrt(fertility * other.fertility) * MAX_CHILDREN);
     	Monster[] children = new Monster[numberofchildren + 1]; 
-        
         for (int i = 0; i<= numberofchildren; i++){
             children[i]=new Monster();
             children[i].dob=new Date();
