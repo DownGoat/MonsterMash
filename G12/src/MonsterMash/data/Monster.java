@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Monster {
     private final int START_HEALTH = 100;
-    private final int LIFESPAN = 60*60*24*7;
+    public static final int LIFESPAN = 60*60*24*7;
     
     
     /** Attributes **/    
@@ -27,6 +27,12 @@ public class Monster {
     private int serverID;
     
     private final int MAX_CHILDREN = 10;
+    
+    public Monster(String id, String name, String userID){
+        this.id = id;
+        this.name = name;
+        this.userID = userID;
+    }
     
     public Monster(String name, String userID){
         this.id = "0";

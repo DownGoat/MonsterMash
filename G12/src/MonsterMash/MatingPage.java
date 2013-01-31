@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import ServerCom.RemoteTalker;
 import data.Monster;
 import data.NameGenerator;
 import data.Notification;
@@ -126,6 +127,12 @@ public class MatingPage extends HttpServlet {
                         if(oldOwner != null){
                             oldOwner.setMoney(oldOwner.getMoney()+monster.getBreedOffer());
                             pm.updateMoney(oldOwner);
+                            oldOwner.addNotification(new Notification("<b>"+current.getUsername()+"</b> has bred with your monster <b>"+monster.getName()+"</b>", "<b>"+current.getUsername()+"</b> has bred with your monster <b>"+monster.getName()+"</b>. You received "+monster.getBreedOffer()+"$ from breeding.", oldOwner));
+                            pm.storeNotifications(oldOwner);
+                        }else{
+                            // Outside our server
+                            RemoteTalker rt = new RemoteTalker();
+                            rt.sendBreedRequest(monsterID, serverID);
                         }
                         current.setMoney(current.getMoney()-monster.getBreedOffer());
                         pm.updateMoney(current);

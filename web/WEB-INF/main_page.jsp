@@ -53,7 +53,7 @@
                     <ul class="subrequest"><li><a href="#">Accept Request</a></li><li><a href="fight/reject?fightID=${monsterRequest.fightID}">Cancel Request</a></li></ul>
                 </c:forEach>
                 <c:forEach items="${monsterList}" var="monster">
-                    <c:if test="${monster.saleOffer == 0}" >
+                    <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
                         <li title="Born: ${monster.dob}; Strength: ${monster.currentStrength}; Defence: ${monster.currentDefence}; Health: ${monster.currentHealth}; Fertility: ${monster.fertility}"><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
                     </c:if>
                 </c:forEach>

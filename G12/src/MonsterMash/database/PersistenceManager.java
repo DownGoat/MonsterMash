@@ -24,8 +24,10 @@ public class PersistenceManager {
     
     private Connection connection;
     private String error;
+    private RemoteTalker remote;
     
     public PersistenceManager(){
+        remote = new RemoteTalker();
         String driver = "org.apache.derby.jdbc.EmbeddedDriver";
         String connectionURL = "jdbc:derby://"+dbhost+":"+dbport+"/"+dbname+";create=true;user="+dbuser+";password="+dbpassword;
         try {
@@ -47,7 +49,7 @@ public class PersistenceManager {
      */
     private String randomString(int length){
         Random random = new SecureRandom();
-        String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+        String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ0123456789";
         String pw = "";
         for (int i=0; i<length; i++){
             int index = (int)(random.nextDouble()*letters.length());
@@ -460,11 +462,10 @@ public class PersistenceManager {
             }
             return email;
         }else{
-            RemoteTalker rt = new RemoteTalker();
-            String address = rt.getRemoteAddress(serverID);
+            String address = remote.getRemoteAddress(serverID);
             Player selected = null;
             try {
-                selected = rt.getRemotePlayer(playerID, address);
+                selected = remote.getRemotePlayer(playerID, address);
             } catch (JSONException ex) {
 
             }
@@ -587,14 +588,22 @@ public class PersistenceManager {
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-
-
-          for(Player p: friends){
-            if(p.getServerID() != 12){
-          
+        for(Player p: friends){
+            if(p.getServerID() != CONFIG.OUR_SERVER){
+                String address = remote.getRemoteAddress(p.getServerID());
+                ArrayList<Monster> userMonsters = null;
+                try {
+                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                    for(Monster m: userMonsters){
+                        if(m.getSaleOffer() > 0){
+                            monsters.add(m);
+                        }
+                    }
+                } catch (JSONException ex) {
+                    
+                }
             }
-          }
-
+        }
         return monsters;
     }
     
@@ -629,14 +638,22 @@ public class PersistenceManager {
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-        /**
-         * TODO: need to download monster from other servers
-         * for(Player p: friends){
-         *   if(p.getServerID() != 12){
-         * 
-         *   }
-         * }
-         */
+        for(Player p: friends){
+            if(p.getServerID() != CONFIG.OUR_SERVER){
+                String address = remote.getRemoteAddress(p.getServerID());
+                ArrayList<Monster> userMonsters = null;
+                try {
+                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                    for(Monster m: userMonsters){
+                        if(m.getBreedOffer() > 0){
+                            monsters.add(m);
+                        }
+                    }
+                } catch (JSONException ex) {
+                    
+                }
+            }
+        }
         return monsters;
     }
 
@@ -824,7 +841,18 @@ public class PersistenceManager {
                 this.error = sqlExcept.getMessage();
             }
         }else{
-            // TODO: outside server
+            String address = remote.getRemoteAddress(serverID);
+            Monster selected;
+            try {
+                selected = remote.getRemoteMonster(monsterID, address);
+                selected.setId("0");
+                Player current = this.getPlayer(userID);
+                current.addMonster(selected);
+                this.storeMonsters(current);
+            } catch (JSONException ex) {
+                System.err.println(ex.toString());
+            }
+            
         }
     }
     
@@ -863,8 +891,12 @@ public class PersistenceManager {
             }
             return monster;
         }else{
-            // TODO: SERVER2SERVER
-            return null;
+            String address = remote.getRemoteAddress(serverID);
+            try {
+                return remote.getRemoteMonster(monsterID, address);
+            } catch (JSONException ex) {
+                return null;
+            }
         }
     }
     
