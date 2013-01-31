@@ -14,7 +14,12 @@
         <link rel="stylesheet" href="css/unregister.css" type="text/css" media="screen" />
     </head>
     <body>
-        <img src="/MonsterMash/images/sadmonster.png" /> <br />
-        <a href="/MonsterMash/unregister?doIt=Yes"><img src="/MonsterMash/images/yes.png" /></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="/MonsterMash/main"><img src="/MonsterMash/images/no.png" /></a>       
+  
+        <div class="content unreg">
+            <img src="images/sadmonster.png" /> <br />
+            <p>Are you sure you want to delete your account and kill all your poor innocent monsters?</p>
+            <a href="unregister?doIt=Yes"><img src="images/yes.png" /></a> 
+            <a href="/MonsterMash/main"><img src="/MonsterMash/images/no.png" /></a>       
+        </div>
     </body>
 </html>

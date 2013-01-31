@@ -157,6 +157,10 @@ hr {
 	border: 2px solid #fff;
 	border-radius: 5px;
 }
+
+.unreg{
+    margin-top: 200px;
+}
 .date {
 	float: right;
 	font-weight: bold;
@@ -283,3 +287,4 @@ tr.head td {
 	color: #1200ff;
 	font-weight: bold;
 }
+
