@@ -50,7 +50,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("users").queryParam("userID", userID).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return null;
         }
         JSONObject json = new JSONObject(body);
@@ -70,7 +70,7 @@ public class RemoteTalker {
 
         try {
             body = resource.path("monsters").queryParam("monsterID", monsterID).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return null;
         }
         JSONObject json = new JSONObject(body);
@@ -99,7 +99,7 @@ public class RemoteTalker {
 
         try {
             body = resource.path("monsters").queryParam("userID", userID).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return null;
         }
         JSONArray jsonArray = new JSONArray(body);
@@ -146,7 +146,7 @@ public class RemoteTalker {
 
         try {
             body = resource.path("friends/request").queryParams(params).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -165,7 +165,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("friends/accept").queryParam("friendID", friend.getFriendshipID()).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -178,7 +178,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("friends/reject").queryParam("friendID", friend.getFriendshipID()).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -197,7 +197,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("fight/request").queryParams(params).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -217,7 +217,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("fight/won").queryParams(params).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -230,7 +230,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("fight/lost").queryParam("fightID", fightRequest.getFightID()).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -243,7 +243,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("fight/reject").queryParam("fightID", fightRequest.getFightID()).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -256,7 +256,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("breed").queryParam("monsterID", monsterID).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 
@@ -269,7 +269,7 @@ public class RemoteTalker {
         String body = null;
         try {
             body = resource.path("buy").queryParam("monsterID", monsterID).get(String.class);
-        } catch (com.sun.jersey.api.client.UniformInterfaceException err) {
+        } catch (Exception err) {
             return false;
         }
 

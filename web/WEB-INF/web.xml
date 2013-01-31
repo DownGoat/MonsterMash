@@ -105,6 +105,10 @@
         <url-pattern>/friends/request</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>FriendAccept</servlet-name>
+        <url-pattern>/friends/accept</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>MarketPage</servlet-name>
         <url-pattern>/market</url-pattern>
     </servlet-mapping>

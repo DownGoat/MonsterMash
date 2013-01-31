@@ -177,8 +177,7 @@ public class MainPage extends HttpServlet {
                 Friend friend = pm.getFriend(friendshipID);
                 if (friend != null) {
                     Player sender = rt.findUser(friend.getRemoteUserID());
-
-                    if (sender == null || logged == null) {
+                    if (sender == null) {
                         System.err.println("Something went wrong with server to server stuff player(s) not found.");
                         return;
                     }
