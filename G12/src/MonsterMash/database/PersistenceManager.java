@@ -1,11 +1,15 @@
 package database;
 
+import ServerCom.RemoteTalker;
 import data.Monster;
 import data.*;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
 
 /**
  *
@@ -62,7 +66,7 @@ public class PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Player\" WHERE \"username\" = '"+userID+"'");
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Player\" WHERE \"id\" = '"+userID+"'");
             results.next();
             count = results.getInt(1);
             results.close();
@@ -193,6 +197,7 @@ public class PersistenceManager {
             System.err.println("Selecting friendships from DB error:\n"+sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
+        
         return friendList;
     }
     
@@ -246,6 +251,8 @@ public class PersistenceManager {
      * @return object of Player class, null when player doesn't exist
      */
     public Player getPlayer(String userID){
+        // Check if any monster on a server died:
+        this.checkIfAnyMonsterDies();
         Player selected = null;
         try{
             Statement stmt = connection.createStatement();
@@ -430,7 +437,18 @@ public class PersistenceManager {
             }
             return email;
         }else{
-            return "Player Outside";
+            RemoteTalker rt = new RemoteTalker();
+            String address = rt.getRemoteAddress(serverID);
+            Player selected = null;
+            try {
+                selected = rt.getRemotePlayer(playerID, address);
+            } catch (JSONException ex) {
+
+            }
+            if(selected != null){
+                return selected.getUserID();
+            }
+            return null;
         }
     }
     
@@ -517,7 +535,6 @@ public class PersistenceManager {
     }
     
     /**
-     * TODO: check if monster dies
      * @param playerID
      * @return 
      */
@@ -547,14 +564,14 @@ public class PersistenceManager {
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-        /**
-         * TODO: need to download monster from other servers
-         * for(Player p: friends){
-         *   if(p.getServerID() != 12){
-         * 
-         *   }
-         * }
-         */
+
+
+          for(Player p: friends){
+            if(p.getServerID() != 12){
+          
+            }
+          }
+
         return monsters;
     }
     
@@ -840,6 +857,74 @@ public class PersistenceManager {
         } catch (SQLException sqlExcept) {
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    /**
+     * 
+     */
+    public void checkIfAnyMonsterDies(){
+        //List of users, who will loose monsters
+        ArrayList<String> users = new ArrayList<String>();
+        ArrayList<String> monstersToRemove = new ArrayList<String>();
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\"");
+            while(r.next()){
+                // UPDATE CURRENT HEALTH
+                java.util.Date current = new java.util.Date();
+                double age = ((current.getTime()-r.getLong("dob"))/(r.getLong("dod")-r.getLong("dob")));
+                double health = 1-Math.exp(age*0.1)+r.getDouble("base_health");
+                //UPDATE CURRENT STRENGTH AND DEFENCE
+                double strength = (Math.exp(0.1*age)-1+r.getDouble("base_strength"))*(2-Math.exp(0.1*age));
+                double defence = (Math.exp(0.1*age)-1+r.getDouble("base_defence"))*(2-Math.exp(0.1*age));
+                stmt.execute("UPDATE \"Monster\" SET \"current_health\" = "+health+", \"current_strength\" = "+strength+", \"current_defence\" = "+defence+" WHERE \"id\" = '"+r.getString("id")+"'");
+                //CHECK
+                if(r.getLong("dod") < current.getTime() || health <= 0 || strength <= 0 || defence <= 0){
+                    monstersToRemove.add(r.getString("id"));
+                    if(!users.contains(r.getString("user_id"))){
+                        users.add(r.getString("user_id"));
+                    }
+                }
+            }
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        // Remove monsters
+        for(String m: monstersToRemove){
+            try{
+                Statement stmt = connection.createStatement();
+                stmt.execute("DELETE FROM \"Monster\" WHERE \"id\" = '"+m+"'");
+                stmt.close();
+            }catch(SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+        }
+        // When it was last monster ...
+        for(String u: users){
+            int count = 0;
+            try{
+                Statement stmt = connection.createStatement();
+                stmt = connection.createStatement();
+                ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"user_id\" = '"+u+"'");
+                results.next();
+                count = results.getInt(1);
+                results.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                this.error = sqlExcept.getMessage();
+            }
+            if(count < 1){
+                Player p = this.getPlayer(u);
+                String randomName = NameGenerator.getName();
+                p.addMonster(new Monster(randomName, u));
+                this.storeMonsters(p);
+                p.addNotification(new Notification("Your last monster dies.", "Your last monster has died. We generated for you new monster - meet <b>"+randomName+"</b>.", p));
+                this.storeNotifications(p);
+            }
         }
     }
     
