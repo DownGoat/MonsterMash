@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.Date;
+import data.Player;
 
 /**
  *
@@ -228,11 +229,9 @@ public class PlayerTest {
         System.out.println("addFriend");
         Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
         Player playerv2 = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
-        //Friend friend = new Friend("dah27@aber.ac.uk","jau1@aber.ac.uk","11",23,34,"N");
-        Player friend = player;
-        Player instance = playerv2;
-      friend.addFriend(instance);  
-        assertEquals("Friend should be friend",friend, instance.getFriend(0));
+     
+      player.addFriend(playerv2);  
+        assertEquals("Friend should be friend",playerv2, player.getFriend(0));
         
         // TODO review the generated test code and remove the default call to fail.
     }
@@ -243,11 +242,15 @@ public class PlayerTest {
     @Test
     public void testRemoveFriend() {
         System.out.println("removeFriend");
-        Friend friend = null;
-        Player instance = null;
-        instance.removeFriend(friend);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
+        Player playerv2 = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
+     
+      player.addFriend(playerv2);  
+        assertEquals("Friend should be friend",playerv2, player.getFriend(0));
+        
+        player.removeFriend(playerv2);
+        
+        assertNull(player.getFriend(0));
     }
 
     /**
@@ -256,11 +259,11 @@ public class PlayerTest {
     @Test
     public void testAddMonster() {
         System.out.println("addMonster");
-        Monster monster = null;
-        Player instance = null;
-        instance.addMonster(monster);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
+        Monster monster = new Monster("Name","jau1@aber.ac.uk");
+        //ArrayList monsterarr = new ArrayList();
+        player.addMonster(monster);
+        assertEquals("Monster should be added",monster, player.getMonsters().get(1));
     }
 
     /**
@@ -269,11 +272,14 @@ public class PlayerTest {
     @Test
     public void testRemoveMonster() {
         System.out.println("removeMonster");
-        Monster monster = null;
-        Player instance = null;
-        instance.removeMonster(monster);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
+        Monster monster = new Monster("Name","dah27@aber.ac.uk");
+        //ArrayList monsterarr = new ArrayList();
+        player.addMonster(monster);
+        assertEquals("Monster should be added",monster, player.getMonsters().get(1));
+        player.removeMonster(monster);
+   
+        assertEquals("size should be 1",1,player.getMonsters().size());
     }
 
     /**
@@ -282,22 +288,31 @@ public class PlayerTest {
     @Test
     public void testAddNotification() {
         System.out.println("addNotification");
-        Notification notification = null;
-        Player instance = null;
-        instance.addNotification(notification);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
+        Notification notice = new Notification("short","long", player);
+        //ArrayList notices = new ArrayList();
+        player.addNotification(notice);
+        assertEquals("Notification should be added",notice, player.getNotifications().get(2));
     }
-
-    /**
-     * Test of updateMonsters method, of class Player.
-     */
+    
     @Test
-    public void testUpdateMonsters() {
-        System.out.println("updateMonsters");
-        Player instance = null;
-        instance.updateMonsters();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testsortByMoney() {
+        System.out.println("sortByMoney");
+        Player player1 = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
+        Player player2 = new Player ("James","jau1@aber.ac.uk", "password", 120, "Bill");
+        Player player3 = new Player ("Llion","lwv@aber.ac.uk", "password", 50, "Bobby");
+        Player player4 = new Player ("sam","agsda@aber.ac.uk", "password", 105, "John");
+        
+        ArrayList<Player> array = new ArrayList();
+        array.add(player1);
+        array.add(player2);
+        array.add(player3);
+        array.add(player4);
+        
+       
+        assertEquals("player2 should be at index 0, most money", player2, player1.sortByMoney(array).get(0));
+        assertEquals("player1 should be at index 1, second most money", player4, player1.sortByMoney(array).get(1));
+        assertEquals("player4 should be at index 3, third most money", player1, player1.sortByMoney(array).get(2));
+        assertEquals("player3 should be at index 2, fourth most money", player3, player1.sortByMoney(array).get(3));
     }
 }
