@@ -48,9 +48,9 @@ public class PersistenceManagerTest {
     public void testAccountExists() {
         System.out.println("accountExists");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         pm.storePlayer(player);
-        assertTrue(pm.accountExists("pal11@aber.ac.uk"));
+        assertTrue(pm.accountExists("Pavel"));
     }
 
     /**
@@ -60,13 +60,13 @@ public class PersistenceManagerTest {
     public void testStorePlayer() {
         System.out.println("storePlayer");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         pm.storePlayer(player);
-        assertTrue(pm.accountExists("pal11@aber.ac.uk"));
+        assertTrue(pm.accountExists("Pavel"));
         
-        Player playerTwo = new Player("Pavels","pal111@aber.ac.uk", "password", 100, "Bill");
+        Player playerTwo = new Player("Pavels","pal1@aber.ac.uk", "password", 100, "Bill");
         pm.storePlayer(playerTwo);
-        assertTrue(pm.accountExists("pal111@aber.ac.uk"));
+        assertTrue(pm.accountExists("Pavel"));
         
     }
 
@@ -77,9 +77,9 @@ public class PersistenceManagerTest {
     public void testStoreNotifications() {
         System.out.println("storeNotifications");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         pm.storeNotifications(player);
-        assertNotNull(pm.getNotificationList("pal11@aber.ac.uk"));
+        assertNotNull(pm.getNotificationList("pal@aber.ac.uk"));
         
     }
 
@@ -89,7 +89,7 @@ public class PersistenceManagerTest {
     @Test
     public void testStoreMonsters() {
         System.out.println("storeMonsters");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
         pm.storeMonsters(player);
         assertNotNull(pm.getMonsterList("Bill"));
@@ -100,12 +100,11 @@ public class PersistenceManagerTest {
      * Test of doLogin method, of class PersistenceManager.
      */
     @Test
-    public void testDoLogin() throws Exception {
+    public void testDoLogin() {
         System.out.println("doLogin");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");        
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");        
         PersistenceManager pm = new PersistenceManager();
-        pm.storePlayer(player);
-        assertNotNull(pm.doLogin("pal11@aber.ac.uk", "password"));
+        assertNotNull(pm.doLogin("Pavel", "password"));
         //TODO
     }
 
@@ -116,13 +115,13 @@ public class PersistenceManagerTest {
     public void testGetFriendList() {
         System.out.println("getFriendList");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill"); 
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
         pm.storePlayer(player);
-        Player playerTwo = new Player("Pavels","pal111@aber.ac.uk", "password", 100, "Billy");
+        Player playerTwo = new Player("Pavels","tab@aber.ac.uk", "password", 100, "Billy");
         pm.storePlayer(playerTwo);
-        pm.sendFriendRequest("pal111@aber.ac.uk", "pal11@aber.ac.uk", 12);
-        pm.acceptFriendRequest("pal11@aber.ac.uk", "pal111@aber.ac.uk");
-        assertEquals(pm.getFriendList("pal11@aber.ac.uk").get(0), playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        pm.acceptFriendRequest("Pavel", "Table");
+        assertNotNull(pm.getFriendList("Pavel").get(0));
     }
 
     /**
@@ -131,10 +130,13 @@ public class PersistenceManagerTest {
     @Test
     public void testGetNotificationList() {
         System.out.println("getNotificationList");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
         pm.storePlayer(player);
-        assertNotNull(pm.getNotificationList("pal11@aber.ac.uk"));
+        Notification notification = new Notification("short message", "long message text", player);
+        notification.setShortText("new short message");
+        pm.storeNotifications(player);
+        assertEquals("new short message", pm.getNotificationList("Pavel").get(pm.getNotificationList("Pavel").size()-1).getShortText());
     }
 
     /**
@@ -143,9 +145,10 @@ public class PersistenceManagerTest {
     @Test
     public void testGetMonsterList() {
         System.out.println("getMonsterList");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
-        assertNotNull(pm.getMonsterList("pal11@aber.ac.uk"));
+        pm.storePlayer(player);
+        assertNotNull(pm.getMonsterList("Pavel").get(0));
     }
 
     /**
@@ -154,9 +157,10 @@ public class PersistenceManagerTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");                
         PersistenceManager pm = new PersistenceManager();
-        assertNotNull(pm.getPlayer("pal11@aber.ac.uk"));
+        pm.storePlayer(player);
+        assertEquals(pm.getPlayer("Pavel").getUserID(), player.getUserID());
     }
 
     /**
@@ -165,9 +169,11 @@ public class PersistenceManagerTest {
     @Test
     public void testGetPlayerIdAndServer() {
         System.out.println("getPlayerIdAndServer");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                        
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
-        assertNotNull(pm.getPlayerIdAndServer("pal11@aber.ac.uk"));
+        pm.storePlayer(player);
+        assertNotNull(pm.getPlayerIdAndServer("pal@aber.ac.uk"));
+        fail();
     }
 
     /**
@@ -176,14 +182,13 @@ public class PersistenceManagerTest {
     @Test
     public void testIsFriendRequestSent() {
         System.out.println("isFriendRequestSent");
-        String playerOne = "";
-        String playerTwo = "";
-        PersistenceManager instance = new PersistenceManager();
-        boolean expResult = false;
-        boolean result = instance.isFriendRequestSent(playerOne, playerTwo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        assertTrue(pm.isFriendRequestSent("Pavel", "Table"));
     }
 
     /**
@@ -192,13 +197,13 @@ public class PersistenceManagerTest {
     @Test
     public void testSendFriendRequest() {
         System.out.println("sendFriendRequest");
-        String senderID = "";
-        String receiverID = "";
-        int receiverServerID = 0;
-        PersistenceManager instance = new PersistenceManager();
-        instance.sendFriendRequest(senderID, receiverID, receiverServerID);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        assertTrue(pm.isFriendRequestSent("Pavel", "Table"));
     }
 
     /**
@@ -207,14 +212,13 @@ public class PersistenceManagerTest {
     @Test
     public void testConfirmFriendship() {
         System.out.println("confirmFriendship");
-        String senderID = "";
-        int senderServer = 0;
-        String receiverID = "";
-        int receiverServer = 0;
-        PersistenceManager instance = new PersistenceManager();
-        instance.confirmFriendship(senderID, senderServer, receiverID, receiverServer);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.confirmFriendship("Pavel", 12, "Table", 12);
+        assertEquals(pm.getFriendList("Pavel").get(pm.getFriendList("Pavel").size()-1).getUserID(), "Table");
     }
 
     /**
@@ -223,14 +227,14 @@ public class PersistenceManagerTest {
     @Test
     public void testRejectFriendship() {
         System.out.println("rejectFriendship");
-        String senderID = "";
-        int senderServer = 0;
-        String receiverID = "";
-        int receiverServer = 0;
-        PersistenceManager instance = new PersistenceManager();
-        instance.rejectFriendship(senderID, senderServer, receiverID, receiverServer);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        pm.rejectFriendship("Pavel", 12, "Table", 12);
+        assertNotSame(pm.getFriendList("Pavel").get(pm.getFriendList("Pavel").size()-1).getUserID(), "Table");
     }
 
     /**
@@ -239,22 +243,26 @@ public class PersistenceManagerTest {
     @Test
     public void testGetHighscores() {
         System.out.println("getHighscores");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                        
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
         PersistenceManager pm = new PersistenceManager();
-        assertNotNull(pm.getHighscores("pal11@aber.ac.uk"));
+        pm.storePlayer(player);
+        assertNotNull(pm.getHighscores("pal@aber.ac.uk"));
+        fail();
     }
 
     /**
      * Test of getPlayerUsername method, of class PersistenceManager.
-     */
+     
     @Test
     public void testGetPlayerUsername() {
         System.out.println("getPlayerUsername");
-        Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");                                
-        int serverID = 12;
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
-        assertNotNull(pm.getPlayerUsername("pal11@aber.ac.uk", 12));
-    }
+        pm.storePlayer(player);
+        
+        
+        assertEquals( "pal@aber.ac.uk", pm.getPlayerUsername("Pavel", 12));
+    }*/
 
     /**
      * Test of getFriendRequestList method, of class PersistenceManager.
@@ -262,13 +270,13 @@ public class PersistenceManagerTest {
     @Test
     public void testGetFriendRequestList() {
         System.out.println("getFriendRequestList");
-        String userID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getFriendRequestList(userID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        assertNotNull(pm.getFriendRequestList("Pavel").get(0));
     }
 
     /**
@@ -291,12 +299,14 @@ public class PersistenceManagerTest {
     @Test
     public void testCancelFriendRequest() {
         System.out.println("cancelFriendRequest");
-        String requestID = "";
-        String receiverID = "";
-        PersistenceManager instance = new PersistenceManager();
-        instance.cancelFriendRequest(requestID, receiverID);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        pm.storePlayer(player);
+        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.sendFriendRequest("Pavel", "Table", 12);
+        pm.rejectFriendship("Pavel", 12, "Table", 12);
+        fail();
     }
 
     /**
@@ -372,19 +382,6 @@ public class PersistenceManagerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    /**
-     * Test of getMonster method, of class PersistenceManager.
-     */
-    @Test
-    public void testGetMonster() {
-        System.out.println("getMonster");
-        int monsterID = 0;
-        PersistenceManager instance = new PersistenceManager();
-        Monster expResult = null;
-        Monster result = instance.getMonster(monsterID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+      
+     
 }
