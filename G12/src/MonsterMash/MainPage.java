@@ -128,8 +128,7 @@ public class MainPage extends HttpServlet {
 //                }
 //            }
 
-
-            // Gets email from POST
+            // Gets email from POST 
             String userID = request.getParameter("email");
             Player sender = (Player)session.getAttribute("user");
             // Checks if user with this email address exists

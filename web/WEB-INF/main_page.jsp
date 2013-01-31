@@ -20,9 +20,9 @@
         <script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		$(function() {
-			$( "#updates" ).accordion({
+                    $( "#updates" ).accordion({
 				event: "click"
-			});
+                    });
                         <c:if test="${not empty alertMessage}">
                         alert("${alertMessage}");
                         </c:if>      

@@ -4,6 +4,7 @@
  */
 package ServerCom;
 
+import data.CONFIG;
 import data.Friend;
 import data.Player;
 import database.OtherPersistenceManager;
@@ -45,16 +46,17 @@ public class FriendRequest extends HttpServlet {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Player player = pm.getPlayer(localUserID);
 
-            friend = new Friend(friendID, remoteUserID, localUserID, Integer.parseInt(remoteServerNumber), 12, "N");
+            friend = new Friend(friendID, localUserID, remoteUserID, CONFIG.OUR_SERVER, Integer.parseInt(remoteServerNumber), "N");
             
             if(player != null) {
+                System.out.println("Player exists on my server.");
                 pm.addFriend(friend);
                 pm.storeNotifications(player);
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found.");
             }
             
-            response.sendRedirect("/MonsterMash/main");
+            //response.sendRedirect("/MonsterMash/main");
         }
     }
 

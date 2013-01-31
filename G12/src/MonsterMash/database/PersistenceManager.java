@@ -297,30 +297,27 @@ public class PersistenceManager {
      * @param userID player's userID
      * @return player name (index 0) player server id (index 1)
      */
-    public String[] getPlayerIdAndServer(String userID){
-        String[] playerInfo = new String[2];
-        playerInfo[0] = "0";
-        playerInfo[1] = "0";
+    public int getPlayerServerID(String userID){
+        int serverID = 0;
         try{
             Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"id\" = '"+userID+"'");
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Player\" WHERE \"id\" = '"+userID+"'");
             results.next();
-            playerInfo[0] = results.getString("id");
-            playerInfo[1] = "12";
+            
             results.close();
             stmt.close();
         }catch (SQLException sqlExcept){
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-        if(playerInfo[0].equals("0") || playerInfo[1].equals("0")){
-            Player user = remote.findUser(userID);
-            if(user != null){
-                playerInfo[0] = user.getUsername();
-                playerInfo[1] = user.getServerID()+"";
-            }
-        }
-        return playerInfo;
+//        if(playerInfo[0].equals("0") || playerInfo[1].equals("0")){
+//            Player user = remote.findUser(userID);
+//            if(user != null){
+//                playerInfo[0] = user.getUsername();
+//                playerInfo[1] = user.getServerID()+"";
+//            }
+//        }
+        return serverID;
     }
     
     /**
@@ -450,13 +447,12 @@ public class PersistenceManager {
     
     /**
      * Gets player username by player id and server id.
-     * TODO: needs server-server communication
      * @param playerID id of selected player
      * @param serverID id of player's sever
      * @return player's username
      */
     public String getPlayerUsername(String playerID, int serverID){
-        if(serverID == 12){
+        if(serverID == CONFIG.OUR_SERVER){
             String email = null;
             try{
                 Statement stmt = connection.createStatement();
@@ -476,10 +472,10 @@ public class PersistenceManager {
             try {
                 selected = remote.getRemotePlayer(playerID, address);
             } catch (JSONException ex) {
-
+                System.out.println(ex.toString());
             }
             if(selected != null){
-                return selected.getUserID();
+                return selected.getUsername();
             }
             return null;
         }

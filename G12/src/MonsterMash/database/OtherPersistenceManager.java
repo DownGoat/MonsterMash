@@ -98,8 +98,7 @@ public class OtherPersistenceManager extends PersistenceManager {
                     friend.getRemoteUserID()+"', "+
                     friend.getLocalServerID()+", "+
                     friend.getRemoteServerID()+", '"+
-                    confirmed+"')",
-                    Statement.RETURN_GENERATED_KEYS);
+                    confirmed+"')");
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
             this.error = ex.getMessage();
