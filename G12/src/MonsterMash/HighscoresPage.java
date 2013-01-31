@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import ServerCom.RemoteTalker;
 import data.Player;
 import database.PersistenceManager;
 import java.io.IOException;
@@ -67,7 +68,8 @@ public class HighscoresPage extends HttpServlet {
         }else{
             PersistenceManager pm = new PersistenceManager();
             Player current = (Player)session.getAttribute("user");
-            ArrayList<String> highscores = pm.getHighscores(current.getUserID());
+            RemoteTalker rt = new RemoteTalker();
+            ArrayList<String> highscores = rt.getHighScores(current);
             request.setAttribute("highscores", highscores);
             this.getDataFromDB(request, response);
         }
