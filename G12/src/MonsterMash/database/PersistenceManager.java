@@ -462,6 +462,7 @@ public class PersistenceManager {
             }
             return email;
         }else{
+            System.err.println("szuka adresu: "+serverID);
             String address = remote.getRemoteAddress(serverID);
             Player selected = null;
             try {
@@ -571,8 +572,8 @@ public class PersistenceManager {
         }
         query = query.substring(0, query.length()-4);
         query += ")";
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
         if(query.length() > 60){
-            ArrayList<Monster> monsters = new ArrayList<Monster>();
             try{
                 Statement stmt = connection.createStatement();
                 ResultSet r = stmt.executeQuery(query);
@@ -587,27 +588,27 @@ public class PersistenceManager {
                 System.err.println(sqlExcept.getMessage());
                 this.error = sqlExcept.getMessage();
             }
-            for(Player p: friends){
-                if(p.getServerID() != CONFIG.OUR_SERVER){
-                    String address = remote.getRemoteAddress(p.getServerID());
-                    ArrayList<Monster> userMonsters = null;
-                    try {
-                        userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
-                        if(userMonsters != null){
-                            for(Monster m: userMonsters){
-                                if(m.getSaleOffer() > 0){
-                                    monsters.add(m);
-                                }
+        }
+        for(Player p: friends){
+            if(p.getServerID() != CONFIG.OUR_SERVER){
+                String address = remote.getRemoteAddress(p.getServerID());
+                ArrayList<Monster> userMonsters = null;
+                try {
+                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                    if(userMonsters != null){
+                        for(Monster m: userMonsters){
+                            if(m.getSaleOffer() > 0){
+                                m.setServerID(p.getServerID());
+                                monsters.add(m);
                             }
                         }
-                    } catch (JSONException ex) {
-
                     }
+                } catch (JSONException ex) {
+
                 }
             }
-            return monsters;
         }
-        return new ArrayList<Monster>();
+        return monsters;
         
     }
     
@@ -627,8 +628,8 @@ public class PersistenceManager {
         }
         query = query.substring(0, query.length()-4);
         query += ")";
+        ArrayList<Monster> monsters = new ArrayList<Monster>();
         if(query.length() > 60){
-            ArrayList<Monster> monsters = new ArrayList<Monster>();
             try{
                 Statement stmt = connection.createStatement();
                 ResultSet r = stmt.executeQuery(query);
@@ -643,28 +644,27 @@ public class PersistenceManager {
                 System.err.println(sqlExcept.getMessage());
                 this.error = sqlExcept.getMessage();
             }
-            for(Player p: friends){
-                if(p.getServerID() != CONFIG.OUR_SERVER){
-                    String address = remote.getRemoteAddress(p.getServerID());
-                    ArrayList<Monster> userMonsters = null;
-                    try {
-                        userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
-                        if(userMonsters != null){
-                            for(Monster m: userMonsters){
-                                if(m.getBreedOffer() > 0){
-                                    monsters.add(m);
-                                }
+        }
+        for(Player p: friends){
+            if(p.getServerID() != CONFIG.OUR_SERVER){
+                String address = remote.getRemoteAddress(p.getServerID());
+                ArrayList<Monster> userMonsters = null;
+                try {
+                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                    if(userMonsters != null){
+                        for(Monster m: userMonsters){
+                            if(m.getBreedOffer() > 0){
+                                monsters.add(m);
                             }
                         }
-
-                    } catch (JSONException ex) {
-
                     }
+
+                } catch (JSONException ex) {
+
                 }
             }
-            return monsters;
         }
-        return new ArrayList<Monster>();
+        return monsters;
     }
 
     /**
