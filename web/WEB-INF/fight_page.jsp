@@ -50,7 +50,7 @@
             <ul class="list">
                 <c:forEach items="${monsterList}" var="monster">
                     <c:if test="${monster.saleOffer == 0 && monster.breedOffer == 0}" >
-                        <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                        <li title="Born: ${monster.dob}; Strength: ${monster.currentStrength}; Defence: ${monster.currentDefence}; Health: ${monster.currentHealth}; Fertility: ${monster.fertility}"><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
                     </c:if>
                 </c:forEach>
             </ul>
@@ -63,19 +63,21 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
 	<div class="content">
+            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money}
+            <hr />
             <c:if test="${friendMonsterList.size() != 0}">
                 <form action="fight/request" method="GET">
                     <input type="hidden" name="fightID" value="0" /> 
+                    Select enemy: 
                     <select name="localMonsterID">
                         <c:forEach items="${friendMonsterList}" var="friendMonster">
-                            Select enemy: 
                             <option value="${friendMonster.id}">${friendMonster.name}</option>
                         </c:forEach>
                     </select>
+                    Select your monster: 
                     <select name="remoteMonsterID">
                         <c:forEach items="${monsterList}" var="monster">
                             <c:if test="${monster.saleOffer == 0 && monster.breedOffer == 0}" >
-                                Select your monster: 
                                 <option value="${monster.id}">${monster.name}</option>
                             </c:if>
                         </c:forEach>

@@ -196,6 +196,29 @@ public class PersistenceManager {
         return friendList;
     }
     
+    public ArrayList<FightRequest> getFightRequests(String playerID)
+    {
+        ArrayList<FightRequest> fightRequests = new ArrayList<FightRequest>();
+        
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM \"Fight_request\" WHERE (\"receiver_id\" = '"+playerID+"')");
+            while(result.next()){
+                if(result.getString("receiver_id").equals(playerID+"")){
+                    // Sender String id, String name, int serverID
+                    fightRequests.add(new FightRequest(result.getString("sender_id"), result.getString("receiver_id"), result.getString("id"), result.getString("sender_monster_id"), result.getString("receiver_monster_id"), result.getInt("sender_server_id"), result.getInt("receiver_server_id")));
+                    //friendList.add(new Player(result.getString("receiver_id"), this.getPlayerUsername(result.getString("receiver_id"), result.getInt("receiver_server_id")), result.getInt("receiver_server_id")));
+                }
+            }
+            result.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            System.err.println("Selecting fight requests from DB error:\n"+sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return fightRequests;
+    }
+    
     /**
      * Gets all notifications from DB ordered by date.
      * @param playerID id of player

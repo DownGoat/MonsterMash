@@ -48,9 +48,13 @@
 	</div>
 	<div id="monsterlist">
             <ul class="list">
+                <c:forEach items="${monsterRequestList}" var="monsterRequest">
+                    <li class="fight-request" style="background-color: #ff9d9d; border-top-left-radius: 5px;"><a><img src="images/avatar.jpg" alt="" />${monsterRequest.senderID}</a></li>
+                    <ul class="subrequest"><li><a href="#">Accept Request</a></li><li><a href="fight/reject?fightID=${monsterRequest.fightID}">Cancel Request</a></li></ul>
+                </c:forEach>
                 <c:forEach items="${monsterList}" var="monster">
                     <c:if test="${monster.saleOffer == 0}" >
-                        <li><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
+                        <li title="Born: ${monster.dob}; Strength: ${monster.currentStrength}; Defence: ${monster.currentDefence}; Health: ${monster.currentHealth}; Fertility: ${monster.fertility}"><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
                     </c:if>
                 </c:forEach>
             </ul>
@@ -63,6 +67,8 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
 	<div class="content">
+            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money}
+            <hr />
 		<div id="updates">
                     <c:forEach items="${notificationList}" var="current">
                         <h3>
