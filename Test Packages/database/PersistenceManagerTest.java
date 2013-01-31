@@ -100,10 +100,11 @@ public class PersistenceManagerTest {
      * Test of doLogin method, of class PersistenceManager.
      */
     @Test
-    public void testDoLogin() {
+    public void testDoLogin() throws Exception {
         System.out.println("doLogin");
         Player player = new Player("Pavel","pal11@aber.ac.uk", "password", 100, "Bill");        
         PersistenceManager pm = new PersistenceManager();
+        pm.storePlayer(player);
         assertNotNull(pm.doLogin("pal11@aber.ac.uk", "password"));
         //TODO
     }
