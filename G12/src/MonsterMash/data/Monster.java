@@ -79,16 +79,15 @@ public class Monster {
             children[i]=new Monster();
             children[i].dob=new Date();
             //this is assuming that the children go to the owner of the monster that calls the method
-            children[i].userID=userID; 
-            
+            children[i].userID = userID; 
+            children[i].name = NameGenerator.getName();
             //generating inherited defense
             if(r.nextInt(100)<5){
                  children[i].baseDefence=r.nextDouble();
-            }
-            else if(r.nextInt(100)<50){
+            } else if(r.nextInt(100)<50){
                  children[i].baseDefence=baseDefence;
-            }
-            else { children[i].baseDefence=other.baseDefence;
+            } else {
+                 children[i].baseDefence=other.baseDefence;
             }
             //generating inherited strength
             if(r.nextInt(100)<5){
@@ -96,31 +95,26 @@ public class Monster {
             }
             else if(r.nextInt(100)<50){
                  children[i].baseStrength=baseStrength;
-            }
-            else { children[i].baseStrength=other.baseStrength;
+            } else {
+                 children[i].baseStrength=other.baseStrength;
             }
             //generating inherited health
             if(r.nextInt(100)<5){
                  children[i].baseHealth=r.nextDouble();
-            }
-            else if(r.nextInt(100)<50){
+            }else if(r.nextInt(100)<50){
                  children[i].baseHealth=baseHealth;
-            }
-            else { children[i].baseHealth=other.baseHealth;
+            } else {
+                 children[i].baseHealth=other.baseHealth;
             }
             //generating inherited fertility
             if(r.nextInt(100)<5){
                  children[i].fertility=r.nextFloat();
-            }
-            else if(r.nextInt(100)<50){
+            } else if(r.nextInt(100)<50){
                  children[i].fertility=fertility;
+            } else {
+                children[i].fertility=other.fertility;
             }
-            else { children[i].fertility=other.fertility;
-            }
-             
-            
-        }
-            
+        }      
         return children;
     }
 

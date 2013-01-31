@@ -637,6 +637,39 @@ public class PersistenceManager {
      * 
      * @param userID
      * @param monsterID
+     * @param offerAmount
+     * @return 
+     */
+    public boolean makeNewBreedOffer(String userID, String monsterID, int offerAmount){
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"breed_offer\" = "+offerAmount+" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            stmt.close();
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        int count = 0;
+        try{
+            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            results.next();
+            count = results.getInt(1);
+            results.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+        if(count > 0){
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 
+     * @param userID
+     * @param monsterID
      * @return 
      */
     public boolean cancelMonsterOffer(String userID, String monsterID){
@@ -644,7 +677,7 @@ public class PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"'");
+            ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"' AND \"user_id\" = '"+userID+"' AND \"sale_offer\" <> 0");
             results.next();
             count = results.getInt(1);
             results.close();
@@ -716,101 +749,7 @@ public class PersistenceManager {
         }
         return monsterName;
     }
-    
-    /**
-     * 
-     * @param monsterID
-     * @param serverID
-     * @return 
-     */
-    public boolean monsterExists(String monsterID, int serverID){
-        if(serverID == 12){
-            int count = 0;
-            try{
-                Statement stmt = connection.createStatement();
-                stmt = connection.createStatement();
-                ResultSet results = stmt.executeQuery("SELECT count(\"id\") FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
-                results.next();
-                count = results.getInt(1);
-                results.close();
-                stmt.close();
-            }catch (SQLException sqlExcept){
-                this.error = sqlExcept.getMessage();
-            }
-            if(count > 0){
-                return true;
-            }
-            return false;
-        }else{
-            // TODO: outside server
-            return false;
-        }
-    }
-    
-    /**
-     * 
-     * @param playersMoney
-     * @param monsterID
-     * @param serverID
-     * @return 
-     */
-    public boolean canUserBuyMonster(int playersMoney, String monsterID, int serverID){
-        if(serverID == 12){
-            try{
-                Statement stmt = connection.createStatement();
-                stmt = connection.createStatement();
-                ResultSet results = stmt.executeQuery("SELECT \"sale_offer\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
-                results.next();
-                int offer = results.getInt("sale_offer");
-                results.close();
-                stmt.close();
-                if(offer <= playersMoney){
-                    return true;
-                }else{
-                    return false;
-                }
-            }catch (SQLException sqlExcept){
-                this.error = sqlExcept.getMessage();
-            }
-            return false;
-        }else{
-            // TODO: outside server
-            return false;
-        }
-    }
-    
-    /**
-     * 
-     * @param playersMoney
-     * @param monsterID
-     * @param serverID
-     * @return 
-     */
-    public boolean canUserBreedMonster(int playersMoney, String monsterID, int serverID){
-        if(serverID == 12){
-            try{
-                Statement stmt = connection.createStatement();
-                stmt = connection.createStatement();
-                ResultSet results = stmt.executeQuery("SELECT \"breed_offer\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
-                results.next();
-                int offer = results.getInt("breed_offer");
-                results.close();
-                stmt.close();
-                if(offer <= playersMoney){
-                    return true;
-                }else{
-                    return false;
-                }
-            }catch (SQLException sqlExcept){
-                this.error = sqlExcept.getMessage();
-            }
-            return false;
-        }else{
-            // TODO: outside server
-            return false;
-        }
-    }
-    
+
     /**
      * 
      * @param userID
@@ -835,12 +774,11 @@ public class PersistenceManager {
                 this.storeNotifications(exOwner);
                 if(this.getMonsterList(oldOwner).size() < 1){
                     // Old owner doesn't have any monsters
-                    String name = "Random Name";
+                    String name = NameGenerator.getName();
                     exOwner.addMonster(new Monster(name, oldOwner));
                     this.storeMonsters(exOwner);
                     exOwner.addNotification(new Notification("You run out of monsters.", "You run out of monsters. We have generated new monster for you: <b>"+name+"</b>.", exOwner));
                     this.storeNotifications(exOwner);
-                    // TODO: ask user about name of a monster / generate random name
                 }
             }catch(SQLException sqlExcept){
                 this.error = sqlExcept.getMessage();

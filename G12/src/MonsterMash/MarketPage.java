@@ -101,11 +101,14 @@ public class MarketPage extends HttpServlet {
         String server = request.getParameter("server");
         if(monsterID != null && server != null){
             try{
-                String message = null;
+                String message;
                 int serverID = Integer.parseInt(server);
-                if(!pm.monsterExists(monsterID, serverID)){
-                    message = "Monster doesn't exists";
-                }else if(!pm.canUserBuyMonster(current.getMoney(), monsterID, serverID)){
+                Monster selected = pm.getMonster(monsterID, serverID);
+                if(selected == null){
+                    message = "Monster does not exists.";
+                }else if(selected.getSaleOffer() == 0){
+                    message = "Monster is not for sale.";
+                }else if(selected.getSaleOffer() > current.getMoney()){
                     message = "You don not have enough money for buying this monster.";
                 }else{
                     pm.buyMonster(current.getUserID(), monsterID, serverID);
@@ -115,7 +118,7 @@ public class MarketPage extends HttpServlet {
                 }
                 request.setAttribute("alertMessage", message);
             }catch(Exception e){
-                
+                request.setAttribute("alertMessage", "Incorrect server ID.");
             }
         }
     }

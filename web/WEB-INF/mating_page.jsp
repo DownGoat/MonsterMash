@@ -26,6 +26,14 @@
             $(function() {
                 $( "#selllist" ).menu();
             });
+            <c:if test="${not empty alertMessage}">
+                alert("${alertMessage}");
+            </c:if> 
+            function setValues(monsterID, serverID){
+                document.getElementById('monsterID').value = monsterID;
+                document.getElementById('serverID').value = serverID;
+                document.getElementById('breedingForm').submit();
+            }
         </script>
     </head>
     <body>
@@ -62,9 +70,15 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
         <div class="content">
+                <c:set var="anyAvailableMonsters" value="0" />
+                <c:forEach items="${monsterList}" var="monster">
+                    <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
+                        <c:set var="anyAvailableMonsters" value="1" />
+                    </c:if>
+                </c:forEach>
                 <h1><span style="font-size: 25px;">O</span>FFERED <span style="font-size: 25px;">F</span>OR <span style="font-size: 25px;">B</span>REEDING:</h1>
+                <form id="breedingForm" action="" method="get">
                 <ul id="buylist">
-                    <form action="" method="get">
                     <c:if test="${empty monstersForBreed}">
                         <li style="text-align:center;">No offers at the moment.</li>
                     </c:if>
@@ -73,8 +87,11 @@
                     <c:forEach items="${monstersForBreed}" var="monster">
                         ${monster}
                     </c:forEach>
-                    </form>
                 </ul>
+                <c:if test="${anyAvailableMonsters == 0}">
+                    <p style="font-weight:bold;color:red;font-style:italic;text-align:center">You have no monsters to breed with.</p>
+                </c:if>
+                <c:if test="${anyAvailableMonsters != 0}">
                 <p style="text-align:center;font-weight:bold">Breed with:
                     <select name="myMonster">
                         <c:forEach items="${monsterList}" var="monster">
@@ -84,6 +101,8 @@
                         </c:forEach>
                     </select>
                 </p>
+                </c:if>   
+                </form>
                 <hr />
                 <h1><span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTERS <span style="font-size: 25px;">O</span>FFERED <span style="font-size: 25px;">F</span>OR <span style="font-size: 25px;">B</span>REEDING</h1>
                 <ul id="selllist">
@@ -100,13 +119,7 @@
                 </ul><br />
                 <hr />
                 <h1><span style="font-size: 25px;">O</span>FFER <span style="font-size: 25px;">Y</span>OUR <span style="font-size: 25px;">M</span>ONSTER:</h1>
-                <form action="market" method="POST">
-                    <c:set var="anyAvailableMonsters" value="0" />
-                        <c:forEach items="${monsterList}" var="monster">
-                            <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
-                                <c:set var="anyAvailableMonsters" value="1" />
-                            </c:if>
-                        </c:forEach>
+                <form action="mating" method="POST">
                     <c:if test="${anyAvailableMonsters == 1}">
                     <p style="text-align:center">Choose monster:</p>
                     <p style="text-align:center">  
