@@ -294,28 +294,33 @@ public class PersistenceManager {
     
     /**
      * Returns player id at index 0 and player server id at index 1
-     * TODO: Needs SERVER<->SERVER
-     * @param email player's email address
-     * @return player id (index 0) player server id (index 1)
+     * @param userID player's userID
+     * @return player name (index 0) player server id (index 1)
      */
-    public String[] getPlayerIdAndServer(String email){
-        String[] player = new String[2];
-        player[0] = "0";
-        player[1] = "0";
+    public String[] getPlayerIdAndServer(String userID){
+        String[] playerInfo = new String[2];
+        playerInfo[0] = "0";
+        playerInfo[1] = "0";
         try{
             Statement stmt = connection.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"id\" = '"+email+"'");
+            ResultSet results = stmt.executeQuery("SELECT \"id\" FROM \"Player\" WHERE \"id\" = '"+userID+"'");
             results.next();
-            player[0] = results.getString("id");
-            player[1] = "12";
+            playerInfo[0] = results.getString("id");
+            playerInfo[1] = "12";
             results.close();
             stmt.close();
         }catch (SQLException sqlExcept){
             System.err.println(sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
-        //SERVER2SERVER HERE!
-        return player;
+        if(playerInfo[0].equals("0") || playerInfo[1].equals("0")){
+            Player user = remote.findUser(userID);
+            if(user != null){
+                playerInfo[0] = user.getUsername();
+                playerInfo[1] = user.getServerID()+"";
+            }
+        }
+        return playerInfo;
     }
     
     /**
@@ -353,13 +358,17 @@ public class PersistenceManager {
      * @param receiverServerID  server ID of receiver
      */
     public void sendFriendRequest(String senderID, String receiverID, int receiverServerID){
-        try{
-            Statement stmt = connection.createStatement();
-            String id = this.randomString(16);
-            stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', 12, "+receiverServerID+", 'N')");
-        }catch(SQLException sqlExcept){
-            System.err.println(sqlExcept.getMessage());
-            this.error = sqlExcept.getMessage();
+        if(receiverServerID == CONFIG.OUR_SERVER){
+            try{
+                Statement stmt = connection.createStatement();
+                String id = this.randomString(16);
+                stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', 12, "+receiverServerID+", 'N')");
+            }catch(SQLException sqlExcept){
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }    
+        }else{
+            remote.remoteFriendRequest(this.getPlayer(senderID), receiverID, receiverServerID);
         }
     }
     
@@ -506,7 +515,6 @@ public class PersistenceManager {
     public void acceptFriendRequest(String requestID, String receiverID){
         try{
             Statement stmt = connection.createStatement();
-            stmt = connection.createStatement();
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '"+requestID+"' AND \"receiver_id\" = '"+receiverID+"'");
             if(results.next()){
                 this.confirmFriendship(results.getString("sender_id"), results.getInt("sender_server_id"), receiverID, results.getInt("receiver_server_id"));
@@ -536,7 +544,6 @@ public class PersistenceManager {
     public void cancelFriendRequest(String requestID, String receiverID){
         try{
             Statement stmt = connection.createStatement();
-            stmt = connection.createStatement();
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '"+requestID+"' AND \"receiver_id\" = '"+receiverID+"'");
             if(results.next()){
                 this.rejectFriendship(results.getString("sender_id"), results.getInt("sender_server_id"), receiverID, results.getInt("receiver_server_id"));
@@ -925,15 +932,16 @@ public class PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\"");
+            ArrayList<String> queries = new ArrayList<String>();
             while(r.next()){
                 // UPDATE CURRENT HEALTH
                 java.util.Date current = new java.util.Date();
-                double age = ((current.getTime()-r.getLong("dob"))/(r.getLong("dod")-r.getLong("dob")));
+                double age = (((double)current.getTime()-(double)r.getLong("dob"))/((double)r.getLong("dod")-(double)r.getLong("dob")));
                 double health = 1-Math.exp(age*0.1)+r.getDouble("base_health");
                 //UPDATE CURRENT STRENGTH AND DEFENCE
                 double strength = (Math.exp(0.1*age)-1+r.getDouble("base_strength"))*(2-Math.exp(0.1*age));
                 double defence = (Math.exp(0.1*age)-1+r.getDouble("base_defence"))*(2-Math.exp(0.1*age));
-                stmt.execute("UPDATE \"Monster\" SET \"current_health\" = "+health+", \"current_strength\" = "+strength+", \"current_defence\" = "+defence+" WHERE \"id\" = '"+r.getString("id")+"'");
+                queries.add("UPDATE \"Monster\" SET \"current_health\" = "+health+", \"current_strength\" = "+strength+", \"current_defence\" = "+defence+" WHERE \"id\" = '"+r.getString("id")+"'");
                 //CHECK
                 if(r.getLong("dod") < current.getTime() || health <= 0 || strength <= 0 || defence <= 0){
                     monstersToRemove.add(r.getString("id"));
@@ -943,6 +951,9 @@ public class PersistenceManager {
                 }
             }
             r.close();
+            for(String query: queries){
+                stmt.execute(query);
+            }
             stmt.close();
         }catch (SQLException sqlExcept){
             System.err.println(sqlExcept.getMessage());
