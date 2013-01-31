@@ -6,11 +6,13 @@ package ServerCom;
 
 import data.FightRequest;
 import data.Monster;
+import data.NameGenerator;
 import data.Notification;
 import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -66,6 +68,15 @@ public class FightLost extends HttpServlet {
                    pm.storeNotifications(player);
                    pm.removeMonster(fr.getSenderMonsterID());
                    pm.removeFightRequest(fr);
+                   
+                   if(player.getMonsters().size() == 1) {
+                       ArrayList<Monster> monsters = new ArrayList<Monster>();
+                       
+                       monsters.add(new Monster(NameGenerator.getName(), player.getUserID()));
+                       player.setMonsters(monsters);
+                       
+                       pm.storeMonsters(player);
+                   }
                } else {
                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unkown player id in fight request.");
                }

@@ -53,6 +53,8 @@ public class FriendRequest extends HttpServlet {
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found.");
             }
+            
+            response.sendRedirect("/MonsterMash/main");
         }
     }
 

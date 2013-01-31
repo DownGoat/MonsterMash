@@ -62,6 +62,8 @@ public class FightWon extends HttpServlet {
                     pm.removeFightRequest(fr);
                     player.setMoney(fr.getMONEY()+player.getMoney());
                     pm.updateMoney(player);
+                    
+                    response.sendRedirect("/MonsterMash/main");
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad fight request data."); 
                 }     

@@ -45,8 +45,8 @@ public class BreedServlet extends HttpServlet {
                 if(player != null) {
                     player.setMoney(player.getMoney()+monster.getBreedOffer());
                     player.addNotification(new Notification(
-                            "<b>"+monster.getName()+"</b> has been breed.",
-                            "Your monster "+monster.getName()+" has been breed and you got "+monster.getBreedOffer()+"$.",
+                            "<b>"+monster.getName()+"</b> has been bred.",
+                            "Your monster "+monster.getName()+" has been bred and you got "+monster.getBreedOffer()+"$.",
                             player
                             ));
                     

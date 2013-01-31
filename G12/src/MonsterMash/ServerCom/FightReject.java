@@ -52,6 +52,8 @@ public class FightReject extends HttpServlet {
                             ));
                     pm.storeNotifications(sender);
                     pm.removeFightRequest(fr);
+                    
+                    response.sendRedirect("/MonsterMash/main");
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown player in fight request.");
                 }

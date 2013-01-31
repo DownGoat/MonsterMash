@@ -46,6 +46,8 @@ public class FriendAccept extends HttpServlet {
                 Player sender = pm.getPlayer(friend.getLocalUserID());
                 sender.addNotification(new Notification("Accepted friend request from "+friend.getRemoteUserID(), "You have accepted friend request from "+friend.getRemoteUserID(), sender));
                 pm.storeNotifications(sender);
+                
+                response.sendRedirect("/MonsterMash/main");
             }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid friendID");

@@ -59,6 +59,7 @@ public class FightRequestServlet extends HttpServlet {
                                 "You got a new figth request from "+senderMonster.getUserID(),
                                 senderMonster.getUserID()+" has challenged you to a epic battle! His monster "+senderMonster.getId()+" versus your monster "+reciverMonster.getName(),
                                 p));
+                    response.sendRedirect("/MonsterMash/main");
                     pm.storeNotifications(p);
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, Player ID not found.");

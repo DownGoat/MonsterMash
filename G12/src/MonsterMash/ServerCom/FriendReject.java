@@ -42,6 +42,7 @@ public class FriendReject extends HttpServlet {
             if(friend != null) {
                 pm.rejectFriend(friend);
                 response.setStatus(200);
+                response.sendRedirect("/MonsterMash/main");
             }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request invalid friendID for friend reject.");

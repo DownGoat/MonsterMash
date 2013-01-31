@@ -5,11 +5,13 @@
 package ServerCom;
 
 import data.Monster;
+import data.NameGenerator;
 import data.Notification;
 import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +54,15 @@ public class BuyServlet extends HttpServlet {
                     
                     pm.storeNotifications(player);
                     pm.updateMoney(player);
+                    
+                    if(player.getMonsters().size() == 1) {
+                       ArrayList<Monster> monsters = new ArrayList<Monster>();
+                       
+                       monsters.add(new Monster(NameGenerator.getName(), player.getUserID()));
+                       player.setMonsters(monsters);
+                       
+                       pm.storeMonsters(player);
+                   }
                 }
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid monster id.");
