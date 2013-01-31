@@ -49,7 +49,7 @@ public class OtherPersistenceManager extends PersistenceManager {
     public void acceptFriendRequest(Friend friend) {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("UPDATE \"Friendship\" SET \"CONFIRMED\" = 'Y' WHERE \"id\" = '" + friend.getFriendshipID() + "'");
+            stmt.execute("UPDATE \"Friendship\" SET \"confirmed\" = 'Y' WHERE \"id\" = '" + friend.getFriendshipID() + "'");
             stmt.close();
         } catch (SQLException sqlExcept) {
             this.error = sqlExcept.getMessage();
@@ -63,7 +63,7 @@ public class OtherPersistenceManager extends PersistenceManager {
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '" + friendID + "'");
             results.next();
 
-            friend = new Friend(results.getString("id"), results.getString("reciver_id"), results.getString("sender_id"), results.getInt("reciver_server_id"), results.getInt("sender_server_id"), results.getString("confirmed"));
+            friend = new Friend(results.getString("id"), results.getString("receiver_id"), results.getString("sender_id"), results.getInt("receiver_server_id"), results.getInt("sender_server_id"), results.getString("confirmed"));
             results.close();
             stmt.close();
         } catch (SQLException sqlExcept) {
