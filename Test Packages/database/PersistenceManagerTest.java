@@ -171,7 +171,10 @@ public class PersistenceManagerTest {
         Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill");
         PersistenceManager pm = new PersistenceManager();
         pm.storePlayer(player);
-        assertEquals(pm.getPlayerIdAndServer("pal@aber.ac.uk"), "Pavel");
+        String[] example = new String[2];
+        example[0] = "Pavel";
+        example[1] = "12";
+        assertArrayEquals(pm.getPlayerIdAndServer("Pavel"), example);
         
     }
 
@@ -228,15 +231,15 @@ public class PersistenceManagerTest {
     public void testRejectFriendship() {
         System.out.println("rejectFriendship");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        Player player = new Player("Timmy","tim@aber.ac.uk", "password", 100, "Bill"); 
         pm.storePlayer(player);
-        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        Player playerTwo = new Player("Floor","flr@aber.ac.uk", "password", 100, "Billy");
         pm.storePlayer(playerTwo);
-        pm.sendFriendRequest("Pavel", "Table", 12);
-        pm.confirmFriendship("Pavel", 12, "Table", 12);
-        int size = pm.getFriendList("Pavel").size()-2; //Assuming that there are 2 entries for each friendship
-        pm.rejectFriendship("Pavel", 12, "Table", 12);
-        assertEquals(pm.getFriendList("Pavel").size(), size );
+        pm.sendFriendRequest("Timmy", "Floor", 12);
+        pm.confirmFriendship("Timmy", 12, "Floor", 12);
+        int size = pm.getFriendList("Timmy").size()-1; 
+        pm.rejectFriendship("Timmy", 12, "Floor", 12);
+        assertEquals(pm.getFriendList("Timmy").size(), size );
     }
 
     /**
@@ -254,7 +257,7 @@ public class PersistenceManagerTest {
 
     /**
      * Test of getPlayerUsername method, of class PersistenceManager.
-     
+     */
     @Test
     public void testGetPlayerUsername() {
         System.out.println("getPlayerUsername");
@@ -262,9 +265,8 @@ public class PersistenceManagerTest {
         PersistenceManager pm = new PersistenceManager();
         pm.storePlayer(player);
         
-        
         assertEquals( "pal@aber.ac.uk", pm.getPlayerUsername("Pavel", 12));
-    }*/
+    }
 
     /**
      * Test of getFriendRequestList method, of class PersistenceManager.
@@ -294,8 +296,8 @@ public class PersistenceManagerTest {
         pm.storePlayer(playerTwo);
         pm.sendFriendRequest("Pavel", "Table", 12);
         pm.acceptFriendRequest("Pavel", "Table");
+        assertEquals(pm.getFriendList("Pavel").get(0).getUserID(), playerTwo.getUserID());
         
-        fail();
     }
 
     /**
@@ -305,13 +307,14 @@ public class PersistenceManagerTest {
     public void testCancelFriendRequest() {
         System.out.println("cancelFriendRequest");
         PersistenceManager pm = new PersistenceManager();
-        Player player = new Player("Pavel","pal@aber.ac.uk", "password", 100, "Bill"); 
+        Player player = new Player("Shovel","shl@aber.ac.uk", "password", 100, "Bill"); 
         pm.storePlayer(player);
-        Player playerTwo = new Player("Table","tab@aber.ac.uk", "password", 100, "Billy");
+        Player playerTwo = new Player("SomeonesFace","sof@aber.ac.uk", "password", 100, "Billy");
         pm.storePlayer(playerTwo);
-        pm.sendFriendRequest("Pavel", "Table", 12);
-        pm.rejectFriendship("Pavel", 12, "Table", 12);
-        fail();
+        pm.sendFriendRequest("Shovel", "SomeonesFace", 12);
+        int requestListSize = pm.getFriendRequestList("SomeonesFace").size()-1; //wha?
+        pm.cancelFriendRequest("Shovel", "SomeonesFace");
+        assertEquals(pm.getFriendRequestList("SomeonesFace").size(), requestListSize);
     }
 
     /**
@@ -320,13 +323,14 @@ public class PersistenceManagerTest {
     @Test
     public void testGetMonstersForSale() {
         System.out.println("getMonstersForSale");
-        String playerID = "";
-        PersistenceManager instance = new PersistenceManager();
-        ArrayList expResult = null;
-        ArrayList result = instance.getMonstersForSale(playerID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistenceManager pm = new PersistenceManager();
+        Player player = new Player("Shovel","shl@aber.ac.uk", "password", 100, "Bill");
+        pm.storePlayer(player);
+        Player playerTwo = new Player("SomeonesFace","sof@aber.ac.uk", "password", 100, "Billy");
+        pm.storePlayer(playerTwo);
+        pm.makeNewMarketOffer("Shovel", "Bill", 100);
+        assertNotNull(pm.getMonstersForSale("SomeonesFace").get(0));
+        
     }
 
     /**
