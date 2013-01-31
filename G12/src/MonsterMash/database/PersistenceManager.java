@@ -562,7 +562,7 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForSale(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        if(friends.size() < 1){
+        if(friends.size() > 0){
             // Build query
             String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
             for(Player p: friends){
@@ -617,7 +617,7 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForBreeding(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        if(friends.size() < 1){
+        if(friends.size() > 0){
             // Build query
             String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
             for(Player p: friends){
