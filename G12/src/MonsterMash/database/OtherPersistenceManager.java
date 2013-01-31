@@ -318,7 +318,7 @@ public class OtherPersistenceManager extends PersistenceManager {
             r.next();
             selected = new Player();
             selected.setMoney(r.getInt("money"));
-            selected.setUserID((r.getString("userID")));
+            selected.setUserID((r.getString("id")));
             selected.setUsername(r.getString("username"));
             r.close();
             stmt.close();

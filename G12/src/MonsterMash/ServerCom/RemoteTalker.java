@@ -53,12 +53,12 @@ public class RemoteTalker {
             return null;
         }
         JSONObject json = new JSONObject(body);
+        System.out.println("JSONObject contains: "+json.toString());
         System.out.println("Get player "+userID+" on server: "+remoteAddress);
         player = new Player();
         player.setUsername(json.getString("name"));
         player.setMoney(json.getInt("money"));
         player.setUserID(json.getString("userID"));
-
         return player;
     }
 
@@ -302,6 +302,9 @@ public class RemoteTalker {
         }
 
         for (int i = 11; i < 13 && player == null; i++) {
+            if(i == CONFIG.OUR_SERVER){
+                continue;
+            }
             String addr = null;
             try {
                 addr = getRemoteAddress(i);

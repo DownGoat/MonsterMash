@@ -562,16 +562,16 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForSale(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        if(friends.size() > 0){
-            // Build query
-            String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
-            for(Player p: friends){
-                if(p.getServerID() == CONFIG.OUR_SERVER){
-                    query += "\"user_id\" = '"+p.getUserID()+"' OR ";
-                }
+        // Build query
+        String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
+        for(Player p: friends){
+            if(p.getServerID() == CONFIG.OUR_SERVER){
+                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
             }
-            query = query.substring(0, query.length()-4);
-            query += ")";
+        }
+        query = query.substring(0, query.length()-4);
+        query += ")";
+        if(query.length() > 60){
             ArrayList<Monster> monsters = new ArrayList<Monster>();
             try{
                 Statement stmt = connection.createStatement();
@@ -608,6 +608,7 @@ public class PersistenceManager {
             return monsters;
         }
         return new ArrayList<Monster>();
+        
     }
     
     /**
@@ -617,17 +618,16 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForBreeding(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        if(friends.size() > 0){
-            // Build query
-            String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
-            for(Player p: friends){
-                if(p.getServerID() == CONFIG.OUR_SERVER){
-                    query += "\"user_id\" = '"+p.getUserID()+"' OR ";
-                }
+        // Build query
+        String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
+        for(Player p: friends){
+            if(p.getServerID() == CONFIG.OUR_SERVER){
+                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
             }
-            query = query.substring(0, query.length()-4);
-            query += ")";
-            System.out.println(query);
+        }
+        query = query.substring(0, query.length()-4);
+        query += ")";
+        if(query.length() > 60){
             ArrayList<Monster> monsters = new ArrayList<Monster>();
             try{
                 Statement stmt = connection.createStatement();
