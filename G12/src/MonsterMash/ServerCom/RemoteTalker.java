@@ -32,7 +32,7 @@ import org.json.JSONObject;
  */
 public class RemoteTalker {
 
-    private final int OUR_SERVER = 12;
+    private final int OUR_SERVER = CONFIG.OUR_SERVER;
     private Client client;
     private WebResource resource;
 
@@ -135,7 +135,7 @@ public class RemoteTalker {
     public Boolean remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         resource = client.resource(getRemoteAddress(serverNumber));
 
-        Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getUserID(), 12, serverNumber, "N");
+        Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getUserID(), CONFIG.OUR_SERVER, serverNumber, "N");
 
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add("friendID", friend.getFriendshipID());

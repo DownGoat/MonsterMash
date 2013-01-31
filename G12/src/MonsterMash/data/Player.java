@@ -48,7 +48,7 @@ public class Player {
         this.friends = new ArrayList<Player>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
-        this.serverID = 12;
+        this.serverID = CONFIG.OUR_SERVER;
     	monsters.add(new Monster(initialMonsterName, this.userID));
         // Add first notifications:
         notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));

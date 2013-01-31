@@ -4,10 +4,7 @@
  */
 package ServerCom;
 
-import data.FightRequest;
-import data.Monster;
-import data.Notification;
-import data.Player;
+import data.*;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,7 +49,7 @@ public class FightRequestServlet extends HttpServlet {
             if(reciverMonster != null && senderMonster != null) {            
                 Player p = pm.getPlayer(reciverMonster.getUserID());
                 if(p != null) {
-                    FightRequest fr = new FightRequest(senderMonster.getUserID(), reciverMonster.getUserID(), fightID, senderMonsterID, recieverMonsterID, senderServerID, 12);
+                    FightRequest fr = new FightRequest(senderMonster.getUserID(), reciverMonster.getUserID(), fightID, senderMonsterID, recieverMonsterID, senderServerID, CONFIG.OUR_SERVER);
                     pm.storeFightRequest(fr);
                     p.addNotification(
                             new Notification(

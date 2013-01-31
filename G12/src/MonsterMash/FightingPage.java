@@ -4,6 +4,7 @@
  */
 
 import ServerCom.RemoteTalker;
+import data.CONFIG;
 import data.Monster;
 import data.Player;
 import database.PersistenceManager;
@@ -69,7 +70,7 @@ public class FightingPage extends HttpServlet {
             // Saves all friends to attribute
             request.setAttribute("friendList", current.getFriends());
             // Saves monsters of selected friend to attribute
-            if(serverID == 12){
+            if(serverID == CONFIG.OUR_SERVER){
                 request.setAttribute("friendMonsterList", pm.getMonsterList(request.getParameter("user")));
             }else{
                 RemoteTalker rt = new RemoteTalker();

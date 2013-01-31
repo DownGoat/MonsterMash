@@ -4,10 +4,7 @@
  */
 
 import ServerCom.RemoteTalker;
-import data.Monster;
-import data.NameGenerator;
-import data.Notification;
-import data.Player;
+import data.*;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,7 +111,7 @@ public class MatingPage extends HttpServlet {
                 }else if(monster.getBreedOffer() > current.getMoney()){
                     message = "You don not have enough money for buying this monster.";
                 }else{
-                    Monster myMonster = pm.getMonster(myMonsterID, 12);
+                    Monster myMonster = pm.getMonster(myMonsterID, CONFIG.OUR_SERVER);
                     if(myMonster == null || monster == null){
                         message = "Cannot find monster.";
                     }else{

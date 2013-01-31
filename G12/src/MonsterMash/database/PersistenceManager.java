@@ -359,7 +359,7 @@ public class PersistenceManager {
             try{
                 Statement stmt = connection.createStatement();
                 String id = this.randomString(16);
-                stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', 12, "+receiverServerID+", 'N')");
+                stmt.execute("INSERT INTO \"Friendship\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"confirmed\") VALUES ('"+id+"', '"+senderID+"', '"+receiverID+"', "+CONFIG.OUR_SERVER+", "+receiverServerID+", 'N')");
             }catch(SQLException sqlExcept){
                 System.err.println(sqlExcept.getMessage());
                 this.error = sqlExcept.getMessage();
@@ -414,7 +414,7 @@ public class PersistenceManager {
         ArrayList<String> friendIDs = new ArrayList<String>();
         ArrayList<String> toReturn = new ArrayList<String>();
         for(Player p: friends){
-            if(p.getServerID() == 12){
+            if(p.getServerID() == CONFIG.OUR_SERVER){
                 friendIDs.add(p.getUserID());
             }else{
                 // TODO: get player's money amount from different server
@@ -570,7 +570,7 @@ public class PersistenceManager {
         // Build query
         String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
         for(Player p: friends){
-            if(p.getServerID() == 12){
+            if(p.getServerID() == CONFIG.OUR_SERVER){
                 query += "\"user_id\" = '"+p.getUserID()+"' OR ";
             }
         }
@@ -582,7 +582,7 @@ public class PersistenceManager {
             ResultSet r = stmt.executeQuery(query);
             while(r.next()){
                 Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
-                tmp.setServerID(12);
+                tmp.setServerID(CONFIG.OUR_SERVER);
                 monsters.add(tmp);
             }
             r.close();
@@ -620,7 +620,7 @@ public class PersistenceManager {
         // Build query
         String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
         for(Player p: friends){
-            if(p.getServerID() == 12){
+            if(p.getServerID() == CONFIG.OUR_SERVER){
                 query += "\"user_id\" = '"+p.getUserID()+"' OR ";
             }
         }
@@ -632,7 +632,7 @@ public class PersistenceManager {
             ResultSet r = stmt.executeQuery(query);
             while(r.next()){
                 Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
-                tmp.setServerID(12);
+                tmp.setServerID(CONFIG.OUR_SERVER);
                 monsters.add(tmp);
             }
             r.close();
@@ -817,7 +817,7 @@ public class PersistenceManager {
      * @param serverID 
      */
     public void buyMonster(String userID, String monsterID, int serverID){
-        if(serverID == 12){
+        if(serverID == CONFIG.OUR_SERVER){
             try{
                 Statement stmt = connection.createStatement();
                 ResultSet r = stmt.executeQuery("SELECT \"sale_offer\", \"user_id\" FROM \"Monster\" WHERE \"id\" = '"+monsterID+"'");
@@ -866,7 +866,7 @@ public class PersistenceManager {
      * @return 
      */
     public Monster getMonster(String monsterID, int serverID){
-        if(serverID == 12){
+        if(serverID == CONFIG.OUR_SERVER){
             Monster monster = null;
             try {
                 Statement stmt = connection.createStatement();
