@@ -42,7 +42,7 @@ public class FriendAccept extends HttpServlet {
             if(friend != null) {
                 pm.acceptFriendRequest(friend);
                 response.setStatus(200);
-                
+                System.out.println(friendID);
                 Player sender = pm.getPlayer(friend.getLocalUserID());
                 sender.addNotification(new Notification("Accepted friend request from "+friend.getRemoteUserID(), "You have accepted friend request from "+friend.getRemoteUserID(), sender));
                 pm.storeNotifications(sender);

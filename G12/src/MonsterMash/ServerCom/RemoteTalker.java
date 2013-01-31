@@ -127,11 +127,19 @@ public class RemoteTalker {
     }
 
     public String getRemoteAddress(int serverNumber) {
+        
+//        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+//    System.out.println(ste);
+//}
+
+
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\nGetting remote address.");
         resource = client.resource("http://monstermash.digitdex.com/directory");
         return resource.path(String.valueOf(serverNumber)).path("service").get(String.class);
     }
 
     public Boolean remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
+        System.out.println("Getting remoteFriendRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         Friend friend = new Friend(String.valueOf(new Date().getTime()), remoteUserID, localUser.getUserID(), CONFIG.OUR_SERVER, serverNumber, "N");
@@ -159,6 +167,7 @@ public class RemoteTalker {
     }
 
     public Boolean acceptRemoteFriendRequest(Friend friend) {
+        System.out.println("Getting acceptRemoteFriendRequest.");
         resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
 
         String body = null;
@@ -172,6 +181,7 @@ public class RemoteTalker {
     }
 
     public Boolean rejectRemoteFriendRequest(Friend friend) {
+        System.out.println("Getting rejectRemoteFriendRequest.");
         resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
 
         String body = null;
@@ -185,6 +195,7 @@ public class RemoteTalker {
     }
 
     public Boolean remoteFightRequest(FightRequest fightRequest, int serverNumber) {
+        System.out.println("Getting remoteFightRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -205,6 +216,7 @@ public class RemoteTalker {
     }
 
     public Boolean wonRemoteFight(FightRequest fightRequest, int serverNumber, Monster monster) {
+        System.out.println("Getting wonRemoteFight.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -224,6 +236,7 @@ public class RemoteTalker {
     }
 
     public Boolean lostRemoteFight(FightRequest fightRequest, int serverNumber) {
+        System.out.println("Getting lostRemoteFight.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         String body = null;
@@ -237,6 +250,7 @@ public class RemoteTalker {
     }
 
     public Boolean rejectRemoteFight(FightRequest fightRequest, int serverNumber) {
+        System.out.println("Getting rejectRemoteFight.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         String body = null;
@@ -250,6 +264,7 @@ public class RemoteTalker {
     }
 
     public Boolean sendBreedRequest(String monsterID, int serverNumber) {
+        System.out.println("Getting sendBreedRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         String body = null;
@@ -263,6 +278,7 @@ public class RemoteTalker {
     }
 
     public Boolean sendBuyRequest(String monsterID, int serverNumber) {
+        System.out.println("Getting sendBuyRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
 
         String body = null;
@@ -276,6 +292,7 @@ public class RemoteTalker {
     }
 
     public Player findUser(String userID) {
+        System.out.println("Getting findUser.");
         Player player = null;
 
         OtherPersistenceManager pm = new OtherPersistenceManager();
@@ -317,6 +334,7 @@ public class RemoteTalker {
     }
 
     public ArrayList<String> getHighScores(Player player) {
+        System.out.println("Getting getHighScores.");
         ArrayList<String> highscores = new ArrayList<String>();
         ArrayList<Player> players = new ArrayList<Player>();
         RemoteTalker rt = new RemoteTalker();

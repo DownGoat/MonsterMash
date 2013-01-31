@@ -24,7 +24,7 @@ public class NameGenerator {
         startWords.addAll(Arrays.asList(thestartWords));
         endWords.addAll(Arrays.asList(theendWords));
 
-        String name = startWords.get(randomInt(0, 25)) + " " + endWords.get(randomInt(0, 19));
+        String name = startWords.get(randomInt(0, 24)) + " " + endWords.get(randomInt(0, 18));
 
         return name;
     }

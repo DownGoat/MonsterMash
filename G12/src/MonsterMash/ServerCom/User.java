@@ -53,12 +53,17 @@ public class User extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        
+        System.out.println("IP: " + request.getRemoteAddr() +
+                ", Port: " + request.getRemotePort() +
+                ", Host: " + request.getRemoteHost());
         OtherPersistenceManager pm = new OtherPersistenceManager();
         String userIDString = request.getParameter("userID");
+        System.out.println(userIDString);
 
         if (userIDString != null) {
             Player player = null;
-            player = pm.getPlayer(userIDString);
+            player = pm.getPlayerSafe(userIDString);
 
             if (player != null) {
                 PrintWriter out = response.getWriter();
