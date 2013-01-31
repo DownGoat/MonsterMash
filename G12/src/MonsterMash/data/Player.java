@@ -79,6 +79,29 @@ public class Player {
     public Player() {
         
     }
+    
+    public ArrayList<Player> sortByMoney(ArrayList<Player> players) {        
+        while(true) {
+            Boolean swapped = false;
+            for(int i = 0; i < players.size()-1; i++) {
+                Player selectorOne = players.get(i);
+                Player selectorTwo = players.get(i+1);
+                
+                if(selectorOne.getMoney() < selectorTwo.getMoney()) {
+                    players.set(i, selectorTwo);
+                    players.set(i+1, selectorOne);
+                    
+                    swapped = true;
+                }
+            }
+            
+            if(!swapped) {
+                break;
+            }
+        }
+        
+        return players;
+    }
 
     public String getUserID() {
         return userID;
