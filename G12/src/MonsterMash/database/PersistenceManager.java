@@ -788,6 +788,12 @@ public class PersistenceManager {
         }
     }
     
+    /**
+     * 
+     * @param monsterID
+     * @param serverID
+     * @return 
+     */
     public Monster getMonster(String monsterID, int serverID){
         if(serverID == 12){
             Monster monster = null;
@@ -822,7 +828,20 @@ public class PersistenceManager {
         }
     }
     
-    
+    /**
+     * 
+     * @param player 
+     */
+    public void updateMoney(Player player) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Player\" SET \"money\" = "+player.getMoney()+" WHERE \"id\" = '"+player.getUserID()+"'"); 
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
     
     
     

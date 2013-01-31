@@ -105,33 +105,33 @@ public class MatingPage extends HttpServlet {
             try{
                 String message = null;
                 int serverID = Integer.parseInt(server);
-                Monster selected = pm.getMonster(monsterID, serverID);
-                if(selected == null){
+                Monster monster = pm.getMonster(monsterID, serverID);
+                if(monster == null){
                     message = "Monster does not exists.";
-                }else if(selected.getBreedOffer() == 0){
+                }else if(monster.getBreedOffer() == 0){
                     message = "Monster is not offered for breeding.";
-                }else if(selected.getBreedOffer() > current.getMoney()){
+                }else if(monster.getBreedOffer() > current.getMoney()){
                     message = "You don not have enough money for buying this monster.";
                 }else{
                     Monster myMonster = pm.getMonster(myMonsterID, 12);
-                    Monster monster = pm.getMonster(monsterID, serverID);
                     if(myMonster == null || monster == null){
                         message = "Cannot find monster.";
                     }else{
                         Monster[] children = myMonster.breeding(monster);
-                        System.out.println("1");
                         for(int i=0;i<children.length;i++){
                             current.addMonster(children[i]);
                         }
-                        System.out.println("2");
                         pm.storeMonsters(current);
-                        System.out.println("3");
+                        Player oldOwner = pm.getPlayer(monster.getUserID());
+                        if(oldOwner != null){
+                            oldOwner.setMoney(oldOwner.getMoney()+monster.getBreedOffer());
+                            pm.updateMoney(oldOwner);
+                        }
+                        current.setMoney(current.getMoney()-monster.getBreedOffer());
+                        pm.updateMoney(current);
                         current.addNotification(new Notification(children.length+" new monsters from breeding.", "As a result of breeding, you received "+children.length+" new monsters.", current));
-                        System.out.println("4");
                         pm.storeNotifications(current);
-                        System.out.println("5");
                         request.setAttribute("alertMessage", "As a result of breeding, you received "+children.length+" new monsters.");
-                        System.out.println("6");
                         return;
                     }
                 }

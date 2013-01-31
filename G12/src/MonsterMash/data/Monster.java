@@ -5,6 +5,8 @@ import java.util.Random;
 
 public class Monster {
     private final int START_HEALTH = 100;
+    private final int LIFESPAN = 60*60*24*7;
+    
     
     /** Attributes **/    
     private String id;
@@ -30,7 +32,7 @@ public class Monster {
         this.id = "0";
 	this.name = name;
 	this.dob = new Date();
-        this.dod = new Date();
+        this.dod = new Date(dob.getTime()+LIFESPAN);
         Random random = new Random();
         this.baseStrength = random.nextDouble();
         this.currentStrength = random.nextDouble();
@@ -77,9 +79,11 @@ public class Monster {
     	Monster[] children = new Monster[numberofchildren + 1]; 
         for (int i = 0; i<= numberofchildren; i++){
             children[i]=new Monster();
+            children[i].id = "0";
             children[i].dob=new Date();
+            children[i].dod = new Date(children[i].dob.getTime()+LIFESPAN);
             //this is assuming that the children go to the owner of the monster that calls the method
-            children[i].userID = userID; 
+            children[i].userID = this.userID; 
             children[i].name = NameGenerator.getName();
             //generating inherited defense
             if(r.nextInt(100)<5){
@@ -89,6 +93,7 @@ public class Monster {
             } else {
                  children[i].baseDefence=other.baseDefence;
             }
+            children[i].currentDefence = children[i].baseDefence;
             //generating inherited strength
             if(r.nextInt(100)<5){
                  children[i].baseStrength=r.nextDouble();
@@ -98,6 +103,7 @@ public class Monster {
             } else {
                  children[i].baseStrength=other.baseStrength;
             }
+            children[i].currentStrength = children[i].baseStrength;
             //generating inherited health
             if(r.nextInt(100)<5){
                  children[i].baseHealth=r.nextDouble();
@@ -106,6 +112,7 @@ public class Monster {
             } else {
                  children[i].baseHealth=other.baseHealth;
             }
+            children[i].currentHealth = children[i].baseHealth;
             //generating inherited fertility
             if(r.nextInt(100)<5){
                  children[i].fertility=r.nextFloat();
