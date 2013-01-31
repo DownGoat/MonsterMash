@@ -564,47 +564,52 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForSale(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        // Build query
-        String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
-        for(Player p: friends){
-            if(p.getServerID() == CONFIG.OUR_SERVER){
-                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
-            }
-        }
-        query = query.substring(0, query.length()-4);
-        query += ")";
-        ArrayList<Monster> monsters = new ArrayList<Monster>();
-        try{
-            Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery(query);
-            while(r.next()){
-                Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
-                tmp.setServerID(CONFIG.OUR_SERVER);
-                monsters.add(tmp);
-            }
-            r.close();
-            stmt.close();
-        }catch (SQLException sqlExcept){
-            System.err.println(sqlExcept.getMessage());
-            this.error = sqlExcept.getMessage();
-        }
-        for(Player p: friends){
-            if(p.getServerID() != CONFIG.OUR_SERVER){
-                String address = remote.getRemoteAddress(p.getServerID());
-                ArrayList<Monster> userMonsters = null;
-                try {
-                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
-                    for(Monster m: userMonsters){
-                        if(m.getSaleOffer() > 0){
-                            monsters.add(m);
-                        }
-                    }
-                } catch (JSONException ex) {
-                    
+        if(friends.size() < 1){
+            // Build query
+            String query = "SELECT * FROM \"Monster\" WHERE \"sale_offer\" <> 0 AND (";
+            for(Player p: friends){
+                if(p.getServerID() == CONFIG.OUR_SERVER){
+                    query += "\"user_id\" = '"+p.getUserID()+"' OR ";
                 }
             }
+            query = query.substring(0, query.length()-4);
+            query += ")";
+            ArrayList<Monster> monsters = new ArrayList<Monster>();
+            try{
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery(query);
+                while(r.next()){
+                    Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
+                    tmp.setServerID(CONFIG.OUR_SERVER);
+                    monsters.add(tmp);
+                }
+                r.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }
+            for(Player p: friends){
+                if(p.getServerID() != CONFIG.OUR_SERVER){
+                    String address = remote.getRemoteAddress(p.getServerID());
+                    ArrayList<Monster> userMonsters = null;
+                    try {
+                        userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                        if(userMonsters != null){
+                            for(Monster m: userMonsters){
+                                if(m.getSaleOffer() > 0){
+                                    monsters.add(m);
+                                }
+                            }
+                        }
+                    } catch (JSONException ex) {
+
+                    }
+                }
+            }
+            return monsters;
         }
-        return monsters;
+        return new ArrayList<Monster>();
     }
     
     /**
@@ -614,47 +619,54 @@ public class PersistenceManager {
      */
     public ArrayList<Monster> getMonstersForBreeding(String playerID){
         ArrayList<Player> friends =  this.getFriendList(playerID);
-        // Build query
-        String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
-        for(Player p: friends){
-            if(p.getServerID() == CONFIG.OUR_SERVER){
-                query += "\"user_id\" = '"+p.getUserID()+"' OR ";
-            }
-        }
-        query = query.substring(0, query.length()-4);
-        query += ")";
-        ArrayList<Monster> monsters = new ArrayList<Monster>();
-        try{
-            Statement stmt = connection.createStatement();
-            ResultSet r = stmt.executeQuery(query);
-            while(r.next()){
-                Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
-                tmp.setServerID(CONFIG.OUR_SERVER);
-                monsters.add(tmp);
-            }
-            r.close();
-            stmt.close();
-        }catch (SQLException sqlExcept){
-            System.err.println(sqlExcept.getMessage());
-            this.error = sqlExcept.getMessage();
-        }
-        for(Player p: friends){
-            if(p.getServerID() != CONFIG.OUR_SERVER){
-                String address = remote.getRemoteAddress(p.getServerID());
-                ArrayList<Monster> userMonsters = null;
-                try {
-                    userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
-                    for(Monster m: userMonsters){
-                        if(m.getBreedOffer() > 0){
-                            monsters.add(m);
-                        }
-                    }
-                } catch (JSONException ex) {
-                    
+        if(friends.size() < 1){
+            // Build query
+            String query = "SELECT * FROM \"Monster\" WHERE \"breed_offer\" <> 0 AND (";
+            for(Player p: friends){
+                if(p.getServerID() == CONFIG.OUR_SERVER){
+                    query += "\"user_id\" = '"+p.getUserID()+"' OR ";
                 }
             }
+            query = query.substring(0, query.length()-4);
+            query += ")";
+            System.out.println(query);
+            ArrayList<Monster> monsters = new ArrayList<Monster>();
+            try{
+                Statement stmt = connection.createStatement();
+                ResultSet r = stmt.executeQuery(query);
+                while(r.next()){
+                    Monster tmp = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
+                    tmp.setServerID(CONFIG.OUR_SERVER);
+                    monsters.add(tmp);
+                }
+                r.close();
+                stmt.close();
+            }catch (SQLException sqlExcept){
+                System.err.println(sqlExcept.getMessage());
+                this.error = sqlExcept.getMessage();
+            }
+            for(Player p: friends){
+                if(p.getServerID() != CONFIG.OUR_SERVER){
+                    String address = remote.getRemoteAddress(p.getServerID());
+                    ArrayList<Monster> userMonsters = null;
+                    try {
+                        userMonsters = remote.getRemoteUsersMonsters(p.getUserID(), address);
+                        if(userMonsters != null){
+                            for(Monster m: userMonsters){
+                                if(m.getBreedOffer() > 0){
+                                    monsters.add(m);
+                                }
+                            }
+                        }
+
+                    } catch (JSONException ex) {
+
+                    }
+                }
+            }
+            return monsters;
         }
-        return monsters;
+        return new ArrayList<Monster>();
     }
 
     /**

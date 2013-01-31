@@ -39,8 +39,8 @@ public class RemoteTalker {
     public RemoteTalker() {
         ClientConfig config = new DefaultClientConfig();
         client = Client.create(config);
-        client.setConnectTimeout(5000);
-        client.setReadTimeout(10000);
+        client.setConnectTimeout(2000);
+        client.setReadTimeout(5000);
 
     }
 
@@ -285,7 +285,7 @@ public class RemoteTalker {
             player.setServerID(CONFIG.OUR_SERVER);
         }
 
-        for (int i = 1; i < 20 && player == null; i++) {
+        for (int i = 11; i < 13 && player == null; i++) {
             String addr = null;
             try {
                 addr = getRemoteAddress(i);
