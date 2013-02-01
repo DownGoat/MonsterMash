@@ -34,48 +34,121 @@
                 document.getElementById('serverID').value = serverID;
                 document.getElementById('breedingForm').submit();
             }
-        </script>
-        <script type="text/javascript">
-        function validate(evt) {
-            var theEvent = evt || window.event;
-            var key = theEvent.keyCode || theEvent.which;
-            key = String.fromCharCode( key );
-            var regex = /[0-9]/;
-            if( !regex.test(key) ) {
-                theEvent.returnValue = false;
-                if(theEvent.preventDefault)
-                    theEvent.preventDefault();
+            function validate(evt) {
+                var theEvent = evt || window.event;
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode( key );
+                var regex = /[0-9]/;
+                if( !regex.test(key) ) {
+                    theEvent.returnValue = false;
+                    if(theEvent.preventDefault)
+                        theEvent.preventDefault();
+                }
             }
-        }
-        </script>
-    </head>
-    <body>
-        <div id="friendslist">
+            function setFriendLinks(userID, serverID){
+                    document.getElementById("fightRequestLink").href = "fight?user="+userID+"&server="+serverID;
+                    document.getElementById("removeFriendLink").href = "main?removeFriend="+userID;
+                    $('a[data-reveal-id]').live('click', function(e) {
+                        e.preventDefault();
+                        var modalLocation = $(this).attr('data-reveal-id');
+                        $('#'+modalLocation).reveal($(this).data());
+                    });
+                }
+                function setRequestLinks(requestID){
+                    document.getElementById("acceptRequest").href = "main?acceptFriendRequest="+requestID;
+                    document.getElementById("cancelRequest").href = "main?cancelFriendRequest="+requestID;
+                    $('a[data-reveal-id]').live('click', function(e) {
+                        e.preventDefault();
+                        var modalLocation = $(this).attr('data-reveal-id');
+                        $('#'+modalLocation).reveal($(this).data());
+                    });
+                }
+                function setFightLinks(requestID){
+                    document.getElementById("acceptRequest").href = "fight/accept?fightID="+requestID;
+                    document.getElementById("cancelRequest").href = "fight/reject?fightID="+requestID;
+                    $('a[data-reveal-id]').live('click', function(e) {
+                        e.preventDefault();
+                        var modalLocation = $(this).attr('data-reveal-id');
+                        $('#'+modalLocation).reveal($(this).data());
+                    });
+                }
+                function showMonsterStats(monsterName, saleOffer, breedOffer, monsterStrength, monsterDefence, monsterHealth){
+                    document.getElementById("monster-name").innerHTML = monsterName;
+                    var status = "<span style=\"color:green;\">ready to fight</span>";
+                    if(saleOffer > 0){
+                        status = "<span style=\"color:orange;\">for sale</span>";
+                    }else if(breedOffer > 0){
+                        status = "<span style=\"color:blue;\">for breeding</span>";
+                    }
+                    document.getElementById("monster-status").innerHTML = "Status: "+status;
+                    document.getElementById("monster-strength").style.width = Math.round(monsterStrength*100)+"%";
+                    document.getElementById("monster-defence").style.width = Math.round(monsterDefence*100)+"%";
+                    document.getElementById("monster-health").style.width = Math.round(monsterHealth*100)+"%";
+                    $('a[data-reveal-id]').live('click', function(e) {
+                        e.preventDefault();
+                        var modalLocation = $(this).attr('data-reveal-id');
+                        $('#'+modalLocation).reveal($(this).data());
+                    });
+                }
+	</script>
+</head>
+<body>
+    <div id="friendLinks" class="reveal-modal">
+        <a id="fightRequestLink" href=""><img src="images/request_fight.png" width="125" height="32" alt="Send Fight Reqest" /></a>
+        <a id="removeFriendLink" href=""><img src="images/remove_friend.png" width="125" height="32" alt="Remove Friend" /></a>
+    </div>
+    <div id="requestLinks" class="reveal-modal">
+        <a id="acceptRequest" href=""><img src="images/accept_request.png" width="125" height="32" alt="Accept request" /></a>
+        <a id="cancelRequest" href=""><img src="images/reject_request.png" width="125" height="32" alt="Reject request" /></a>
+    </div>
+    <div class="reveal-modal" id="monsterStats" >
+        <h1 id="monster-name">Monster Name</h1>
+        <hr>
+        <h3 id="monster-status">Status:</h3> 
+        <hr>
+        <h2>Strength:</h2>
+        <div class="meter red nostripes">
+            <span id="monster-strength" style="width: 25%"></span>
+        </div>
+        <h2>Defence:</h2>
+        <div class="meter nostripes">
+            <span id="monster-defence" style="width: 75%"></span>
+        </div>
+        <h2>Health:</h2>
+        <div class="meter orange nostripes">
+            <span id="monster-health" style="width: 45%"></span>
+        </div>		
+     </div>
+	<div id="friendslist">
 		<ul class="list">
                     <c:forEach items="${requestList}" var="request">
                         ${request}
                     </c:forEach>
                     <c:forEach items="${friendList}" var="friend">
-                        <li><a title="Send Fight Request" href="fight?user=${friend.userID}&server=${friend.serverID}"><img src="images/avatar.jpg" alt="" /> ${friend.username}</a></li>
+                        <li>
+                            <a href="#" onclick="setFriendLinks('${friend.userID}', '${friend.serverID}')" data-reveal-id="friendLinks" >${friend.username}</a>
+                        </li>
                     </c:forEach>
 		</ul>
 	</div>
 	<div id="friend-request">
 		<form action="main" method="post">
-			<p><input id="friendRequestName" type="text" value="Enter email ..." name="email" maxlength="255" /></p>
-                        <p><input type="submit" value="Send request" /></p>
+			<p>
+                            <input id="friendRequestName" type="text" onblur="if (this.value == '') {this.value = 'Send email...';}" onfocus="if(this.value == 'Send email...') {this.value = '';}" value="Send email..." name="email" maxlength="255" />
+                            <br />
+                            <button type="submit" class="formbutton">
+                                <img src="images/add_friend.png" width="125" height="32" alt="submit" />
+                            </button>
+                        </p>
 		</form>
 	</div>
 	<div id="monsterlist">
             <ul class="list">
                 <c:forEach items="${monsterRequestList}" var="monsterRequest">
-                    <li class="fight-request" style="background-color: #ff9d9d; border-top-left-radius: 5px;"><a><img src="images/avatar.jpg" alt="" />${monsterRequest.senderID}</a></li>
-                    <ul class="subrequest"><li><a href="#">Accept Request</a></li><li><a href="fight/reject?fightID=${monsterRequest.fightID}">Cancel Request</a></li></ul>
+                    <li class="fight-request" style="background-color: #ff9d9d; border-top-left-radius: 5px;"><a href="#" onclick="setFightLinks('${monsterRequest.fightID}')" data-reveal-id="requestLinks">Fight with <span style="color:#5988ff">${monsterRequest.senderID}</span></a></li>
                 </c:forEach>
                 <c:forEach items="${monsterList}" var="monster">
-                    <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
-                        <li title="Born: ${monster.dob}; Strength: ${monster.currentStrength}; Defence: ${monster.currentDefence}; Health: ${monster.currentHealth}; Fertility: ${monster.fertility}"><a><img src="images/avatar.jpg" alt="" />${monster.name}</a></li>
-                    </c:if>
+                    <li><a href="#" onclick="showMonsterStats('${monster.name}', ${monster.saleOffer}, ${monster.breedOffer}, ${monster.currentStrength}, ${monster.currentDefence}, ${monster.currentHealth})" data-reveal-id="monsterStats">${monster.name}</a></li>
                 </c:forEach>
             </ul>
         </div>
@@ -151,7 +224,11 @@
                         </select>
                     </p>
                     <p style="text-align:center">Your offer: <input type="text" name="offerAmount" size="1" onkeypress="validate(event)" />$</p>
-                    <p style="text-align:center"><input type="submit" value="Sell monster" /></p>
+                    <p style="text-align:center">
+                        <button type="submit" class="formbutton">
+                            <img src="images/offer_for_breeding.png" width="125" height="32" alt="submit" />
+                        </button>
+                    </p>
                     </c:if>
                     <c:if test="${anyAvailableMonsters == 0}">
                         <p style="font-weight:bold;color:red;font-style:italic;text-align:center">You have no monsters.</p>

@@ -29,13 +29,13 @@ public class MatingPage extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("user") == null){
+        if (session == null || session.getAttribute("user") == null) {
             // Redirects when user is not logged in
             response.sendRedirect("");
-        }else{
-            Player current = (Player)session.getAttribute("user");
+        } else {
+            Player current = (Player) session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
             // Check if any monster dies:
             pm.checkIfAnyMonsterDies();
@@ -44,13 +44,15 @@ public class MatingPage extends HttpServlet {
             session.setAttribute("user", current);
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
-            // Saves all friends and friend requests to attribute
+            // Saves all friends to attribute
             request.setAttribute("friendList", current.getFriends());
             // Saves all friend requests to attribute
             request.setAttribute("requestList", pm.getFriendRequestList(current.getUserID()));
+            // Saves all fight requests to attribute
+            request.setAttribute("monsterRequestList", pm.getFightRequests(current.getUserID()));
             // Saves all monsters to attribute
             request.setAttribute("monsterList", pm.getMonsterList(current.getUserID()));
-            request.getRequestDispatcher("/WEB-INF/mating_page.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/main_page.jsp").forward(request, response);
         }
     }
 

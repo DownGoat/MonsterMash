@@ -485,7 +485,7 @@ public class PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"receiver_id\" = '"+userID+"' AND \"confirmed\" = 'N'");
             while(results.next()){
-                toReturn.add("<li class=\"friend-request\"><a><img src=\"images/avatar.jpg\" alt=\"\" /> "+this.getPlayerUsername(results.getString("sender_id"), results.getInt("sender_server_id"))+"</a><ul class=\"subrequest\"><li><a href=\"main?acceptFriendRequest="+results.getString("id")+"\">Accept Request</a></li><li><a href=\"main?cancelFriendRequest="+results.getString("id")+"\">Cancel Request</a></li></ul></li>");
+                toReturn.add("<li class=\"friend-request\"><a href=\"#\" onclick=\"setRequestLinks('"+results.getString("id")+"')\" data-reveal-id=\"requestLinks\">"+this.getPlayerUsername(results.getString("sender_id"), results.getInt("sender_server_id"))+"</a></li>");
             }
             results.close();
             stmt.close();

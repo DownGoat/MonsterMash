@@ -35,7 +35,6 @@
                                     </c:otherwise>
                                 </c:choose>                        
 				<div style="margin-top:0px;">
-					<a class="forgotten-password"><strike>Forgot your password?</strike></a>
 					<button type="submit" class="forgot-password">
 						<img src="images/sign_in.png" width="101" height="32" alt="submit" />
 					</button>
