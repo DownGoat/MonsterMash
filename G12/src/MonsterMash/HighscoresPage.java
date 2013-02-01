@@ -50,7 +50,7 @@ public class HighscoresPage extends HttpServlet {
             request.setAttribute("monsterRequestList", pm.getFightRequests(current.getUserID()));
             // Saves all monsters to attribute
             request.setAttribute("monsterList", pm.getMonsterList(current.getUserID()));
-            request.getRequestDispatcher("/WEB-INF/main_page.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/highscores_page.jsp").forward(request, response);
         }
     }
 
