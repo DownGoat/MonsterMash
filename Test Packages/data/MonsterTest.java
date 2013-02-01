@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package data;
 
 import java.util.Date;
@@ -14,29 +10,13 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Llionv
+ * @author Llion Vaughan (lwv@aber.ac.uk)
  */
 public class MonsterTest {
     
     public MonsterTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testBreeding(){
         Monster m1 = new Monster("testMonster", "jau1");
@@ -47,8 +27,6 @@ public class MonsterTest {
         assertNotNull(testChildren[0].getBaseStrength());
         
     }
-    
-    
     
     /**
      * Test of getId method, of class Monster.
@@ -117,7 +95,7 @@ public class MonsterTest {
         assertTrue(0<monster.getBaseStrength() && monster.getBaseStrength()<1);
     }
 
-       /**
+    /**
      * Test of getCurrentStrength method, of class Monster.
      */
     @Test
@@ -169,17 +147,7 @@ public class MonsterTest {
         Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getCurrentHealth() && monster.getCurrentHealth()<1);
     }
-
-    /**
-     * Test of getAge_rate method, of class Monster.
     
-    @Test
-    public void testGetAge_rate() {
-        System.out.println("getAge_rate");
-        Monster monster = new Monster("Bob");
-        assertTrue(0<monster.getAge_rate() && monster.getAge_rate()<1);
-    }
- */
     /**
      * Test of getFertility method, of class Monster.
      */

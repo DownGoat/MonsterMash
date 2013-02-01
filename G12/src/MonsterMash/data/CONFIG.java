@@ -9,5 +9,5 @@ package data;
  * @author sis13
  */
 public class CONFIG {
-    public static final int OUR_SERVER = 13;
+    public static final int OUR_SERVER = 10;
 }

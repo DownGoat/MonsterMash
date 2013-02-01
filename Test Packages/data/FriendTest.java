@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package data;
 
 import org.junit.After;
@@ -13,29 +9,12 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author FlanManDan
+ * @author Daniel Hopkins (dah27)
  */
 public class FriendTest {
     
     public FriendTest() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of isFriendshipConfirmed method, of class Friend.
      */
