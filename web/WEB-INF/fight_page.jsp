@@ -88,6 +88,7 @@
                             </c:forEach>
                         </select>
                         <input type="hidden" name="remoteServerNumber" value="${remoteServer}" /> 
+                        <input type="hidden" name="receiver" value="${receiver}" /> 
                         <input type="submit" value="Request fight" />
                     </form>
                 </c:if>
@@ -105,12 +106,13 @@
                         <select name="remoteMonsterID">
                             <c:forEach items="${monsterList}" var="monster">
                                 <c:if test="${monster.saleOffer == 0 && monster.breedOffer == 0}" >
-                                    <option value="${monster.id}">${monster.id}</option>
+                                    <option value="${monster.id}">${monster.name}</option>
                                 </c:if>
                             </c:forEach>
                         </select>
                         <input type="hidden" name="remoteServerNumber" value="${remoteServer}" /> 
                         <input type="hidden" name="remoteFight" value="Yes" /> 
+                        <input type="hidden" name="receiver" value="${receiver}" /> 
                         <input type="submit" value="Request fight" />
                     </form>
                 </c:if>

@@ -44,7 +44,7 @@ public class FightingPage extends HttpServlet {
         } else {
             String remoteRequest = request.getParameter("remoteFight");
 
-            if ("Yes".equals(remoteRequest)) {
+            if (remoteRequest != null && "Yes".equals(remoteRequest)) {
                 doRemoteRequest(request, response);
             }
 
@@ -57,6 +57,7 @@ public class FightingPage extends HttpServlet {
                 return;
             }
             Player current = (Player) session.getAttribute("user");
+            
             PersistenceManager pm = new PersistenceManager();
             // Check if any monster dies:
             pm.checkIfAnyMonsterDies();
@@ -65,6 +66,7 @@ public class FightingPage extends HttpServlet {
             session.setAttribute("user", current);
             // Saves all friends to attribute
             request.setAttribute("friendList", current.getFriends());
+            request.setAttribute("receiver", request.getParameter("user"));
             // Saves monsters of selected friend to attribute
             if (serverID == CONFIG.OUR_SERVER) {
                 request.setAttribute("friendMonsterList", pm.getMonsterList(encoder.encodeForSQL(new OracleCodec(), request.getParameter("user"))));
@@ -133,25 +135,26 @@ public class FightingPage extends HttpServlet {
             response.sendRedirect("");
         } else {
             RemoteTalker rt = new RemoteTalker();
-            String user = encoder.encodeForSQL(new OracleCodec(), request.getParameter("user"));
+            String receiver = encoder.encodeForSQL(new OracleCodec(), request.getParameter("receiver"));
             String localMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("localMonsterID"));
             String remoteMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteMonsterID"));
             int server = Integer.parseInt(encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteServerNumber")));
             Player player = (Player) session.getAttribute("user");
-            
+            String localUser = player.getUserID();
+            System.out.println("User: "+localUser+" Local monster: "+localMonsterID+" Remote monster: "+remoteMonsterID+" Sever: "+server);
             
 //            String senderID, String recieverID
 //            , String fightID, String senderMonsterID
 //            , String receiverMonsterID, int senderServerID, int recieverServerID
-
+//String senderID, String recieverID, String fightID, String senderMonsterID, String receiverMonsterID, int senderServerID, int recieverServerID
             FightRequest ft = new FightRequest(
-                    user,
-                    player.getUserID(),
+                    localUser,
+                    receiver,
                     String.valueOf(new Date().getTime()),
-                    remoteMonsterID,
                     localMonsterID,
-                    server,
-                    CONFIG.OUR_SERVER
+                    remoteMonsterID,
+                    CONFIG.OUR_SERVER,
+                    server
                     );
             
             OtherPersistenceManager pm = new OtherPersistenceManager();
