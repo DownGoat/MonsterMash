@@ -29,7 +29,7 @@ public class MatingPage extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
             // Redirects when user is not logged in
@@ -75,14 +75,12 @@ public class MatingPage extends HttpServlet {
             // Check if user wants to cancel offer
             this.cancelOffer(request, response, pm, current);
             // Check if user wants to breed monster
-            
             this.breedMonster(request, response, pm, current);
             ArrayList<Monster> monsters = pm.getMonstersForBreeding(current.getUserID());
             // Prepare strings:
-
             ArrayList<String> monstersForBreed = new ArrayList<String>();
             for(Monster m: monsters){
-                monstersForBreed.add("<li><a href=\"javascript:{}\" onclick=\"setValues('"+m.getId()+"', '"+m.getServerID()+"')\"><b>Name:</b> "+m.getName()+" | <b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getBreedOffer()+"$ | <b>Stats:</b> DEF: "+(int)(m.getBaseDefence()*100)+" /  HP: "+(int)(m.getBaseHealth()*100)+" / STR: "+(int)(m.getBaseStrength()*100)+" </a></li>");
+                monstersForBreed.add("<li><a href=\"javascript:{}\" onclick=\"setValues('"+m.getId()+"', '"+m.getServerID()+"')\"><b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getBreedOffer()+"$ | <b>Stats:</b> DEF: "+(int)(m.getBaseDefence()*100)+" /  HP: "+(int)(m.getBaseHealth()*100)+" / STR: "+(int)(m.getBaseStrength()*100)+" </a></li>");
             }
             request.setAttribute("monstersForBreed", monstersForBreed);
             this.getDataFromDB(request, response);

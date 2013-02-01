@@ -649,11 +649,11 @@ public class PersistenceManager {
                     if(userMonsters != null){
                         for(Monster m: userMonsters){
                             if(m.getBreedOffer() > 0){
+                                m.setServerID(p.getServerID());
                                 monsters.add(m);
                             }
                         }
                     }
-
                 } catch (JSONException ex) {
 
                 }
