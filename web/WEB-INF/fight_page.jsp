@@ -92,13 +92,13 @@
                     </form>
                 </c:if>
 
-                <c:if test="${0 ==  remoteServer}" >
+                <c:if test="${user.serverID !=  remoteServer}" >
                     <form action="fight" method="GET">
                         <input type="hidden" name="fightID" value="0" /> 
                         Select enemy: 
                         <select name="localMonsterID">
                             <c:forEach items="${friendMonsterList}" var="friendMonster">
-                                <option value="${friendMonster.id}">${friendMonster.serverID}${friendMonster.id}</option>
+                                <option value="${friendMonster.id}">${friendMonster.id}</option>
                             </c:forEach>
                         </select>
                         Select your monster: 

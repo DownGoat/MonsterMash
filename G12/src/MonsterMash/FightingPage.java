@@ -5,12 +5,15 @@
 
 import ServerCom.RemoteTalker;
 import data.CONFIG;
+import data.FightRequest;
 import data.Monster;
 import data.Player;
+import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -30,22 +33,30 @@ import org.owasp.esapi.reference.DefaultEncoder;
  */
 @WebServlet(name = "FightingPage", urlPatterns = {"/fight"})
 public class FightingPage extends HttpServlet {
+
     Encoder encoder = new DefaultEncoder();
-    
+
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("user") == null){
+        if (session == null || session.getAttribute("user") == null) {
             // Redirects when user is not logged in
             response.sendRedirect("");
-        }else{
+        } else {
+            String remoteRequest = request.getParameter("remoteFight");
+
+            if ("Yes".equals(remoteRequest)) {
+                doRemoteRequest(request, response);
+            }
+
+
             int serverID = 0;
-            try{
-                 serverID = Integer.parseInt(request.getParameter("server"));
-            }catch(Exception e){
+            try {
+                serverID = Integer.parseInt(request.getParameter("server"));
+            } catch (Exception e) {
                 response.sendRedirect("");
                 return;
             }
-            Player current = (Player)session.getAttribute("user");
+            Player current = (Player) session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
             // Check if any monster dies:
             pm.checkIfAnyMonsterDies();
@@ -55,9 +66,9 @@ public class FightingPage extends HttpServlet {
             // Saves all friends to attribute
             request.setAttribute("friendList", current.getFriends());
             // Saves monsters of selected friend to attribute
-            if(serverID == CONFIG.OUR_SERVER){
+            if (serverID == CONFIG.OUR_SERVER) {
                 request.setAttribute("friendMonsterList", pm.getMonsterList(encoder.encodeForSQL(new OracleCodec(), request.getParameter("user"))));
-            }else{
+            } else {
                 RemoteTalker rt = new RemoteTalker();
                 String address = rt.getRemoteAddress(serverID);
                 ArrayList<Monster> monsters;
@@ -69,7 +80,7 @@ public class FightingPage extends HttpServlet {
                 }
                 request.setAttribute("friendMonsterList", monsters);
             }
-            
+
             // Saves server id of selected friend to attribute
             request.setAttribute("remoteServer", request.getParameter("server"));
             // Saves all friend requests to attribute
@@ -79,7 +90,7 @@ public class FightingPage extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/fight_page.jsp").forward(request, response);
         }
     }
-    
+
     /**
      * Handles the HTTP
      * <code>GET</code> method.
@@ -92,14 +103,13 @@ public class FightingPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("user") == null){
+        if (session == null || session.getAttribute("user") == null) {
             // Redirects when user is not logged in
             response.sendRedirect("");
-        }else{
+        } else {
             this.getDataFromDB(request, response);
         }
     }
-
 
     /**
      * Handles the HTTP
@@ -114,5 +124,40 @@ public class FightingPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
+    }
+
+    public void doRemoteRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            // Redirects when user is not logged in
+            response.sendRedirect("");
+        } else {
+            RemoteTalker rt = new RemoteTalker();
+            String user = encoder.encodeForSQL(new OracleCodec(), request.getParameter("user"));
+            String localMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("localMonsterID"));
+            String remoteMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteMonsterID"));
+            int server = Integer.parseInt(encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteServerNumber")));
+            Player player = (Player) session.getAttribute("user");
+            
+            
+//            String senderID, String recieverID
+//            , String fightID, String senderMonsterID
+//            , String receiverMonsterID, int senderServerID, int recieverServerID
+
+            FightRequest ft = new FightRequest(
+                    user,
+                    player.getUserID(),
+                    String.valueOf(new Date().getTime()),
+                    remoteMonsterID,
+                    localMonsterID,
+                    server,
+                    CONFIG.OUR_SERVER
+                    );
+            
+            OtherPersistenceManager pm = new OtherPersistenceManager();
+            pm.storeFightRequest(ft);
+            rt.remoteFightRequest(ft, server);
+        }
+
     }
 }
