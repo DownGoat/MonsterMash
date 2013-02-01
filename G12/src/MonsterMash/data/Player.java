@@ -64,8 +64,11 @@ public class Player {
         this.serverID = CONFIG.OUR_SERVER;
     	monsters.add(new Monster(initialMonsterName, this.userID));
         // Add first notifications:
-        notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
-        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
+        notifications.add(new Notification("Account created successfully.", "Welcome to MonsterMash, an interactive online learning"
+                + ", fun, multiplayer game. Add friends to your friends list by entering their email, and compete to "
+                + "breed the most powerful monster. Crush you opposition and amass vast wealth. All while learning about evolution.", this));
+        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster",
+                initialMonsterName+" is your first monster. Use them to fight other monsters or breed to create new more powerful generations.", this));
     }
     
     /**
