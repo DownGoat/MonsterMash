@@ -977,6 +977,8 @@ public class PersistenceManager {
                 // UPDATE CURRENT HEALTH
                 java.util.Date current = new java.util.Date();
                 double age = (((double)current.getTime()-(double)r.getLong("dob"))/((double)r.getLong("dod")-(double)r.getLong("dob")));
+                //System.err.println(current.getTime()+"-"+r.getLong("dob")+"/"+r.getLong("dod")+"-"+r.getLong("dob"));
+                //System.err.println("AGE: "+age);
                 double health = 1-Math.exp(age*0.1)+r.getDouble("base_health");
                 //UPDATE CURRENT STRENGTH AND DEFENCE
                 double strength = (Math.exp(0.1*age)-1+r.getDouble("base_strength"))*(2-Math.exp(0.1*age));

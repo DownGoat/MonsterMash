@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class Monster {
     private final int START_HEALTH = 100;
-    public static final int LIFESPAN = 60*60*24*7;
+    public static final int LIFESPAN = 1000*60*60*60*24*7;
     
     
     /** Attributes **/    
