@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/ServerCom/User.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved.
  */
 package ServerCom;
 
@@ -19,8 +21,15 @@ import org.owasp.esapi.codecs.OracleCodec;
 import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
- *
- * @author sis13
+ * Servlet implementing the API used to get users from this server.
+ * If the url /users is requested from our server server the servlet will return
+ * a json array containing all the users registerd on the server. If the client
+ * wants a specific user only it can be requested by sending a request to 
+ * /users?userID=xxx where xxx is the ID of the user.
+ * 
+ * @author $Author sis13 $
+ * 
+ * @see data.Player
  */
 @WebServlet(name = "users", urlPatterns = {"/users"})
 public class User extends HttpServlet {

@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/ServerCom/User.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved.
  */
 package ServerCom;
 
@@ -23,8 +25,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * RemoteTalker holds all the methods needed for the client part of the 
+ * server to server communication. It has methods to access all of the 
+ * request specified by the standards which the groups agreed on.
  *
- * @author sis13
+ * @author $Author sis13 $
  */
 public class RemoteTalker {
 
@@ -39,6 +44,15 @@ public class RemoteTalker {
 
     }
 
+    /**
+     * Get a Player from a remote server.
+     * @param userID userID of the player you want to request.
+     * @param remoteAddress The address to the remote server.
+     * 
+     * @return A Player object.
+     * 
+     * @see data.Player
+     */
     public Player getRemotePlayer(String userID, String remoteAddress) {
         Player player = null;
         resource = client.resource(remoteAddress);
@@ -64,6 +78,17 @@ public class RemoteTalker {
         return player;
     }
 
+    /**
+     * Gets a Monster from a remote server.
+     * 
+     * @param monsterID Id of the monster you want.
+     * @param remoteAddress The address of the server you want to look up the 
+     * monster at.
+     * @return Monster object if found, returns null elswise. 
+     * @throws JSONException
+     * 
+     * @see data.Monster
+     */
     public Monster getRemoteMonster(String monsterID, String remoteAddress) throws JSONException {
         Monster monster = null;
         resource = client.resource(remoteAddress);
@@ -96,6 +121,17 @@ public class RemoteTalker {
         return monster;
     }
 
+    /**
+     * Get all the monsters of a user from a remote server.
+     * 
+     * @param userID The userID of the user you want monsters off.
+     * @param remoteAddress Address of the server.
+     * 
+     * @return returns a list if successful and null if something goes wrong.
+     * @throws JSONException 
+     * 
+     * @see data.Monster
+     */
     public ArrayList<Monster> getRemoteUsersMonsters(String userID, String remoteAddress) throws JSONException {
         ArrayList<Monster> monsters = null;
         resource = client.resource(remoteAddress);
@@ -132,6 +168,11 @@ public class RemoteTalker {
         return monsters;
     }
 
+    /**
+     * Convert a server number to a remote address.
+     * @param serverNumber
+     * @return The remote address.
+     */
     public String getRemoteAddress(int serverNumber) {
         
 //        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
@@ -143,6 +184,17 @@ public class RemoteTalker {
         return resource.path(String.valueOf(serverNumber)).path("service").get(String.class);
     }
 
+    /**
+     * Send a friend request to a user on a remote server.
+     * 
+     * @param localUser The user you want to add as friend.
+     * @param remoteUserID Your local userID.
+     * @param serverNumber Your server number
+     * 
+     * @return returns true if the function is successful, false otherwise.
+     * 
+     * @see data.Player
+     */
     public Boolean remoteFriendRequest(Player localUser, String remoteUserID, int serverNumber) {
         System.out.println("Getting remoteFriendRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
@@ -170,7 +222,15 @@ public class RemoteTalker {
 
         return true;
     }
-
+    
+    
+    /**
+     * Accept a friend request gotten from another server.
+     * 
+     * @param friend Friend ship data bout the friend ship.
+     * 
+     * @return Returns true if successful, false otherwise.
+     */
     public Boolean acceptRemoteFriendRequest(Friend friend) {
         System.out.println("Getting acceptRemoteFriendRequest.");
         resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
@@ -185,6 +245,11 @@ public class RemoteTalker {
         return true;
     }
 
+    /**
+     * Reject a remote friend request.
+     * @param friend Friendship object holding data bout the friendship.
+     * @return true if successful false otherwise.
+     */
     public Boolean rejectRemoteFriendRequest(Friend friend) {
         System.out.println("Getting rejectRemoteFriendRequest.");
         resource = client.resource(getRemoteAddress(friend.getRemoteServerID()));
@@ -199,6 +264,16 @@ public class RemoteTalker {
         return true;
     }
 
+    /**
+     * Send a remote fight request to a remote server given by the server number.
+     * 
+     * @param fightRequest Fight request object with the data about the fight.
+     * @param serverNumber Server number the request is going too.
+     * 
+     * @return true if successful false otherwise.
+     * 
+     * @see data.FightRequest
+     */
     public Boolean remoteFightRequest(FightRequest fightRequest, int serverNumber) {
         System.out.println("Getting remoteFightRequest.");
         resource = client.resource(getRemoteAddress(serverNumber));
@@ -220,6 +295,13 @@ public class RemoteTalker {
         // TODO save FR to DB.
     }
 
+    /**
+     * Send a request that a fight has been won.
+     * @param fightRequest 
+     * @param serverNumber
+     * @param monster
+     * @return 
+     */
     public Boolean wonRemoteFight(FightRequest fightRequest, int serverNumber, Monster monster) {
         System.out.println("Getting wonRemoteFight.");
         resource = client.resource(getRemoteAddress(serverNumber));
