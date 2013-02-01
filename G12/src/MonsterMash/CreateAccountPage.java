@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/CreateAccountPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import data.*;
@@ -14,9 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * TO DO:
- * - needs to set start amount of money.
- * @author sjk4
+ * Servlet for creating a new account. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class CreateAccountPage extends HttpServlet {
     /** SET INITIAL MONEY AMOUNT **/
