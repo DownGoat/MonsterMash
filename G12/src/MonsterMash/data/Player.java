@@ -1,3 +1,10 @@
+
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/data/Player.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved.
+ */
 package data;
 
 import java.util.ArrayList;
@@ -5,9 +12,8 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/data/Player.java
- * 
- * 
+ * The Player class is the representation of the Player's i our database.
+ * @author $Author sis13 $
  */
 public class Player {
     /** Attributes */
@@ -87,6 +93,12 @@ public class Player {
         this.notifications = new ArrayList<Notification>();
     }
     
+    /**
+     * Sorts a ArrayList of players by the amount of money. The Player with 
+     * the most money should appear in the front of the list.
+     * @param players List of Players you want to sort.
+     * @return  Returns a list of sorted Players.
+     */
     public ArrayList<Player> sortByMoney(ArrayList<Player> players) {        
         while(true) {
             Boolean swapped = false;

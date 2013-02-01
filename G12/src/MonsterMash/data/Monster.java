@@ -1,8 +1,20 @@
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/data/Monster.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved.
+ */
 package data;
 
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * Encapsulation of the Monster data. The data is stored in the database and
+ * represents one of the the player's Monster. 
+ * 
+ * @author $Author sis13 $
+ */
 public class Monster {
     private final int START_HEALTH = 100;
     public static final int LIFESPAN = 60*60*24*7;
@@ -29,12 +41,27 @@ public class Monster {
     
     private final int MAX_CHILDREN = 10;
     
+    /**
+     * Constructor taking parameters. This constructor is used for creating 
+     * Monster objects about remote Monsters before we get all the data.
+     * 
+     * @param id The Monsters ID.
+     * @param name The Monster's name.
+     * @param userID  The ID of the owner of the Monster.
+     * 
+     * @see Player
+     */
     public Monster(String id, String name, String userID){
         this.id = id;
         this.name = name;
         this.userID = userID;
     }
     
+    /**
+     * Constructor setting all the Monsters fields, the stats are random.
+     * @param name
+     * @param userID 
+     */
     public Monster(String name, String userID){
         this.id = "0";
 	this.name = name;
@@ -79,7 +106,6 @@ public class Monster {
      * @param other Monster that is being bred with
      * @return Monster[] and array of the children
      */
-    
     public Monster[] breeding(Monster other) {
         Random r = new Random(); 
         int numberofchildren = (int) (Math.sqrt(fertility * other.fertility) * MAX_CHILDREN);
@@ -258,6 +284,11 @@ public class Monster {
         this.currentHealth = health;
     }
     
+    /**
+     * Enrolls two Monsters in a epic battle. 
+     * @param opponent The Monster this monster will fight versus.
+     * @return The opponent is returned with new stats..
+     */
     public double fight(Monster opponent)
     {
         double playerInjuries = 0; 
