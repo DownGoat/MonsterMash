@@ -77,6 +77,19 @@ public class MainPage extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(request.getParameter("removeFriend") != null){
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("user") == null) {
+                response.sendRedirect("");
+            } else {
+                String friendID = request.getParameter("removeFriend");
+                Player myUser = (Player)session.getAttribute("user");
+                myUser.addNotification(new Notification("Friend "+friendID+" removed from friend list.", "You have removed "+friendID+" from your friend list.", myUser));
+                OtherPersistenceManager opm = new OtherPersistenceManager();
+                opm.storeNotifications(myUser);
+                opm.removeFriendship(friendID, myUser.getUserID());
+            }
+        }
         this.respondToFriendRequest(request, response);
         this.getDataFromDB(request, response);
     }
