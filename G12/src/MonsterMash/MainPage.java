@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/MainPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import ServerCom.RemoteTalker;
@@ -20,8 +23,10 @@ import org.owasp.esapi.codecs.OracleCodec;
 import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
- *
- * @author sjk4
+ * Servlet used for displaying the main page after logging in. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class MainPage extends HttpServlet {
 
@@ -105,32 +110,6 @@ public class MainPage extends HttpServlet {
         PersistenceManager pm = new PersistenceManager();
         // Checks if user is logged in
         if (session != null && session.getAttribute("user") != null) {
-//            RemoteTalker rt = new RemoteTalker();
-//            String userID = request.getParameter("email");
-//            Player sender = (Player) session.getAttribute("user");
-//            Player receiver = rt.findUser(userID);
-//
-//            if (receiver == null) {
-//                request.setAttribute("alertMessage", "Cannot find user with this email address.");
-//            } else if (receiver.getUserID().equals(sender.getUserID())) {
-//                request.setAttribute("alertMessage", "Cannot send friend request to yourself.");
-//            }
-//
-//            if (!rt.remoteFriendRequest(sender, userID, receiver.getServerID())) {
-//                request.setAttribute("alertMessage", "Oops something went wrong sending that request.");
-//            } else {
-//                String message = "Friend request to <b>" + userID + "</b> sent successfully.";
-//                sender.addNotification(new Notification(message, "You have sent friend request to <b>" + userID + "</b>.", sender));
-//                pm.storeNotifications(sender);
-//
-//                if (receiver.getServerID() == CONFIG.OUR_SERVER) {
-//                    receiver.addNotification(new Notification("Received friend request from <b>" + sender.getUsername() + "</b>", "You have received friend request from <b>" + sender.getUsername() + "</b>.", receiver));
-//                    pm.storeNotifications(receiver);
-//                    // Save updated player's object in session
-//                    session.setAttribute("user", sender);
-//                    request.setAttribute("alertMessage", message);
-//                }
-//            }
 
             // Gets email from POST 
             Encoder encoder = new DefaultEncoder();

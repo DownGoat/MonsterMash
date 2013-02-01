@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/MarketPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import ServerCom.RemoteTalker;
@@ -16,16 +19,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-//
+
 /**
- *
- * @author sjk4
+ * Servlet used for displaying the market page. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class MarketPage extends HttpServlet {
 
     /**
-     * Gets all data from DB, which will be displayed on main screen (list of
-     * friends, monsters and notifications).
+     * Gets all data from DB, which will be displayed on market page.
      *
      * @param request servlet request
      * @param response servlet response
@@ -92,6 +96,15 @@ public class MarketPage extends HttpServlet {
         }
     }
     
+    /**
+     * After a user has offered a monster for sell, he can cancel the offer. 
+     * @param request servlet request
+     * @param response servlet response
+     * @param pm persistence manager
+     * @param current object of current player
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void cancelOffer(HttpServletRequest request, HttpServletResponse response, PersistenceManager pm, Player current) throws ServletException, IOException {
         String monsterID = request.getParameter("cancelOffer");
         if(monsterID != null){
@@ -102,6 +115,15 @@ public class MarketPage extends HttpServlet {
         }
     }
     
+    /**
+     * Enables player to buy a monster available on the market. 
+     * @param request servlet request
+     * @param response servlet response
+     * @param pm persistence manager
+     * @param current object of current player
+     * @throws ServletException
+     * @throws IOException 
+     */
     private void buyMonster(HttpServletRequest request, HttpServletResponse response, PersistenceManager pm, Player current) throws ServletException, IOException {
         String monsterID = request.getParameter("monster");
         String server = request.getParameter("server");
@@ -186,6 +208,11 @@ public class MarketPage extends HttpServlet {
         
     }
     
+    /**
+     * Checks if the offered money is valid (an integer larger than 0) 
+     * @param offerAmount
+     * @return 
+     */
     private boolean validOffer(String offerAmount)
     {
         int offer;

@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/Unregister.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import data.Player;
@@ -14,8 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author sis13
+ * Allows user to unregister his account, deleting his monsters, etc. 
+ * @author $Author: sis13$
+ * @version $Id$
  */
 public class Unregister extends HttpServlet {
 
