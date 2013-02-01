@@ -14,6 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -21,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "users", urlPatterns = {"/users"})
 public class User extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -62,6 +65,7 @@ public class User extends HttpServlet {
         System.out.println(userIDString);
 
         if (userIDString != null) {
+            userIDString = encoder.encodeForSQL(new OracleCodec(), userIDString);
             Player player = null;
             player = pm.getPlayerSafe(userIDString);
 

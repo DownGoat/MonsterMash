@@ -15,13 +15,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
  * @author sis13
  */
 public class FriendRequest extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -35,10 +38,10 @@ public class FriendRequest extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Friend friend = null;
-        String friendID = request.getParameter("friendID");
-        String localUserID = request.getParameter("localUserID");
-        String remoteUserID = request.getParameter("remoteUserID");
-        String remoteServerNumber = request.getParameter("remoteServerNumber");
+        String friendID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("friendID"));
+        String localUserID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("localUserID"));
+        String remoteUserID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteUserID"));
+        String remoteServerNumber = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteServerNumber"));
         
         if (friendID == null || localUserID == null || remoteServerNumber == null || remoteUserID == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for friend request.");

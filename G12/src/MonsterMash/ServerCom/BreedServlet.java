@@ -14,13 +14,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
  * @author sis13
  */
 public class BreedServlet extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -33,7 +36,7 @@ public class BreedServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String monsterID = request.getParameter("monsterID");
+        String monsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("monsterID"));
         
         if(monsterID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();

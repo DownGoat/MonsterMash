@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 
 /**
@@ -22,7 +25,7 @@ import org.json.JSONException;
  * @author sis13
  */
 public class FightRequestServlet extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -35,10 +38,16 @@ public class FightRequestServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, JSONException {
-        String fightID = request.getParameter("fightID");
-        String recieverMonsterID = request.getParameter("localMonsterID");
-        String senderMonsterID = request.getParameter("remoteMonsterID");
-        int senderServerID = Integer.parseInt(request.getParameter("remoteServerNumber"));
+        String fightID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("fightID"));
+        String recieverMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("localMonsterID"));
+        String senderMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteMonsterID"));
+        int senderServerID = 0;
+        
+        try {
+            senderServerID = Integer.parseInt(request.getParameter("remoteServerNumber"));
+        } catch(Exception err) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight request.");
+        }
         
         if(fightID != null && recieverMonsterID != null && senderMonsterID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import data.*;
 import database.OtherPersistenceManager;
 import java.util.Collections;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -130,7 +133,8 @@ public class MainPage extends HttpServlet {
 //            }
 
             // Gets email from POST 
-            String userID = request.getParameter("email");
+            Encoder encoder = new DefaultEncoder();
+            String userID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("email"));
             Player sender = (Player)session.getAttribute("user");
             // Checks if user with this email address exists
             int serverID = pm.getPlayerServerID(userID);

@@ -20,13 +20,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
  * @author sis13
  */
 public class FightLost extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -39,7 +42,7 @@ public class FightLost extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fightID = request.getParameter("fightID");
+        String fightID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("fightID"));
         
         if(fightID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();

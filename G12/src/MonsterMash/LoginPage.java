@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -69,6 +72,7 @@ public class LoginPage extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Encoder encoder = new DefaultEncoder();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         if(email.length() < 1 || password.length() < 1){
@@ -76,8 +80,8 @@ public class LoginPage extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/login_page.jsp").forward(request, response);
         }else{
             PersistenceManager pm = new PersistenceManager();
-            password = this.MD5(password);
-            Player selected = pm.doLogin(email, password);
+            password = this.MD5(encoder.encodeForSQL(new OracleCodec(), password));
+            Player selected = pm.doLogin(encoder.encodeForSQL(new OracleCodec(), email), password);
             if(selected != null){
                 // If player exists save object to the session called "user"
                 HttpSession session = request.getSession(true);
