@@ -82,7 +82,7 @@ public class MarketPage extends HttpServlet {
             // Prepare strings:
             ArrayList<String> monstersForSale = new ArrayList<String>();
             for(Monster m: monsters){
-                monstersForSale.add("<li><a href=\"market?monster="+m.getId()+"&server="+m.getServerID()+"\"><b>Name:</b> "+m.getName()+" | <b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getSaleOffer()+"$ | <b>Stats:</b> DEF: "+(int)(m.getBaseDefence()*100)+" /  HP: "+(int)(m.getBaseHealth()*100)+" / STR: "+(int)(m.getBaseStrength()*100)+" </a></li>");
+                monstersForSale.add("<li><a href=\"market?monster="+m.getId()+"&server="+m.getServerID()+"\"><b>Owner:</b> "+pm.getPlayerUsername(m.getUserID(), m.getServerID())+" | <b>Price:</b> "+m.getSaleOffer()+"$ | <b>Stats:</b> DEF: "+(int)(m.getBaseDefence()*100)+" /  HP: "+(int)(m.getBaseHealth()*100)+" / STR: "+(int)(m.getBaseStrength()*100)+" </a></li>");
             }
             request.setAttribute("monstersForSale", monstersForSale);
             this.getDataFromDB(request, response);
