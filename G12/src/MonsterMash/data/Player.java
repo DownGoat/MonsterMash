@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
-
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/data/Player.java
+ * 
+ * 
+ */
 public class Player {
     /** Attributes */
     private String userID;

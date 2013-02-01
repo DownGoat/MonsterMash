@@ -5,6 +5,8 @@
 package ServerCom;
 
 import data.Friend;
+import data.Notification;
+import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +45,19 @@ public class FriendReject extends HttpServlet {
             Friend friend = pm.getFriend(friendID);
             
             if(friend != null) {
+                Player player = pm.getPlayer(friend.getRemoteUserID());
+                
+                if(player != null) {
+                    player.addNotification(new Notification(
+                            "Friend request rejected!",
+                            "Your friend request to <b>"+friend.getLocalUserID()
+                                +"</b> has been rejected!",
+                            player
+                            ));
+                    
+                    pm.storeNotifications(player);
+                }
+                
                 pm.rejectFriend(friend);
                 response.setStatus(200);
                 response.sendRedirect("/MonsterMash/main");

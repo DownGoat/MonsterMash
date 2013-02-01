@@ -72,7 +72,7 @@
             <c:if test="${friendMonsterList.size() != 0}">
                 <c:if test="${user.serverID ==  remoteServer}">
                     <form action="fight/request" method="GET">
-                        <input type="hidden" name="fightID" value="0" /> 
+                        <input type="hidden" name="fightID" value="${fightID}" /> 
                         Select enemy: 
                         <select name="remoteMonsterID">
                             <c:forEach items="${friendMonsterList}" var="friendMonster">

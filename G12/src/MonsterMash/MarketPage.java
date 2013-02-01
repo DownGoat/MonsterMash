@@ -4,6 +4,7 @@
  */
 
 import ServerCom.RemoteTalker;
+import data.CONFIG;
 import data.Monster;
 import data.Notification;
 import data.Player;
@@ -118,8 +119,10 @@ public class MarketPage extends HttpServlet {
                     message = "You have bought new monster called "+pm.getMonsterName(newMonsterID)+".";
                     current.addNotification(new Notification("You have bought new monster called <b>"+pm.getMonsterName(newMonsterID)+"</b>.", "You have bought new monster called <b>"+pm.getMonsterName(newMonsterID)+"</b>. It will appear on your monster list now.", current));
                     pm.storeNotifications(current);
-                    RemoteTalker rt = new RemoteTalker();
-                    rt.sendBuyRequest(monsterID, serverID);
+                    if(serverID != CONFIG.OUR_SERVER) {
+                       RemoteTalker rt = new RemoteTalker();
+                       rt.sendBuyRequest(monsterID, serverID);
+                    }
                 }
                 request.setAttribute("alertMessage", message);
             }catch(Exception e){

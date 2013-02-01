@@ -65,6 +65,7 @@ public class FightingPage extends HttpServlet {
             current = pm.getPlayer(current.getUserID());
             session.setAttribute("user", current);
             // Saves all friends to attribute
+            request.setAttribute("fightID", String.valueOf(new Date().getTime()));
             request.setAttribute("friendList", current.getFriends());
             request.setAttribute("receiver", request.getParameter("user"));
             // Saves monsters of selected friend to attribute

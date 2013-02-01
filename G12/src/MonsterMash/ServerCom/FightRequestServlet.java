@@ -19,13 +19,14 @@ import org.owasp.esapi.Encoder;
 import org.owasp.esapi.codecs.OracleCodec;
 import org.owasp.esapi.reference.DefaultEncoder;
 
-
 /**
  *
  * @author sis13
  */
 public class FightRequestServlet extends HttpServlet {
+
     Encoder encoder = new DefaultEncoder();
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -42,30 +43,37 @@ public class FightRequestServlet extends HttpServlet {
         String recieverMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("localMonsterID"));
         String senderMonsterID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("remoteMonsterID"));
         int senderServerID = 0;
-        
+
         try {
             senderServerID = Integer.parseInt(request.getParameter("remoteServerNumber"));
-        } catch(Exception err) {
+        } catch (Exception err) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight request.");
         }
-        
-        if(fightID != null && recieverMonsterID != null && senderMonsterID != null) {
+
+        if (fightID != null && recieverMonsterID != null && senderMonsterID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Monster reciverMonster = pm.getMonster(recieverMonsterID);
             RemoteTalker rt = new RemoteTalker();
             //System.out.println(rt.getRemoteAddress(senderServerID));
             Monster senderMonster = rt.getRemoteMonster(senderMonsterID, rt.getRemoteAddress(senderServerID));
             //System.out.println(senderMonster.getId());
-            if(reciverMonster != null && senderMonster != null) {            
+            if (reciverMonster != null && senderMonster != null) {
                 Player p = pm.getPlayer(reciverMonster.getUserID());
-                if(p != null) {
-                    FightRequest fr = new FightRequest(senderMonster.getUserID(), reciverMonster.getUserID(), fightID, senderMonsterID, recieverMonsterID, senderServerID, CONFIG.OUR_SERVER);
+                if (p != null) {
+
+                    FightRequest fr = null;
+                    if (senderServerID == CONFIG.OUR_SERVER) {
+                        fr = new FightRequest( reciverMonster.getUserID(), senderMonster.getUserID(), fightID, recieverMonsterID, senderMonsterID, senderServerID, CONFIG.OUR_SERVER);
+
+                    } else {
+                        fr = new FightRequest(senderMonster.getUserID(), reciverMonster.getUserID(), fightID, senderMonsterID, recieverMonsterID, senderServerID, CONFIG.OUR_SERVER);
+                    }
                     pm.storeFightRequest(fr);
                     p.addNotification(
                             new Notification(
-                                "You got a new figth request from "+senderMonster.getUserID(),
-                                senderMonster.getUserID()+" has challenged you to a epic battle! His monster "+senderMonster.getId()+" versus your monster "+reciverMonster.getName(),
-                                p));
+                            "You got a new figth request from " + senderMonster.getUserID(),
+                            senderMonster.getUserID() + " has challenged you to a epic battle! His monster " + senderMonster.getId() + " versus your monster " + reciverMonster.getName(),
+                            p));
                     response.sendRedirect("/MonsterMash/main");
                     pm.storeNotifications(p);
                 } else {

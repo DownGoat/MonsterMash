@@ -50,13 +50,15 @@ public class FightAccept extends HttpServlet {
                     double opponentHealth = myMonster.fight(opponent);
                     if(opponentHealth > 0){
                         rt.wonRemoteFight(fr, fr.getSenderServerID(), opponent);
-                        receiver.addNotification(new Notification("Fight won!", "Congratulations! You are the winner of the epic battle between you and <b>" + fr.getSenderID() + "</b>. The bards will songs about this heroic battle for thousands of years to come.", receiver));
+                        
+                        receiver.addNotification(new Notification("The battle is lost!", "Your enemy fights with no honor and has won the battle. You lost your pet monster <b>" + myMonster.getName()
+                                + "</b> against the demonic. <b>" + sender.getUsername() + "</b> is now enjoing the spoils of war.", receiver));
                         pm.storeNotifications(receiver);
 
                     } else {
                         rt.lostRemoteFight(fr, fr.getSenderServerID());
-                        receiver.addNotification(new Notification("The battle is lost!", "Your enemy fights with no honor and has won the battle. You lost your pet monster <b>" + myMonster.getName()
-                                + "</b> against the demonic. <b>" + sender.getUsername() + "</b> is now enjoing the spoils of war.", receiver));
+                        receiver.addNotification(new Notification("Fight won!", "Congratulations! You are the winner of the epic battle between you and <b>" + fr.getSenderID() + "</b>. The bards will songs about this heroic battle for thousands of years to come.", receiver));
+                        
                         pm.storeNotifications(receiver);
                     }
                     pm.removeFightRequest(fr);
