@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/FightAccept.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import ServerCom.RemoteTalker;
@@ -17,8 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 
 /**
- *
- * @author FZajac
+ * This servlet is called when a fight request is accepted, runs fight 
+ * algorithm and determinates who won and who lost. 
+ * 
+ * @author $Author: fiz$
+ * @version $Id$
  */
 public class FightAccept extends HttpServlet {
 

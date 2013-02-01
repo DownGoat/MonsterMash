@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/FightingPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import ServerCom.RemoteTalker;
@@ -28,14 +31,25 @@ import org.owasp.esapi.codecs.OracleCodec;
 import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
- *
- * @author FZajac
+ * Servlet for displaying page that allows user to select to fight with another 
+ * user's  monsters. 
+ * 
+ * @author $Author: fiz$
+ * @version $Id$
  */
 @WebServlet(name = "FightingPage", urlPatterns = {"/fight"})
 public class FightingPage extends HttpServlet {
 
     Encoder encoder = new DefaultEncoder();
 
+    /**
+     * Gets all data from DB, which will be displayed on fighting page. 
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
@@ -144,10 +158,6 @@ public class FightingPage extends HttpServlet {
             String localUser = player.getUserID();
             System.out.println("User: "+localUser+" Local monster: "+localMonsterID+" Remote monster: "+remoteMonsterID+" Sever: "+server);
             
-//            String senderID, String recieverID
-//            , String fightID, String senderMonsterID
-//            , String receiverMonsterID, int senderServerID, int recieverServerID
-//String senderID, String recieverID, String fightID, String senderMonsterID, String receiverMonsterID, int senderServerID, int recieverServerID
             FightRequest ft = new FightRequest(
                     localUser,
                     receiver,
