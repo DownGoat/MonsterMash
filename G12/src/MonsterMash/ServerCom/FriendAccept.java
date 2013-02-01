@@ -47,7 +47,10 @@ public class FriendAccept extends HttpServlet {
                 response.setStatus(200);
                 System.out.println(friendID);
                 Player sender = pm.getPlayer(friend.getLocalUserID());
-                sender.addNotification(new Notification("Accepted friend request from "+friend.getRemoteUserID(), "You have accepted friend request from "+friend.getRemoteUserID(), sender));
+                sender.addNotification(new Notification(
+                        "<b>"+friend.getRemoteUserID()+"</b> accepted your request!",
+                        "<b>"+friend.getRemoteUserID()+"</b> accepted your request to become friends.",
+                        sender));
                 pm.storeNotifications(sender);
                 
                 response.sendRedirect("/MonsterMash/main");

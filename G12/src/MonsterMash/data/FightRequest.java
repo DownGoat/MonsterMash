@@ -18,7 +18,7 @@ public class FightRequest {
     private int senderServerID;
     private int recieverServerID;
     
-    private static final int MONEY = CONFIG.FIGHT_WIN_MONEY;
+    private static final int MONEY = 20;
 
     public FightRequest(String senderID, String recieverID, String fightID, String senderMonsterID, String receiverMonsterID, int senderServerID, int recieverServerID) {
         this.senderID = senderID;

@@ -188,7 +188,7 @@ public class OtherPersistenceManager extends PersistenceManager {
             r.close();
             stmt.close();
         } catch (SQLException sqlExcept) {
-            System.err.println(sqlExcept.getMessage());
+            System.err.println("asdasd"+sqlExcept.getMessage());
             this.error = sqlExcept.getMessage();
         }
         return monster;
