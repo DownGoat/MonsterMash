@@ -72,6 +72,7 @@ public class RemoteTalker {
         try {
             body = resource.path("monsters").queryParam("monsterID", monsterID).get(String.class);
         } catch (Exception err) {
+            System.err.println("getRemoteMonster falied to "+remoteAddress);
             return null;
         }
         JSONObject json = new JSONObject(body);
