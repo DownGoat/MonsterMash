@@ -4,10 +4,7 @@
  */
 
 import ServerCom.RemoteTalker;
-import data.CONFIG;
-import data.FightRequest;
-import data.Monster;
-import data.Player;
+import data.*;
 import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.io.IOException;
@@ -38,36 +35,39 @@ public class FightAccept extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String fightID = request.getParameter("fightID");
-        
-        if(fightID != null) {
+        if(fightID != null){
             OtherPersistenceManager pm = new OtherPersistenceManager();
             FightRequest fr = pm.getFightRequest(fightID);
-            
-            if(fr != null) {
-                Player reciver = pm.getPlayer(fr.getRecieverID());
+
+            if(fr != null){
+                Player receiver = pm.getPlayer(fr.getRecieverID());
                 RemoteTalker rt = new RemoteTalker();
                 String address = rt.getRemoteAddress(fr.getSenderServerID());
                 Player sender = rt.getRemotePlayer(fr.getSenderID(), address);
-                if(sender != null) {
+                if(sender != null){
                     Monster opponent = pm.getMonster(fr.getSenderMonsterID(), fr.getSenderServerID());
-                    double opponentHealth = pm.getMonster(fr.getReceiverMonsterID(), CONFIG.OUR_SERVER).fight(opponent);
-                    if(opponentHealth > 0)
-                    {
-                        response.sendRedirect("/MonsterMash/fight/won?fightID=" + fightID + "&strength=" + opponent.getCurrentStrength() + "&defence=" + opponent.getCurrentDefence() + "&health=" + opponentHealth);
+                    Monster myMonster = pm.getMonster(fr.getReceiverMonsterID(), CONFIG.OUR_SERVER);
+                    double opponentHealth = myMonster.fight(opponent);
+                    if(opponentHealth > 0){
+                        rt.wonRemoteFight(fr, fr.getSenderServerID(), opponent);
+                        receiver.addNotification(new Notification("Fight won!", "Congratulations! You are the winner of the epic battle between you and <b>" + fr.getSenderID() + "</b>. The bards will songs about this heroic battle for thousands of years to come.", receiver));
+                        pm.storeNotifications(receiver);
+
+                    } else {
+                        rt.lostRemoteFight(fr, fr.getSenderServerID());
+                        receiver.addNotification(new Notification("The battle is lost!", "Your enemy fights with no honor and has won the battle. You lost your pet monster <b>" + myMonster.getName()
+                                + "</b> against the demonic. <b>" + sender.getUsername() + "</b> is now enjoing the spoils of war.", receiver));
+                        pm.storeNotifications(receiver);
                     }
-                    else
-                    {
-                        response.sendRedirect("/MonsterMash/fight/lost?fightID=" + fightID);
-                    }
-                    
-                    
+
+
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown player in fight request.");
                 }
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown fightID.");
             }
-            
+
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request, invalid parameters for fight reject.");
         }
