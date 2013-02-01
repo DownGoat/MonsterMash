@@ -462,14 +462,9 @@ public class PersistenceManager {
             }
             return email;
         }else{
-            System.err.println("szuka adresu: "+serverID);
             String address = remote.getRemoteAddress(serverID);
             Player selected = null;
-            try {
-                selected = remote.getRemotePlayer(playerID, address);
-            } catch (JSONException ex) {
-                System.out.println(ex.toString());
-            }
+            selected = remote.getRemotePlayer(playerID, address);
             if(selected != null){
                 return selected.getUsername();
             }
@@ -823,7 +818,7 @@ public class PersistenceManager {
      * @param monsterID
      * @param serverID 
      */
-    public void buyMonster(String userID, String monsterID, int serverID){
+    public String buyMonster(String userID, String monsterID, int serverID){
         if(serverID == CONFIG.OUR_SERVER){
             try{
                 Statement stmt = connection.createStatement();
@@ -850,19 +845,38 @@ public class PersistenceManager {
             }catch(SQLException sqlExcept){
                 this.error = sqlExcept.getMessage();
             }
+            return monsterID;
         }else{
             String address = remote.getRemoteAddress(serverID);
             Monster selected;
+            String newMonsterID = null;
             try {
                 selected = remote.getRemoteMonster(monsterID, address);
                 selected.setId("0");
                 Player current = this.getPlayer(userID);
                 current.addMonster(selected);
-                this.storeMonsters(current);
+                for(Monster m: current.getMonsters()){
+                    // If ID equals 0, monster hasn't been saved in DB
+                    if(m.getId().equals("0")){ 
+                        try{
+                            Statement stmt = connection.createStatement();
+                            // Insert monster into DB
+                            newMonsterID = this.randomString(16);
+                            m.setId(newMonsterID);
+                            stmt.execute("UPDATE \"Player\" SET \"money\" = \"money\"-"+m.getSaleOffer()+" WHERE \"id\" = '"+userID+"'");
+                            String query = "INSERT INTO \"Monster\" (\"id\", \"name\", \"dob\", \"dod\", \"base_strength\", \"current_strength\", \"base_defence\", \"current_defence\", \"base_health\", \"current_health\", \"fertility\", \"user_id\", \"sale_offer\", \"breed_offer\") VALUES ('"+m.getId()+"', '"+m.getName()+"', "+m.getDob().getTime()+", "+m.getDod().getTime()+", "+m.getBaseStrength()+", "+m.getCurrentStrength()+", "+m.getBaseDefence()+", "+m.getCurrentDefence()+", "+m.getBaseHealth()+", "+m.getCurrentHealth()+", "+m.getFertility()+", '"+current.getUserID()+"', 0, 0)";
+                            stmt.execute(query);
+                            
+                        }catch(SQLException sqlExcept){
+                            System.err.println("Adding monster to DB error:\n"+sqlExcept.getMessage());
+                            this.error = sqlExcept.getMessage();
+                        }
+                    }
+                }
             } catch (JSONException ex) {
                 System.err.println(ex.toString());
             }
-            
+            return newMonsterID;
         }
     }
     

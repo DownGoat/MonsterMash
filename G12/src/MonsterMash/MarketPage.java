@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import ServerCom.RemoteTalker;
 import data.Monster;
 import data.Notification;
 import data.Player;
@@ -30,7 +31,7 @@ public class MarketPage extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
             // Redirects when user is not logged in
@@ -113,10 +114,12 @@ public class MarketPage extends HttpServlet {
                 }else if(selected.getSaleOffer() > current.getMoney()){
                     message = "You don not have enough money for buying this monster.";
                 }else{
-                    pm.buyMonster(current.getUserID(), monsterID, serverID);
-                    message = "You have bought new monster called "+pm.getMonsterName(monsterID)+".";
-                    current.addNotification(new Notification("You have bought new monster called <b>"+pm.getMonsterName(monsterID)+"</b>.", "You have bought new monster called <b>"+pm.getMonsterName(monsterID)+"</b>. It will appear on your monster list now.", current));
+                    String newMonsterID = pm.buyMonster(current.getUserID(), monsterID, serverID);
+                    message = "You have bought new monster called "+pm.getMonsterName(newMonsterID)+".";
+                    current.addNotification(new Notification("You have bought new monster called <b>"+pm.getMonsterName(newMonsterID)+"</b>.", "You have bought new monster called <b>"+pm.getMonsterName(newMonsterID)+"</b>. It will appear on your monster list now.", current));
                     pm.storeNotifications(current);
+                    RemoteTalker rt = new RemoteTalker();
+                    rt.sendBuyRequest(monsterID, serverID);
                 }
                 request.setAttribute("alertMessage", message);
             }catch(Exception e){

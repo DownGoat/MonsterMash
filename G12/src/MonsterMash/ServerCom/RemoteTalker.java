@@ -9,16 +9,12 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import data.CONFIG;
-import data.FightRequest;
-import data.Friend;
-import data.Monster;
-import data.Notification;
-import data.Player;
+import data.*;
 import database.OtherPersistenceManager;
 import database.PersistenceManager;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.MultivaluedMap;
@@ -81,6 +77,7 @@ public class RemoteTalker {
         JSONObject json = new JSONObject(body);
 
         monster = new Monster();
+        monster.setName(NameGenerator.getName());
         monster.setBaseStrength(json.getDouble("baseStrength"));
         monster.setCurrentStrength(json.getDouble("currentStrength"));
         monster.setBaseDefence(json.getDouble("baseDefence"));
@@ -89,11 +86,12 @@ public class RemoteTalker {
         monster.setCurrentHealth(json.getDouble("currentHealth"));
         monster.setUserID(json.getString("userID"));
         monster.setId(json.getString("monsterID"));
-        monster.setDob(new Date(json.getInt("birthDate")));
-        monster.setDod(new Date(json.getInt("lifespan")));
+        monster.setDob(new Date(json.getLong("birthDate")));
+        monster.setDod(new Date(json.getLong("birthDate")+json.getLong("lifespan")));
         monster.setBreedOffer(json.getInt("breedOffer"));
         monster.setSaleOffer(json.getInt("saleOffer"));
-
+        Random random = new Random();
+        monster.setFertility(random.nextFloat());
         return monster;
     }
 
@@ -122,11 +120,12 @@ public class RemoteTalker {
             monster.setCurrentHealth(json.getDouble("currentHealth"));
             monster.setUserID(json.getString("userID"));
             monster.setId(json.getString("monsterID"));
-            monster.setDob(new Date(json.getInt("birthDate")));
-            monster.setDod(new Date(json.getInt("lifespan")));
+            monster.setDob(new Date(json.getLong("birthDate")));
+            monster.setDod(new Date(json.getLong("birthDate")+json.getLong("lifespan")));
             monster.setBreedOffer(json.getInt("breedOffer"));
             monster.setSaleOffer(json.getInt("saleOffer"));
-
+            Random random = new Random();
+            monster.setFertility(random.nextFloat());
             monsters.add(monster);
         }
         return monsters;
