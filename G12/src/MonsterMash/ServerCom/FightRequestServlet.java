@@ -53,8 +53,9 @@ public class FightRequestServlet extends HttpServlet {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Monster reciverMonster = pm.getMonster(recieverMonsterID);
             RemoteTalker rt = new RemoteTalker();
+            //System.out.println(rt.getRemoteAddress(senderServerID));
             Monster senderMonster = rt.getRemoteMonster(senderMonsterID, rt.getRemoteAddress(senderServerID));
-            
+            //System.out.println(senderMonster.getId());
             if(reciverMonster != null && senderMonster != null) {            
                 Player p = pm.getPlayer(reciverMonster.getUserID());
                 if(p != null) {

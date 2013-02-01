@@ -138,7 +138,6 @@ public class RemoteTalker {
 //    System.out.println(ste);
 //}
 
-
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\nGetting remote address.");
         resource = client.resource("http://monstermash.digitdex.com/directory");
         return resource.path(String.valueOf(serverNumber)).path("service").get(String.class);

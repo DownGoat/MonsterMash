@@ -13,12 +13,13 @@ public class Monster {
     private String name;
     private Date dob;
     private Date dod;
-    private Double baseStrength;
-    private Double currentStrength;
-    private Double baseDefence;
-    private Double currentDefence;
-    private Double baseHealth;
-    private Double currentHealth;
+    private double baseStrength;
+    private double currentStrength;
+    private double baseDefence;
+    private double currentDefence;
+    private double baseHealth;
+    private double currentHealth;
+    //public double injuries = 0; 
     private float fertility;
     private String userID;
     private int saleOffer;
@@ -257,4 +258,20 @@ public class Monster {
         this.currentHealth = health;
     }
     
+    public double fight(Monster opponent)
+    {
+        double playerInjuries = 0; 
+        double opponentInjuries = 0; 
+        
+        Random randomGenerator = new Random(); 
+        double random = randomGenerator.nextDouble(); 
+        
+        while(this.currentHealth > 0 && opponent.currentHealth > 0) {
+            opponent.currentHealth -= this.currentStrength * (1-opponent.currentDefence) * random; 
+            this.currentHealth -= opponent.currentStrength * (1-this.currentDefence) * random; 
+            System.out.println("Player: " + this.currentHealth + "; Opponent: " + opponent.currentHealth);
+        }
+        
+        return opponent.currentHealth; 
+    }
 }

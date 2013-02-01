@@ -50,7 +50,7 @@
             <ul class="list">
                 <c:forEach items="${monsterRequestList}" var="monsterRequest">
                     <li class="fight-request" style="background-color: #ff9d9d; border-top-left-radius: 5px;"><a><img src="images/avatar.jpg" alt="" />${monsterRequest.senderID}</a></li>
-                    <ul class="subrequest"><li><a href="#">Accept Request</a></li><li><a href="fight/reject?fightID=${monsterRequest.fightID}">Cancel Request</a></li></ul>
+                    <ul class="subrequest"><li><a href="fight/accept?fightID=${monsterRequest.fightID}">Accept Request</a></li><li><a href="fight/reject?fightID=${monsterRequest.fightID}">Cancel Request</a></li></ul>
                 </c:forEach>
                 <c:forEach items="${monsterList}" var="monster">
                     <c:if test="${(monster.saleOffer == 0) && (monster.breedOffer == 0)}" >
