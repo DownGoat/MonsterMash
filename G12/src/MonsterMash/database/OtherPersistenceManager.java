@@ -201,7 +201,6 @@ public class OtherPersistenceManager extends PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Fight_request\" WHERE \"id\" = '" + fightID + "'");
             r.next();
-            
             fr = new FightRequest(
                     r.getString("sender_id"),
                     r.getString("receiver_id"),

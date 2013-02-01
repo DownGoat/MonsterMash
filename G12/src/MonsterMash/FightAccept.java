@@ -44,8 +44,10 @@ public class FightAccept extends HttpServlet {
             FightRequest fr = pm.getFightRequest(fightID);
             
             if(fr != null) {
-                Player sender = pm.getPlayer(fr.getSenderID());
-                
+                Player reciver = pm.getPlayer(fr.getRecieverID());
+                RemoteTalker rt = new RemoteTalker();
+                String address = rt.getRemoteAddress(fr.getSenderServerID());
+                Player sender = rt.getRemotePlayer(fr.getSenderID(), address);
                 if(sender != null) {
                     Monster opponent = pm.getMonster(fr.getSenderMonsterID(), fr.getSenderServerID());
                     double opponentHealth = pm.getMonster(fr.getReceiverMonsterID(), CONFIG.OUR_SERVER).fight(opponent);

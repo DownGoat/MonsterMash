@@ -74,13 +74,13 @@
                     <form action="fight/request" method="GET">
                         <input type="hidden" name="fightID" value="0" /> 
                         Select enemy: 
-                        <select name="localMonsterID">
+                        <select name="remoteMonsterID">
                             <c:forEach items="${friendMonsterList}" var="friendMonster">
                                 <option value="${friendMonster.id}">${friendMonster.name}</option>
                             </c:forEach>
                         </select>
                         Select your monster: 
-                        <select name="remoteMonsterID">
+                        <select name="localMonsterID">
                             <c:forEach items="${monsterList}" var="monster">
                                 <c:if test="${monster.saleOffer == 0 && monster.breedOffer == 0}" >
                                     <option value="${monster.id}">${monster.name}</option>
@@ -97,13 +97,13 @@
                     <form action="fight" method="GET">
                         <input type="hidden" name="fightID" value="0" /> 
                         Select enemy: 
-                        <select name="localMonsterID">
+                        <select name="remoteMonsterID">
                             <c:forEach items="${friendMonsterList}" var="friendMonster">
                                 <option value="${friendMonster.id}">${friendMonster.id}</option>
                             </c:forEach>
                         </select>
                         Select your monster: 
-                        <select name="remoteMonsterID">
+                        <select name="localMonsterID">
                             <c:forEach items="${monsterList}" var="monster">
                                 <c:if test="${monster.saleOffer == 0 && monster.breedOffer == 0}" >
                                     <option value="${monster.id}">${monster.name}</option>

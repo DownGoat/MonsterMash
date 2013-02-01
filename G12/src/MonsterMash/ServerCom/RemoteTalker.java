@@ -208,7 +208,7 @@ public class RemoteTalker {
         params.add("localMonsterID", fightRequest.getReceiverMonsterID());
         params.add("remoteMonsterID", fightRequest.getSenderMonsterID());
         params.add("remoteServerNumber", String.valueOf(fightRequest.getSenderServerID()));
-
+        System.out.println(params.toString());
         String body = null;
         try {
             body = resource.path("fight/request").queryParams(params).get(String.class);
