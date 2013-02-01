@@ -189,6 +189,25 @@ public class MonsterTest {
         Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getFertility() && monster.getFertility()<1);
     }
+    
+    /**
+     * Test of fight method, of class Monster.
+     */
+    @Test
+    public void testFight() {
+        System.out.println("fight");
+        Monster monster = new Monster("Bob","1");
+        Monster opponent = new Monster("Billy", "2");
+        double firstStartingHealth = monster.getCurrentHealth();
+        double secondStartingHealth = opponent.getCurrentHealth();
+        boolean fightSurelyHappened = false;  
+        monster.fight(opponent);
+        if (firstStartingHealth != monster.getCurrentHealth() && secondStartingHealth != opponent.getCurrentHealth()){
+            fightSurelyHappened = true;            
+        }
+        assertTrue(fightSurelyHappened);
+        
+    }
 
 
 
