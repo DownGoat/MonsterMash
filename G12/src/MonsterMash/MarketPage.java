@@ -151,11 +151,13 @@ public class MarketPage extends HttpServlet {
             String error = null;
             PersistenceManager pm = new PersistenceManager();
             if(monsterID == null || offerAmount == null){
-                error = "Please fill both fields.";
+                error = "Please fill both fields. ";
             }else if(monsterID.length() < 1){
-                error = "Please select monster name.";
+                error = "Please select monster name. ";
             }else if(offerAmount.length() < 1){
-                error = "Please specify your offer amount.";
+                error = "Please specify your offer amount. ";
+            }else if(!validOffer(offerAmount)){
+                error = "Invalid amount of money to sell the monster. "; 
             }else{
                 int amount = 0;
                 try{
@@ -177,5 +179,19 @@ public class MarketPage extends HttpServlet {
             doGet(request, response);
         }
         
+    }
+    
+    private boolean validOffer(String offerAmount)
+    {
+        int offer;
+        try{
+            offer = Integer.parseInt(offerAmount);
+        }catch(NumberFormatException ex){
+            return false; 
+        }
+        if(offer < 1)
+            return false; 
+        else
+            return true; 
     }
 }

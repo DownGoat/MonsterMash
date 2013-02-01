@@ -64,7 +64,7 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
 	<div class="content">
-            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money}
+            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money} | <a href="unregister">Unregister</a>
             <hr />
 			<h1><span style="font-size: 25px;">H</span>IGHSCORES:</h1>
 			<table style="width:100%" cellspacing="0">

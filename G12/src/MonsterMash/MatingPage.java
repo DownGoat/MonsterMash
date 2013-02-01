@@ -178,6 +178,8 @@ public class MatingPage extends HttpServlet {
                 error = "Please select monster name.";
             }else if(offerAmount.length() < 1){
                 error = "Please specify your offer amount.";
+            }else if(!validOffer(offerAmount)){
+                error = "Invalid amount of offer the monster for breeding. "; 
             }else{
                 int amount = 0;
                 try{
@@ -198,5 +200,19 @@ public class MatingPage extends HttpServlet {
             }
             doGet(request, response);
         }
+    }
+    
+    private boolean validOffer(String offerAmount)
+    {
+        int offer;
+        try{
+            offer = Integer.parseInt(offerAmount);
+        }catch(NumberFormatException ex){
+            return false; 
+        }
+        if(offer < 1)
+            return false; 
+        else
+            return true; 
     }
 }

@@ -67,7 +67,7 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
 	<div class="content">
-            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money}
+            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money} | <a href="unregister">Unregister</a>
             <hr />
             <c:if test="${friendMonsterList.size() != 0}">
                 <form action="fight/request" method="GET">

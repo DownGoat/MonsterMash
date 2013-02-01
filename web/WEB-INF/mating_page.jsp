@@ -35,6 +35,19 @@
                 document.getElementById('breedingForm').submit();
             }
         </script>
+        <script type="text/javascript">
+        function validate(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode( key );
+            var regex = /[0-9]/;
+            if( !regex.test(key) ) {
+                theEvent.returnValue = false;
+                if(theEvent.preventDefault)
+                    theEvent.preventDefault();
+            }
+        }
+        </script>
     </head>
     <body>
         <div id="friendslist">
@@ -74,7 +87,7 @@
 		<li id="logout"><a href="logout">Logout</a></li>
 	</ul>
         <div class="content">
-            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money}
+            Logged in as: ${user.username} (${user.userID}) | Money: $${user.money} | <a href="unregister">Unregister</a>
             <hr />
                 <c:set var="anyAvailableMonsters" value="0" />
                 <c:forEach items="${monsterList}" var="monster">
