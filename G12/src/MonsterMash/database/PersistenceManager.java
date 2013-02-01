@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -384,7 +387,7 @@ public class PersistenceManager {
     }
     
     /**
-     * Cancle friendship request between players (senderID and receiverID)
+     * Cancel friendship request between players (senderID and receiverID)
      * @param senderID id of player who sent request
      * @param senderServer address of sender's server
      * @param receiverID id of player who accepted request
@@ -394,6 +397,24 @@ public class PersistenceManager {
         try{
             Statement stmt = connection.createStatement();
             stmt.execute("DELETE FROM \"Friendship\" WHERE \"receiver_id\" = '"+receiverID+"' AND \"receiver_server_id\" = "+receiverServer+" AND \"sender_id\" = '"+senderID+"' AND \"sender_server_id\" = "+senderServer+"");
+            stmt.close();
+        }catch(SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    /**
+     * Remove friendship request between players (playerOne and playerTwo)
+     * @param playerOne user id of first player
+     * @param playerTwo user id of second player
+     */
+    public void removeFriendship(String playerOne, String playerTwo){
+        Encoder encoder = new DefaultEncoder();
+        playerOne = encoder.encodeForSQL(new OracleCodec(), playerOne);
+        playerTwo = encoder.encodeForSQL(new OracleCodec(), playerTwo);
+        try{
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Friendship\" WHERE (\"receiver_id\" = '"+playerOne+"' AND \"sender_id\" = '"+playerTwo+"') OR (\"receiver_id\" = '"+playerTwo+"' AND \"sender_id\" = '"+playerOne+"')");
             stmt.close();
         }catch(SQLException sqlExcept){
             this.error = sqlExcept.getMessage();
