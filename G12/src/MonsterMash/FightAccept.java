@@ -59,8 +59,9 @@ public class FightAccept extends HttpServlet {
                                 + "</b> against the demonic. <b>" + sender.getUsername() + "</b> is now enjoing the spoils of war.", receiver));
                         pm.storeNotifications(receiver);
                     }
-
-
+                    pm.removeFightRequest(fr);
+                    pm.checkIfAnyMonsterDies();
+                    response.sendRedirect("main");
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown player in fight request.");
                 }
