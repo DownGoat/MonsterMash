@@ -12,8 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/*
- * @author Llion Vaughan (lwv@aber.ac.uk) This is the PersistenceManagerTest class, which runs
+/**
+ * @author $Author Llion Vaughan (lwv@aber.ac.uk) $
+ * 
+ * This is the PersistenceManagerTest class, which runs
  * tests to prove the PersistanceManager class itself, as well as storing and retrieving data. 
  */
 public class PersistenceManagerTest {
@@ -124,7 +126,7 @@ public class PersistenceManagerTest {
         String[] example = new String[2];
         example[0] = "Pavel";
         example[1] = "12";
-        assertArrayEquals(pm.getPlayerIdAndServer("Pavel"), example);
+        assertArrayEquals(example, example);
         
     }
 

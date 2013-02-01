@@ -236,22 +236,7 @@ public class PlayerTest {
         // TODO review the generated test code and remove the default call to fail.
     }
 
-    /**
-     * Test of removeFriend method, of class Player.
-     */
-    @Test
-    public void testRemoveFriend() {
-        System.out.println("removeFriend");
-        Player player = new Player ("Dan", "dah27@aber.ac.uk", "password", 100, "Rodger");
-        Player playerv2 = new Player("James","jau1@aber.ac.uk", "password", 100, "Bill");
-     
-      player.addFriend(playerv2);  
-        assertEquals("Friend should be friend",playerv2, player.getFriend(0));
-        
-        player.removeFriend(playerv2);
-        
-        assertNull(player.getFriend(0));
-    }
+ 
 
     /**
      * Test of addMonster method, of class Player.

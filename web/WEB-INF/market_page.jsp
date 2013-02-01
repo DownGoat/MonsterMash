@@ -13,12 +13,13 @@
         <meta name="description" content="" />
         <meta name="keywords" content="" />
         <link rel="stylesheet" href="css/jquery-ui.css" />
-        <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
-        <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
-        <script type="text/javascript" src="js/menu.js"></script>
-        <script type="text/javascript" src="js/custom.js"></script>
+        <link rel="stylesheet" href="css/reveal.css" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+	<script type="text/javascript" src="js/menu.js"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery.reveal.js"></script>
         <script type="text/javascript">
             $(function() {
                 $( "#buylist" ).menu();
