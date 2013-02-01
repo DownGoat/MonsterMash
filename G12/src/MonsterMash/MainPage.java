@@ -245,12 +245,14 @@ public class MainPage extends HttpServlet {
                         
                         pm.rejectFriend(friend);
                     } else {
-                        receiver.addNotification(new Notification(
+                        if(friend.getRemoteServerID() == CONFIG.OUR_SERVER) {
+                            receiver.addNotification(new Notification(
                                 "Request from <b>" + sender.getUserID() + "</b> declined.",
                                 "You declined the friend request from <b>" + sender.getUserID() + "</b>.",
                                 receiver));
                         
-                        pm.storeNotifications(receiver);
+                            pm.storeNotifications(receiver);
+                        }
                         
                         if(!rt.rejectRemoteFriendRequest(friend)) {
                             System.err.println("Something went wrong with the remote friend reject request.");

@@ -38,6 +38,7 @@ public class BuyServlet extends HttpServlet {
         String monsterID = request.getParameter("monsterID");
         
         if(monsterID != null) {
+            System.out.println("Buy request for monster"+monsterID);
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Monster monster = pm.getMonster(monsterID);
             
@@ -54,6 +55,7 @@ public class BuyServlet extends HttpServlet {
                     
                     pm.storeNotifications(player);
                     pm.updateMoney(player);
+                    pm.removeMonster(monsterID);
                     
                     if(player.getMonsters().size() == 1) {
                        ArrayList<Monster> monsters = new ArrayList<Monster>();

@@ -348,12 +348,17 @@ public class RemoteTalker {
         for (Friend friend : friends) {
             int friendServerID = 0;
             String friendUserID = null;
+            
+//            System.out.println("Player userID:"+player.getUserID());
+//            
+//           System.out.println("LocalUser: "+friend.getLocalUserID()+" server ID"+friend.getLocalServerID());
+//           System.out.println("RemoteUser: "+friend.getRemoteUserID()+" server ID"+friend.getRemoteServerID());
 
             if (friend.getLocalUserID().equals(player.getUserID())) {
-                friendServerID = friend.getRemoteServerID();
+                friendServerID = friend.getLocalServerID();
                 friendUserID = friend.getRemoteUserID();
             } else {
-                friendServerID = friend.getLocalServerID();
+                friendServerID = friend.getRemoteServerID();
                 friendUserID = friend.getLocalUserID();
             }
 
@@ -363,9 +368,8 @@ public class RemoteTalker {
 
                 theFriend = rt.getRemotePlayer(friendUserID, rt.getRemoteAddress(friendServerID));
 
-
-                continue;
             } else {
+
                 theFriend = pm.getPlayer(friendUserID);
             }
 
@@ -374,9 +378,11 @@ public class RemoteTalker {
                 continue;
             }
 
+            System.out.println(theFriend.getUserID());
             players.add(theFriend);
         }
         
+        players.add(player);
         players = player.sortByMoney(players);
         
         int i = 1;

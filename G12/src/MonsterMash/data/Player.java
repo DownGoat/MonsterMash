@@ -31,6 +31,9 @@ public class Player {
         this.notifications = null;
         this.monsters = null;
         this.serverID = serverID;
+        this.friends = new ArrayList<Player>();
+        this.notifications = new ArrayList<Notification>();
+        this.monsters = new ArrayList<Monster>();
     }
     
     /**
@@ -77,7 +80,7 @@ public class Player {
     }
     
     public Player() {
-        
+        this.notifications = new ArrayList<Notification>();
     }
     
     public ArrayList<Player> sortByMoney(ArrayList<Player> players) {        

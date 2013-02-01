@@ -51,7 +51,7 @@ public class JSONManager {
             jObj.put("baseHealth", monster.getBaseHealth());
             jObj.put("currentHealth", monster.getCurrentHealth());
             jObj.put("birthDate", monster.getDob().getTime());
-            jObj.put("lifespan", monster.getDod().getTime());
+            jObj.put("lifespan", monster.getDod().getTime()-monster.getDob().getTime());
             jObj.put("saleOffer", monster.getSaleOffer());
             jObj.put("breedOffer", monster.getBreedOffer());
         } catch (JSONException ex) {
