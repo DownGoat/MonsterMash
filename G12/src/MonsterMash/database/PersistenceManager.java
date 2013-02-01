@@ -259,7 +259,9 @@ public class PersistenceManager {
             Statement stmt = connection.createStatement();
             ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"user_id\" = '"+playerID+"'");
             while(r.next()){
-                monsters.add(new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer")));
+                Monster monster = new Monster(r.getString("id"), r.getString("name"), new Date(r.getLong("dob")*1000), new Date(r.getLong("dod")*1000), r.getDouble("base_strength"), r.getDouble("current_strength"), r.getDouble("base_defence"), r.getDouble("current_defence"), r.getDouble("base_health"), r.getDouble("current_health"), r.getFloat("fertility"), r.getString("user_id"), r.getInt("sale_offer"), r.getInt("breed_offer"));
+                monster.setServerID(CONFIG.OUR_SERVER);
+                monsters.add(monster);
             }
             r.close();
             stmt.close();

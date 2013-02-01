@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.json.JSONException;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -27,7 +30,8 @@ import org.json.JSONException;
  */
 @WebServlet(name = "FightingPage", urlPatterns = {"/fight"})
 public class FightingPage extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
+    
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
@@ -52,7 +56,7 @@ public class FightingPage extends HttpServlet {
             request.setAttribute("friendList", current.getFriends());
             // Saves monsters of selected friend to attribute
             if(serverID == CONFIG.OUR_SERVER){
-                request.setAttribute("friendMonsterList", pm.getMonsterList(request.getParameter("user")));
+                request.setAttribute("friendMonsterList", pm.getMonsterList(encoder.encodeForSQL(new OracleCodec(), request.getParameter("user"))));
             }else{
                 RemoteTalker rt = new RemoteTalker();
                 String address = rt.getRemoteAddress(serverID);
