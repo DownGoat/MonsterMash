@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/LoginPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import data.Player;
@@ -16,8 +19,10 @@ import org.owasp.esapi.codecs.OracleCodec;
 import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
- *
- * @author sjk4
+ * Servlet used for the login page. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class LoginPage extends HttpServlet {
 

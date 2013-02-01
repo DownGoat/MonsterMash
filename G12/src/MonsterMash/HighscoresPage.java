@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/HighscoresPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import ServerCom.RemoteTalker;
@@ -15,13 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Toshiba
+ * Displays the highscores page. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class HighscoresPage extends HttpServlet {
     
     /**
-     * Gets all data from DB, which will be displayed on main screen (list of friends, monsters and notifications).
+     * Gets all data from DB, which will be displayed on highscores page.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
