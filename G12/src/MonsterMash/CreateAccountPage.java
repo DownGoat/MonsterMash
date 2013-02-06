@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/CreateAccountPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
 import data.*;
@@ -12,11 +15,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
- * TO DO:
- * - needs to set start amount of money.
- * @author sjk4
+ * Servlet for creating a new account. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class CreateAccountPage extends HttpServlet {
     /** SET INITIAL MONEY AMOUNT **/
@@ -83,11 +90,12 @@ public class CreateAccountPage extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String username = request.getParameter("username");
-        String monsterName = request.getParameter("monster");
-        String password = request.getParameter("password");
-        String cpassword = request.getParameter("cpassword");
+        Encoder encoder = new DefaultEncoder();
+        String email = encoder.encodeForSQL(new OracleCodec(), request.getParameter("email"));
+        String username = encoder.encodeForSQL(new OracleCodec(), request.getParameter("username"));
+        String monsterName = encoder.encodeForSQL(new OracleCodec(), request.getParameter("monster"));
+        String password = encoder.encodeForSQL(new OracleCodec(), request.getParameter("password"));
+        String cpassword = encoder.encodeForSQL(new OracleCodec(), request.getParameter("cpassword"));
         String errorMessage = null;
         PersistenceManager pm = new PersistenceManager();
         // Simple validation

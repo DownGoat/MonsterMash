@@ -4,6 +4,7 @@
  */
 package database;
 
+import data.FightRequest;
 import data.Friend;
 import data.Monster;
 import data.Player;
@@ -48,7 +49,7 @@ public class OtherPersistenceManager extends PersistenceManager {
     public void acceptFriendRequest(Friend friend) {
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("UPDATE \"Friendship\" SET \"CONFIRMED\" = 'Y' WHERE \"id\" = '" + friend.getFriendshipID() + "'");
+            stmt.execute("UPDATE \"Friendship\" SET \"confirmed\" = 'Y' WHERE \"id\" = '" + friend.getFriendshipID() + "'");
             stmt.close();
         } catch (SQLException sqlExcept) {
             this.error = sqlExcept.getMessage();
@@ -62,7 +63,7 @@ public class OtherPersistenceManager extends PersistenceManager {
             ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"id\" = '" + friendID + "'");
             results.next();
 
-            friend = new Friend(results.getString("id"), results.getString("reciver_id"), results.getString("sender_id"), results.getInt("reciver_server_id"), results.getInt("sender_server_id"), results.getString("confirmed"));
+            friend = new Friend(results.getString("id"), results.getString("receiver_id"), results.getString("sender_id"), results.getInt("receiver_server_id"), results.getInt("sender_server_id"), results.getString("confirmed"));
             results.close();
             stmt.close();
         } catch (SQLException sqlExcept) {
@@ -97,8 +98,7 @@ public class OtherPersistenceManager extends PersistenceManager {
                     friend.getRemoteUserID()+"', "+
                     friend.getLocalServerID()+", "+
                     friend.getRemoteServerID()+", '"+
-                    confirmed+"')",
-                    Statement.RETURN_GENERATED_KEYS);
+                    confirmed+"')");
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
             this.error = ex.getMessage();
@@ -151,5 +151,183 @@ public class OtherPersistenceManager extends PersistenceManager {
             this.error = sqlExcept.getMessage();
         }
         return monsters;
+    }
+
+    public void storeFightRequest(FightRequest fr) {
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            stmt.execute("INSERT INTO \"Fight_request\" (\"id\", \"sender_id\", \"receiver_id\", \"sender_server_id\", \"receiver_server_id\", \"money\", \"receiver_monster_id\", \"sender_monster_id\") "
+                    + "VALUES ('"+fr.getFightID()+"', '"+fr.getSenderID()+"', '"+fr.getRecieverID()+"', "+fr.getSenderServerID()+", "+fr.getRecieverServerID()+", "+fr.getMONEY()+", '"+fr.getReceiverMonsterID()+"', '"+fr.getSenderMonsterID()+"') ");
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            this.error = ex.getMessage();
+        }
+    }
+    
+    public Monster getMonster(String monsterID) {
+        Monster monster = null;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Monster\" WHERE \"id\" = '" + monsterID + "'");
+            r.next();
+            monster = new Monster(r.getString("id"),
+                        r.getString("name"),
+                        new Date(r.getLong("dob")),
+                        new Date(r.getLong("dod")),
+                        r.getDouble("base_strength"), 
+                        r.getDouble("current_strength"),
+                        r.getDouble("base_defence"),
+                        r.getDouble("current_defence"),
+                        r.getDouble("base_health"),
+                        r.getDouble("current_health"), 
+                        r.getFloat("fertility"),
+                        r.getString("user_id"),
+                        r.getInt("sale_offer"),
+                        r.getInt("breed_offer"));
+            r.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println("asdasd"+sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        return monster;
+    }
+
+    public FightRequest getFightRequest(String fightID) {
+        FightRequest fr = null;
+        
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Fight_request\" WHERE \"id\" = '" + fightID + "'");
+            r.next();
+            fr = new FightRequest(
+                    r.getString("sender_id"),
+                    r.getString("receiver_id"),
+                    r.getString("id"),
+                    r.getString("sender_monster_id"),
+                    r.getString("receiver_monster_id"),
+                    r.getInt("sender_server_id"),
+                    r.getInt("receiver_server_id")
+                    );
+            
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        
+        return fr;
+    }
+
+    public void updateMonster(Monster monster) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Monster\" SET \"current_strength\" = "+monster.getCurrentStrength()
+                    +", \"current_defence\" = "+monster.getCurrentDefence()
+                    +", \"current_health\" = "+monster.getCurrentHealth()+" WHERE \"id\" = '"+monster.getId()+"'"
+                        );
+           
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+
+    public void removeFightRequest(FightRequest fr) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Fight_request\" WHERE \"id\" = '" + fr.getFightID() + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    public void updateMoney(Player player) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("UPDATE \"Player\" SET \"money\" = "+player.getMoney()+" WHERE \"id\" = '"+player.getUserID()+"'");
+           
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+
+    public void removeMonster(String senderMonsterID) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Monster\" WHERE \"id\" = '" + senderMonsterID + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+
+    public ArrayList<Friend> getFriends(Player player) {
+        ArrayList<Friend> friends = new ArrayList<Friend>();
+        
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM \"Friendship\" WHERE \"receiver_id\" = '"+player.getUserID()+"' or \"sender_id\" = '"+player.getUserID()+"'");
+            while (results.next()) {
+            friends.add(new Friend(
+                    results.getString("id"),
+                    results.getString("receiver_id"),
+                    results.getString("sender_id"),
+                    results.getInt("receiver_server_id"),
+                    results.getInt("sender_server_id"),
+                    results.getString("confirmed")
+                    ));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+        
+        return friends;
+     }
+    
+    public void removeUser(String userID) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("DELETE FROM \"Fight_request\" WHERE \"sender_id\" = '" + userID + "' OR \"receiver_id\" = '"+userID+"'");
+            stmt.execute("DELETE FROM \"Friendship\" WHERE \"sender_id\" = '" + userID + "' OR \"receiver_id\" = '"+userID+"'");
+            stmt.execute("DELETE FROM \"Monster\" WHERE \"user_id\" = '" + userID + "'");
+            stmt.execute("DELETE FROM \"Notification\" WHERE \"player_id\" = '" + userID + "'");
+            stmt.execute("DELETE FROM \"Player\" WHERE \"id\" = '" + userID + "'");
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            System.err.println(sqlExcept.getMessage());
+            this.error = sqlExcept.getMessage();
+        }
+    }
+    
+    public Player getPlayerSafe(String userID) {
+        Player selected = null;
+        try{
+            Statement stmt = connection.createStatement();
+            ResultSet r = stmt.executeQuery("SELECT * FROM \"Player\" WHERE \"id\" = '"+userID+"'");
+            if(r.next()){
+                selected = new Player();
+                selected.setMoney(r.getInt("money"));
+                selected.setUserID((r.getString("id")));
+                selected.setUsername(r.getString("username"));
+            }else{
+                return null;
+            }
+            r.close();
+            stmt.close();
+        }catch (SQLException sqlExcept){
+            this.error = sqlExcept.getMessage();
+        }
+
+        return selected;
     }
 }

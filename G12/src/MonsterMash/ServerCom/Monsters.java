@@ -15,12 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
  * @author sis13
  */
 public class Monsters extends HttpServlet {
+
+    Encoder encoder = new DefaultEncoder();
 
     /**
      * Processes requests for both HTTP
@@ -37,7 +42,9 @@ public class Monsters extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /* TODO output your page here. You may use following sample code. */
+            /*
+             * TODO output your page here. You may use following sample code.
+             */
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet Monsters</title>");
@@ -70,22 +77,19 @@ public class Monsters extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         if (userID != null) {
-            String json = usersMonsters(userID, response);
-            
+            String json = usersMonsters(encoder.encodeForSQL(new OracleCodec(), userID), response);
+
             if (json != null) {
                 out.write(json);
             }
-            
-        } 
-        else if (monsterID != null) {
-            String json = singleMonster(monsterID, response);
-            
+
+        } else if (monsterID != null) {
+            String json = singleMonster(encoder.encodeForSQL(new OracleCodec(), monsterID), response);
+
             if (json != null) {
                 out.write(json);
             }
-        }
-        
-        else {
+        } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Speak Java please.");
         }
     }
@@ -121,7 +125,7 @@ public class Monsters extends HttpServlet {
 
         if (monsters == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found");
-            
+
             return null;
         }
 
@@ -129,12 +133,12 @@ public class Monsters extends HttpServlet {
     }
 
     public String singleMonster(String monsterID, HttpServletResponse response) throws IOException {
-        PersistenceManager pm = new PersistenceManager();
-        Monster monster = pm.getMonster(Integer.parseInt(monsterID));
+        OtherPersistenceManager pm = new OtherPersistenceManager();
+        Monster monster = pm.getMonster(monsterID);
 
         if (monster == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Monster not found");
-            
+
             return null;
         }
 

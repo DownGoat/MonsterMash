@@ -5,6 +5,8 @@
 package ServerCom;
 
 import data.Friend;
+import data.Notification;
+import data.Player;
 import database.OtherPersistenceManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.codecs.OracleCodec;
+import org.owasp.esapi.reference.DefaultEncoder;
 
 /**
  *
@@ -20,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "FriendReject", urlPatterns = {"/friends/reject"})
 public class FriendReject extends HttpServlet {
-
+    Encoder encoder = new DefaultEncoder();
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -33,18 +38,32 @@ public class FriendReject extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String friendID = request.getParameter("friendID");
-        
+        String friendID = encoder.encodeForSQL(new OracleCodec(), request.getParameter("friendID"));
+
         if(friendID != null) {
             OtherPersistenceManager pm = new OtherPersistenceManager();
             Friend friend = pm.getFriend(friendID);
             
             if(friend != null) {
-                pm.acceptFriendRequest(friend);
+                Player player = pm.getPlayer(friend.getRemoteUserID());
+                
+                if(player != null) {
+                    player.addNotification(new Notification(
+                            "Friend request rejected!",
+                            "Your friend request to <b>"+friend.getLocalUserID()
+                                +"</b> has been rejected!",
+                            player
+                            ));
+                    
+                    pm.storeNotifications(player);
+                }
+                
+                pm.rejectFriend(friend);
                 response.setStatus(200);
+                response.sendRedirect("/MonsterMash/main");
             }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request invalid friendID for friend reject.");
         }
     }
 

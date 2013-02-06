@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package data;
 
 import java.util.Date;
@@ -14,29 +10,24 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Llionv
+ * @author Llion Vaughan (lwv@aber.ac.uk)
  */
 public class MonsterTest {
     
     public MonsterTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
+    @Test
+    public void testBreeding(){
+        Monster m1 = new Monster("testMonster", "jau1");
+        Monster m2 = new Monster("testMonster2", "qwe");
+        Monster[] testChildren = m1.breeding(m2);
+        assertNotNull(testChildren[0].getBaseDefence());
+        assertNotNull(testChildren[0].getBaseHealth());
+        assertNotNull(testChildren[0].getBaseStrength());
+        
     }
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of getId method, of class Monster.
      */
@@ -104,7 +95,7 @@ public class MonsterTest {
         assertTrue(0<monster.getBaseStrength() && monster.getBaseStrength()<1);
     }
 
-       /**
+    /**
      * Test of getCurrentStrength method, of class Monster.
      */
     @Test
@@ -156,25 +147,34 @@ public class MonsterTest {
         Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getCurrentHealth() && monster.getCurrentHealth()<1);
     }
-
-    /**
-     * Test of getAge_rate method, of class Monster.
     
-    @Test
-    public void testGetAge_rate() {
-        System.out.println("getAge_rate");
-        Monster monster = new Monster("Bob");
-        assertTrue(0<monster.getAge_rate() && monster.getAge_rate()<1);
-    }
- */
     /**
      * Test of getFertility method, of class Monster.
      */
     @Test
     public void testGetFertility() {
         System.out.println("getFertility");
-        Monster monster = new Monster("Bob",1);
+        Monster monster = new Monster("Bob","1");
         assertTrue(0<monster.getFertility() && monster.getFertility()<1);
+    }
+    
+    /**
+     * Test of fight method, of class Monster.
+     */
+    @Test
+    public void testFight() {
+        System.out.println("fight");
+        Monster monster = new Monster("Bob","1");
+        Monster opponent = new Monster("Billy", "2");
+        double firstStartingHealth = monster.getCurrentHealth();
+        double secondStartingHealth = opponent.getCurrentHealth();
+        boolean fightSurelyHappened = false;  
+        monster.fight(opponent);
+        if (firstStartingHealth != monster.getCurrentHealth() && secondStartingHealth != opponent.getCurrentHealth()){
+            fightSurelyHappened = true;            
+        }
+        assertTrue(fightSurelyHappened);
+        
     }
 
 

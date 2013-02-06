@@ -1,8 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * $HeadURL: https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/HighscoresPage.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved. 
+ * 
  */
 
+import ServerCom.RemoteTalker;
 import data.Player;
 import database.PersistenceManager;
 import java.io.IOException;
@@ -14,13 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Toshiba
+ * Displays the highscores page. 
+ * 
+ * @author $Author: sjk4$
+ * @version $Id$
  */
 public class HighscoresPage extends HttpServlet {
     
     /**
-     * Gets all data from DB, which will be displayed on main screen (list of friends, monsters and notifications).
+     * Gets all data from DB, which will be displayed on highscores page.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -28,19 +34,27 @@ public class HighscoresPage extends HttpServlet {
      */
     private void getDataFromDB(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("user") == null){
+        if (session == null || session.getAttribute("user") == null) {
             // Redirects when user is not logged in
             response.sendRedirect("");
-        }else{
-            Player current = (Player)session.getAttribute("user");
+        } else {
+            Player current = (Player) session.getAttribute("user");
             PersistenceManager pm = new PersistenceManager();
+            // Check if any monster dies:
+            pm.checkIfAnyMonsterDies();
             // Updates player informations
-            current = pm.getPlayer(current.getId());
+            current = pm.getPlayer(current.getUserID());
+            session.setAttribute("user", current);
             // Saves all notifications to attribute
             request.setAttribute("notificationList", current.getNotifications());
-            // Saves all friends and friend requests to attribute
-            request.setAttribute("friendshipList", current.getFriends());
-            // Load JSP page
+            // Saves all friends to attribute
+            request.setAttribute("friendList", current.getFriends());
+            // Saves all friend requests to attribute
+            request.setAttribute("requestList", pm.getFriendRequestList(current.getUserID()));
+            // Saves all fight requests to attribute
+            request.setAttribute("monsterRequestList", pm.getFightRequests(current.getUserID()));
+            // Saves all monsters to attribute
+            request.setAttribute("monsterList", pm.getMonsterList(current.getUserID()));
             request.getRequestDispatcher("/WEB-INF/highscores_page.jsp").forward(request, response);
         }
     }
@@ -63,7 +77,8 @@ public class HighscoresPage extends HttpServlet {
         }else{
             PersistenceManager pm = new PersistenceManager();
             Player current = (Player)session.getAttribute("user");
-            ArrayList<String> highscores = pm.getHighscores(current.getId());
+            RemoteTalker rt = new RemoteTalker();
+            ArrayList<String> highscores = rt.getHighScores(current);
             request.setAttribute("highscores", highscores);
             this.getDataFromDB(request, response);
         }

@@ -1,10 +1,20 @@
+
+/**
+ * @HeadUrl https://github.com/DownGoat/MonsterMash/blob/development/G12/src/MonsterMash/data/Player.java
+ * 
+ * Copyright (c) 2013 Aberystwyth University
+ * All rights reserved.
+ */
 package data;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
-
+/**
+ * The Player class is the representation of the Player's i our database.
+ * @author $Author sis13 $
+ */
 public class Player {
     /** Attributes */
     private String userID;
@@ -31,6 +41,9 @@ public class Player {
         this.notifications = null;
         this.monsters = null;
         this.serverID = serverID;
+        this.friends = new ArrayList<Player>();
+        this.notifications = new ArrayList<Notification>();
+        this.monsters = new ArrayList<Monster>();
     }
     
     /**
@@ -48,11 +61,14 @@ public class Player {
         this.friends = new ArrayList<Player>();
         this.notifications = new ArrayList<Notification>();
         this.monsters = new ArrayList<Monster>();
-        this.serverID = 12;
+        this.serverID = CONFIG.OUR_SERVER;
     	monsters.add(new Monster(initialMonsterName, this.userID));
         // Add first notifications:
-        notifications.add(new Notification("Account created successfully.", "LONG MESSAGE HERE", this));
-        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster", "LONG MESSAGE HERE (you can access some monster attributes)", this));
+        notifications.add(new Notification("Account created successfully.", "Welcome to MonsterMash, an interactive online learning"
+                + ", fun, multiplayer game. Add friends to your friends list by entering their email, and compete to "
+                + "breed the most powerful monster. Crush you opposition and amass vast wealth. All while learning about evolution.", this));
+        notifications.add(new Notification("Meet "+initialMonsterName+" - your first monster",
+                initialMonsterName+" is your first monster. Use them to fight other monsters or breed to create new more powerful generations.", this));
     }
     
     /**
@@ -77,7 +93,36 @@ public class Player {
     }
     
     public Player() {
+        this.notifications = new ArrayList<Notification>();
+    }
+    
+    /**
+     * Sorts a ArrayList of players by the amount of money. The Player with 
+     * the most money should appear in the front of the list.
+     * @param players List of Players you want to sort.
+     * @return  Returns a list of sorted Players.
+     */
+    public ArrayList<Player> sortByMoney(ArrayList<Player> players) {        
+        while(true) {
+            Boolean swapped = false;
+            for(int i = 0; i < players.size()-1; i++) {
+                Player selectorOne = players.get(i);
+                Player selectorTwo = players.get(i+1);
+                
+                if(selectorOne.getMoney() < selectorTwo.getMoney()) {
+                    players.set(i, selectorTwo);
+                    players.set(i+1, selectorOne);
+                    
+                    swapped = true;
+                }
+            }
+            
+            if(!swapped) {
+                break;
+            }
+        }
         
+        return players;
     }
 
     public String getUserID() {
